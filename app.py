@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Email, Regexp
 from wtforms import StringField, PasswordField
 
 
@@ -11,8 +11,21 @@ app.config.from_object("defender")
 
 # Класс формы регистрации
 class RegistrationForm(FlaskForm):
-    name = StringField("Имя:", validators=[InputRequired()])
-    password = PasswordField("Пароль:", validators=[InputRequired()])
+    message_empty_field = "Поле не должно быть пустым"
+    message_name = "Имя должно содеражать только русские буквы"
+    message_email = "Неверный почтовый адрес"
+    name = StringField(
+        "Имя:",
+        validators=[
+            InputRequired(message=message_empty_field),
+            Regexp(r"^[А-Яа-яЁё]+$", message=message_name)])
+    email = StringField(
+        "Электронная почта:",
+        validators=[
+            InputRequired(message=message_empty_field),
+            Email(message=message_email)])
+    password = PasswordField(
+        "Пароль:", validators=[InputRequired(message=message_empty_field)])
 
 
 @app.route("/")
@@ -26,10 +39,11 @@ def registration():
     form = RegistrationForm()
     # Проверка валидации(все поля заполнены ли)
     if form.validate_on_submit() is True:
-        # Получаем значения из полей name и password
+        # Получаем значения из полей name, password, email
         name = form.name.data
+        email = form.email.data
         password = form.password.data
-        print(name, password)
+        print(name, email, password)
     return render_template("index.html", form=form)
 
 
