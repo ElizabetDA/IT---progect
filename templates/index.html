@@ -1,0 +1,14 @@
+<head>
+  <h>Регистрация </h>
+  <body>
+    <!-- Создаем форму используя Jinja -->
+    <form method="post" action="/register" enctype="multipart/form-data">
+      <!-- Защита от подделки межсайтовых запросов-->
+      {{ form.csrf_token }}
+      <!-- Передаем полученные значения из полей в form в app.py -->
+      <p>{{ form.name.label }} {{ form.name() }}</p>
+      <p>{{ form.password.label }} {{ form.password() }}</p>
+      <input type="submit" value="Зарегистрироваться">
+    </form>
+  </body>
+</head>
