@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
 from wtforms import StringField, PasswordField, SubmitField
@@ -28,13 +28,13 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Введите Email", validators=[InputRequired(), Email()])
+    email = StringField("Введите Email", validators=[InputRequired(message="Неверный почтовый адрес"), Email()])
     password = PasswordField('Введите пароль', validators=[InputRequired()])
-    submit = SubmitField("")
+    submit = SubmitField('Login')
 
 
 @app.route("/")
-def hello_world():
+def index():
     return "Hello"
 
 
@@ -55,6 +55,8 @@ def registration():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        return redirect(url_for("index"))
     return render_template("login.html", form=form)
 
 
