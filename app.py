@@ -1,8 +1,7 @@
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
-from wtforms import StringField, PasswordField
-
+from wtforms import StringField, PasswordField, SubmitField
 
 app = Flask(__name__)
 # Защита от атаки подделки межсайтовых запросов
@@ -28,6 +27,12 @@ class RegistrationForm(FlaskForm):
         "Пароль:", validators=[InputRequired(message=message_empty_field)])
 
 
+class LoginForm(FlaskForm):
+    email = StringField("Введите Email", validators=[InputRequired(), Email()])
+    password = PasswordField('Введите пароль', validators=[InputRequired()])
+    submit = SubmitField("")
+
+
 @app.route("/")
 def hello_world():
     return "Hello"
@@ -45,6 +50,12 @@ def registration():
         password = form.password.data
         print(name, email, password)
     return render_template("index.html", form=form)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    return render_template("login.html", form=form)
 
 
 if __name__ == "__main__":
