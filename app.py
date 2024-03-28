@@ -2,11 +2,12 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
 from wtforms import StringField, PasswordField, SubmitField
+import hashlib
 
 app = Flask(__name__)
 # Защита от атаки подделки межсайтовых запросов
 app.config.from_object("defender")
-import hashlib
+
 
 # Класс формы регистрации
 class RegistrationForm(FlaskForm):
