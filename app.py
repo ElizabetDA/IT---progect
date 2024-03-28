@@ -6,7 +6,7 @@ from wtforms import StringField, PasswordField, SubmitField
 app = Flask(__name__)
 # Защита от атаки подделки межсайтовых запросов
 app.config.from_object("defender")
-
+import hashlib
 
 # Класс формы регистрации
 class RegistrationForm(FlaskForm):
@@ -48,7 +48,10 @@ def registration():
         name = form.name.data
         email = form.email.data
         password = form.password.data
-        print(name, email, password)
+        sha256_hash = hashlib.new('sha256')
+        sha256_hash.update(password.encode())
+        sha256_hex = sha256_hash.hexdigest()
+        print(name, email, password, sha256_hex)
     return render_template("index.html", form=form)
 
 
