@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash
-import hashlib
 from app import app, db
 from app.forms import RegistrationForm, LoginForm
 from app.models import User
 from sqlalchemy.orm.exc import NoResultFound
+import hashlib
 
 
 @app.route("/")
