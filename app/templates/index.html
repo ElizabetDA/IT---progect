@@ -1,0 +1,33 @@
+<head>
+  <h1>Регистрация </h1>
+  <body>
+    <!-- Создаем форму используя Jinja -->
+    <form method="post" action="/register" enctype="multipart/form-data" novalidate>
+        <!-- Защита от подделки межсайтовых запросов-->
+        {{ form.csrf_token }}
+        <!-- Получаем значения из полей -->
+        <p>
+            {{ form.name.label }} {{ form.name() }}
+            <!-- Валидации имени(Только Кириллица)-->
+            {% for error in form.name.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+        <p>
+          <!-- Валидация Электронной почты-->
+            {{ form.email.label }} {{ form.email() }}
+            {% for error in form.email.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+        <p>
+          <!-- Валидация Пароля-->
+            {{ form.password.label }} {{ form.password() }}
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+  </body>
+</head>
