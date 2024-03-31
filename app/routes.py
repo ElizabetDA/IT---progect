@@ -21,7 +21,7 @@ def registration():
         name = form.name.data
         email = form.email.data
         password_hash = hashlib.sha256(form.password.data.encode()).hexdigest()
-        # Проверяем существует ли пользователь в нашей БД
+        # Проверяем существует ли пользователь в нашей БД, если уже существует, то не добавляем в БД
         if User.query.filter_by(email=email).first():
             ...
         else:
@@ -43,7 +43,8 @@ def login():
         email = form.email.data
         password_hash = hashlib.sha256(form.password.data.encode()).hexdigest()
         try:
-            # Находим пользователя в БД по email. Метод one() выдаст исключение Noresultfound в случае, если результатов нет
+            # Находим пользователя в БД по email. Метод one() выдаст исключение Noresultfound в случае,
+            # если результатов нет
             user = User.query.filter_by(email=email).one()
             # Сравниваем хэш введенного пароля с  хэшем пароля найденного пользователя
             if password_hash == user.password_hash:

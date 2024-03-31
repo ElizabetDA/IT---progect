@@ -1,6 +1,6 @@
 from app import db
 
-
+#Cоздаем модель User для базы данных
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
