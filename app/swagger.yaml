@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+  title: Приложение такси
+  description: Спецификация API для приложения такси
+  version: 1.0.0
+servers:
+  - url: "http://127.0.0.1:5000"
+    description: Тестовый сервер
+components:
+  schemas:
+    Driver:
+      description: Информация о водителе
+      type: object
+      properties:
+        driver_id:
+          description: Идентификатор
+          type: integer
+        driver_name:
+          description: Имя водителя
+          type: string
+        email:
+          description: Электронная почта
+          type: string
+        phone_number:
+          description: Номер телефона 
+          type: string
+        car_model:
+          description: Модель автомобиля
+          type: string
+        car_license_plate: 
+          description: Номерной знак автомобиля
+          type: string
+        availability: 
+          description: Доступность 
+          type: string
+        location:
+          description: Местоположение такси
+          type: array
+          items:
+            type: string
+        sum_trips:
+          description: Суммарное количество поездок
+          type: integer
+      required:
+        - driver_id
+        - driver_name
+        - phone_number
+        - car_model
+        - car_license_plate
+        - availability
+        - location
+
+    Trip:
+      description: Информация о поездке
+      type: object
+      properties:
+        trip_id:
+          description: Идентификатор поездки
+          type: integer
+        user_id:
+          description: Идентификатор пользователя
+          type: integer
+        driver_id:
+          description: Идентификатор водителя
+          type: integer
+        pickup_location:
+          description: Место начала поездки
+          type: array
+          items:
+            type: string
+        dropoff_location:
+          description: Место окончания поездки
+          type: array
+          items:
+            type: string
+        start_time:
+          description: Время начала поездки
+          type: array
+          items:
+            type: number
+        end_time:
+          description: Время окончания поездки
+          type: array
+          items:
+            type: number
+        fare:
+          description: Стоимость поездки
+          type: integer
+        status:
+          description: Статус поездки
+          type: string
+      required:
+        - trip_id
+        - user_id
+        - driver_id
+        - pickup_location
+        - dropoff_location
+        - start_time
+        - end_time
+        - fare
+        - status
+        
+    UserForRegistration:
+      description: Информация о новом клиенте
+      type: object
+      properties:
+        username:
+          description: Имя пользователя
+          type: string
+        email:
+          description: Электронная почта 
+          type: string
+        password:
+            description: Пароль 
+            type: string
+      required:
+        - username
+        - email
+        - password
+    
+    UserForAutorization:
+      description: Информация о сущесвтующем клиенте
+      type: object
+      properties:
+        email:
+          description: Электронная почта 
+          type: string
+        password:
+            description: Пароль 
+            type: string
+      required:
+        - email
+        - password
+
+paths:
+    /register:
+      post:
+        description: Регистрация нового пользователя
+        operationId: registration
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserForRegistration"
+        responses:
+          '200':
+            description: Успешная регистрация
+          '400':
+            description: Неверный формат данных
+          '409':
+            description: Пользователь с таким адресом электронной почты уже существует
+      get:
+        description: Сервер возвращает HTML форму для регистрации
+        responses:
+          '200':
+            description: Форма регистрации возвращена
+            content:
+              text/html:
+                schema:
+                  type: string
+    /login:
+      post:
+        description: Авторизация пользователя
+        operationId: authorization
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/UserForAutorization"
+        responses:
+          '200':
+            description: Успешная авторизация
+          '400':
+            description: Неверный формат данных
+          '401':
+            description: Неверный пароль
+          '404':
+            description: Пользователь не найден
+      get:
+        description: Сервер возвращает HTML форму для авторизации
+        responses:
+          '200':
+            description: Форма для авторизации возвращена
+            content:
+              text/html:
+                schema:
+                  type: string
+        
