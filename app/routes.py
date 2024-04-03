@@ -23,13 +23,13 @@ def registration():
         password_hash = hashlib.sha256(form.password.data.encode()).hexdigest()
         # Проверяем существует ли пользователь в нашей БД, если уже существует, то не добавляем в БД
         if User.query.filter_by(email=email).first():
-            ...
+            return "409"
         else:
             new_user = User(name=name, email=email, password_hash=password_hash)
             # Добавляем пользователя в БД
             db.session.add(new_user)
             db.session.commit()
-
+            # Все успешно, код 200
             return redirect(url_for("index"))
 
     return render_template("index.html", form=form)
@@ -46,12 +46,12 @@ def login():
             # Находим пользователя в БД по email. Метод one() выдаст исключение Noresultfound в случае,
             # если результатов нет
             user = User.query.filter_by(email=email).one()
-            # Сравниваем хэш введенного пароля с  хэшем пароля найденного пользователя
+            # Сравниваем хэш введенного пароля с хэшем пароля найденного пользователя (код 200)
             if password_hash == user.password_hash:
                 return redirect(url_for("index"))
             else:
-                ...
+                return "401"
         except NoResultFound:
-            ...
+            return "404"
 
     return render_template("login.html", form=form)

@@ -100,7 +100,7 @@ components:
         - fare
         - status
         
-    UserForRegistration:
+    RegistrationForm:
       description: Информация о новом клиенте
       type: object
       properties:
@@ -118,7 +118,7 @@ components:
         - email
         - password
     
-    UserForAutorization:
+    LoginForm:
       description: Информация о сущесвтующем клиенте
       type: object
       properties:
