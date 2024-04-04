@@ -108,7 +108,7 @@ components:
           description: Имя пользователя
           type: string
         email:
-          description: Электронная почта 
+          description: Электронная почта
           type: string
         password:
             description: Пароль 
@@ -133,6 +133,17 @@ components:
         - password
 
 paths:
+  /:
+    get:
+      description: Получение домашней страницы
+      operationId: lokir.index
+      responses:
+        '200':
+          description: Домашняя страница
+          content:
+            text/html:
+              schema:
+                type: string
   /register:
     post:
       description: Регистрация нового пользователя
@@ -140,7 +151,7 @@ paths:
       requestBody:
           required: true
           content:
-            application/json:
+            multipart/form-data:
               schema:
                 $ref: "#/components/schemas/RegistrationForm"
       responses:
@@ -167,7 +178,7 @@ paths:
       requestBody:
           required: true
           content:
-            application/json:
+            multipart/form-data:
               schema:
                   $ref: "#/components/schemas/LoginForm"
       responses:

@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 import connexion
 
+
 # Создание экземпляра Flask приложения
 app = connexion.App(__name__, specification_dir="./")
 app.add_api("swagger.yaml")
@@ -13,7 +14,7 @@ flask_app.config.from_pyfile("config.py")
 db = SQLAlchemy(flask_app)
 
 
-# Подключение к базе данных
+# Создание базы данных, если еще не  была создана
 with flask_app.app_context():
     db.create_all()
 

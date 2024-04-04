@@ -1,45 +1,26 @@
-<!DOCTYPE html>
-<body>
-    <h1>Авторизация</h1>
-    <form id="loginForm">
-        <label for="email">Электронная почта:</label><br>
-        <input type="email" id="email" name="email"><br>
-        <label for="password">Пароль:</label><br>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Войти">
-    </form>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            var formData = new FormData(this); // Get form data
-            var jsonData = {};
-
-            formData.forEach(function(value, key) {
-                jsonData[key] = value; // Convert form data to JSON format
-            });
-
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // Set content type to JSON
-                },
-                body: JSON.stringify(jsonData) // Convert JSON data to string and send in body
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data); // Handle successful response
-            })
-            .catch(error => {
-                console.error('Error:', error); // Handle errors
-            });
-        });
-    </script>
-</body>
-</html>
+<head>
+    <h1>Авторизация </h1>
+    <body>
+      <!-- Создаем форму используя Jinja -->
+      <form method="post" action="/login" enctype="multipart/form-data" novalidate>
+          <!-- Защита от подделки межсайтовых запросов-->
+          {{ form.csrf_token }}
+          <!-- Получаем значения из полей -->
+          <p>
+            <!-- Валидация Электронной почты-->
+              {{ form.email.label }} {{ form.email() }}
+              {% for error in form.email.errors %}
+                  {{ error }}
+              {% endfor %}
+          </p>
+          <p>
+            <!-- Валидация Пароля-->
+              {{ form.password.label }} {{ form.password() }}
+              {% for error in form.password.errors %}
+                  {{ error }}
+              {% endfor %}
+          </p>
+          <input type="submit" value="Войти">
+      </form>
+    </body>
+  </head>

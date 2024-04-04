@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField
 
 
 # Класс формы регистрации
@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_name = "Имя должно содеражать только русские буквы"
     message_email = "Неверный почтовый адрес"
-    name = StringField(
+    username = StringField(
         "Имя:",
         validators=[
             InputRequired(message=message_empty_field),
@@ -31,4 +31,3 @@ class LoginForm(FlaskForm):
         Email(message=message_email)])
     password = PasswordField('Введите пароль', validators=[
         InputRequired(message=message_empty_field)])
-    submit = SubmitField('Login')
