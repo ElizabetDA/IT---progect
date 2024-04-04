@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<body>
+    <h1>Регистрация</h1>
+    <form id="registrationForm">
+        <label for="username">Имя:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="email">Электронная почта:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="password">Пароль:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var formData = new FormData(this); // Get form data
+            var jsonData = {};
+
+            formData.forEach(function(value, key) {
+                jsonData[key] = value; // Convert form data to JSON format
+            });
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' // Set content type to JSON
+                },
+                body: JSON.stringify(jsonData) // Convert JSON data to string and send in body
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Handle successful response
+            })
+            .catch(error => {
+                console.error('Error:', error); // Handle errors
+            });
+        });
+    </script>
+</body>
+</html>

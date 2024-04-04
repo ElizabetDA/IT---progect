@@ -133,58 +133,59 @@ components:
         - password
 
 paths:
-    /register:
-      post:
-        description: Регистрация нового пользователя
-        operationId: registration
-        requestBody:
+  /register:
+    post:
+      description: Регистрация нового пользователя
+      operationId: lokir.registration
+      requestBody:
           required: true
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserForRegistration"
-        responses:
-          '200':
-            description: Успешная регистрация
-          '400':
-            description: Неверный формат данных
-          '409':
-            description: Пользователь с таким адресом электронной почты уже существует
-      get:
-        description: Сервер возвращает HTML форму для регистрации
-        responses:
-          '200':
-            description: Форма регистрации возвращена
-            content:
-              text/html:
-                schema:
-                  type: string
-    /login:
-      post:
-        description: Авторизация пользователя
-        operationId: authorization
-        requestBody:
+                $ref: "#/components/schemas/RegistrationForm"
+      responses:
+        '200':
+          description: Успешная регистрация
+        '400':
+          description: Неверный формат данных
+        '409':
+          description: Пользователь с таким адресом электронной почты уже существует
+    get:
+      description: Сервер возвращает HTML форму для регистрации
+      operationId: lokir.registrationForm
+      responses:
+        '200':
+          description: Форма регистрации возвращена
+          content:
+            text/html:
+              schema:
+                type: string
+  /login:
+    post:
+      description: Авторизация пользователя
+      operationId: lokir.authorization
+      requestBody:
           required: true
           content:
             application/json:
               schema:
-                  $ref: "#/components/schemas/UserForAutorization"
-        responses:
-          '200':
-            description: Успешная авторизация
-          '400':
-            description: Неверный формат данных
-          '401':
-            description: Неверный пароль
-          '404':
-            description: Пользователь не найден
-      get:
-        description: Сервер возвращает HTML форму для авторизации
-        responses:
-          '200':
-            description: Форма для авторизации возвращена
-            content:
-              text/html:
-                schema:
-                  type: string
-        
+                  $ref: "#/components/schemas/LoginForm"
+      responses:
+        '200':
+          description: Успешная авторизация
+        '400':
+          description: Неверный формат данных
+        '401':
+          description: Неверный пароль
+        '404':
+          description: Пользователь не найден
+    get:
+      description: Сервер возвращает HTML форму для авторизации
+      operationId: lokir.authorizationForm
+      responses:
+        '200':
+          description: Форма для авторизации возвращена
+          content:
+            text/html:
+              schema:
+                type: string
