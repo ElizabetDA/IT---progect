@@ -1,4 +1,7 @@
-from run import db
+from flask_sqlalchemy import SQLAlchemy
+
+# Создаем объект SQLAlchemy
+db = SQLAlchemy()
 
 
 # Cоздаем модель User для базы данных

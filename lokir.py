@@ -1,6 +1,5 @@
 from flask import render_template, request, jsonify, make_response
-from run import db
-from models import User
+from models import db, User
 from forms import RegistrationForm, LoginForm
 from sqlalchemy.orm.exc import NoResultFound
 import hashlib
@@ -34,13 +33,13 @@ def registration():
         return jsonify({"message": "Пользователь успешно зарегистрирован"}),
     200
     # Возвращение подсказок пользователю
-    return make_response(render_template('index.html', form=form), 400)
+    return make_response(render_template("register.html", form=form), 400)
 
 
 # Функция получения формы регистрации
 def registrationForm():
     form = RegistrationForm()
-    return render_template("index.html", form=form)
+    return render_template("register.html", form=form)
 
 
 # Функция авторизации
@@ -51,9 +50,6 @@ def authorization():
         try:
             email = form.email.data
             password = form.password.data
-            # Находим пользователя в БД по email.
-            # Метод one() выдаст исключение Noresultfound в случае,
-            # если результатов нет
             user = User.query.filter_by(email=email).one()
             # Сравниваем хэш введенного пароля с
             # хэшем пароля найденного пользователя
