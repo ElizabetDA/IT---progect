@@ -1,26 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <h1>Авторизация </h1>
-    <body>
-      <!-- Создаем форму используя Jinja -->
-      <form method="post" action="/login" enctype="multipart/form-data" novalidate>
-          <!-- Защита от подделки межсайтовых запросов-->
-          {{ form.csrf_token }}
-          <!-- Получаем значения из полей -->
-          <p>
-            <!-- Валидация Электронной почты-->
-              {{ form.email.label }} {{ form.email() }}
-              {% for error in form.email.errors %}
-                  {{ error }}
-              {% endfor %}
-          </p>
-          <p>
-            <!-- Валидация Пароля-->
-              {{ form.password.label }} {{ form.password() }}
-              {% for error in form.password.errors %}
-                  {{ error }}
-              {% endfor %}
-          </p>
-          <input type="submit" value="Авторизироваться">
-      </form>
-    </body>
-  </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Booking</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3B3052;
+        }
+
+        .container {
+            background-color: #FAF9FC;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #191919;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"],
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background-color: #FAF9FC;
+            color: #3B3052;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Авторизация</h1>
+        <div class="form-container">
+            <form method="post" action="/login" enctype="multipart/form-data" novalidate onsubmit="login(); return false;">
+                <!-- Защита от подделки межсайтовых запросов-->
+                <input type="hidden" name="csrf_token" value="your_csrf_token_here">
+                <!-- Получаем значения из полей -->
+                <p>
+                    <!-- Валидация Электронной почты-->
+                    <label for="email">Электронная почта:</label>
+                    <input type="email" id="email" name="email" required>
+                </p>
+                <p>
+                    <!-- Валидация Пароля-->
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" required>
+                </p>
+                <input type="submit" value="Авторизироваться">
+                <button onclick="window.location.href='register.html'">Регистрация</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Here you can send the login data to the backend for authentication
+            console.log("Email: " + email);
+            console.log("Password: " + password);
+        }
+    </script>
+</body>
+</html>
