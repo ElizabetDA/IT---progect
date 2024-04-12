@@ -20,7 +20,7 @@ class User(db.Model):
 # Cоздаем модель Order для базы данных
 class Trip(db.Model):
     __tablename__ = 'trips'
-    id = db.Column(db.Integer, primary_key=True)
+    trip_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
@@ -43,9 +43,13 @@ class Trip(db.Model):
 # Cоздаем модель Driver для базы данных
 class Driver(db.Model):
     __tablename__ = 'drivers'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    car = db.Column(db.String(100), nullable=False)
+    driver_id = db.Column(db.Integer, primary_key=True)
+    driver_name = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    car_model = db.Column(db.String(100), nullable=False)
+    car_license_plate = db.Column(db.String(20), nullable=False)
+    availability = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
-        return f"Driver {self.name}, Car {self.car}"
+        return f"Driver {self.driver_name}, Car {self.car_model}, Phone: {self.phone_number}"
