@@ -182,7 +182,7 @@ paths:
               schema:
                   $ref: "#/components/schemas/LoginForm"
       responses:
-        '200':
+        '302':
           description: Успешная авторизация
         '400':
           description: Неверный формат данных
@@ -200,3 +200,24 @@ paths:
             text/html:
               schema:
                 type: string
+  /order:
+    get:
+      description: Сервер возвращает HTML форму для заказа
+      operationId: lokir.order_get
+      responses:
+        '200':
+          description: Форма для заказа возвращена
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Пользователь неавторизован(токен неверный или время его действия истекло)
+    post:
+      description: Получение данных о заказе сервером
+      operationId: lokir.order_create
+      responses:
+        "200":
+          description: Заказ успешно создан
+        "400": 
+          description: Неверный формат данных
