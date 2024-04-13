@@ -5,7 +5,7 @@ from forms import RegistrationForm, LoginForm, TripForm
 from sqlalchemy.orm.exc import NoResultFound
 import hashlib
 from flask_jwt_extended import create_access_token, \
-                               jwt_required, get_jwt_identity
+                               jwt_required
 
 
 # Функция получения домашней страницы
