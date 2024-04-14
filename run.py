@@ -1,11 +1,14 @@
 import connexion
 from models import db
+from flask_jwt_extended import JWTManager
 
 
 # Создание экземпляра Flask приложения
 app = connexion.FlaskApp(__name__, specification_dir="./")
 app.add_api("swagger.yaml")
 flask_app = app.app
+jwt = JWTManager(flask_app)
+
 
 # Загрузка конфигурации Flask приложения
 flask_app.config.from_pyfile("config.py")

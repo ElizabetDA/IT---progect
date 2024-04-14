@@ -29,5 +29,20 @@ class LoginForm(FlaskForm):
     email = StringField("Введите Email", validators=[
         InputRequired(message=message_empty_field),
         Email(message=message_email)])
-    password = PasswordField('Введите пароль', validators=[
+    password = PasswordField("Введите пароль", validators=[
         InputRequired(message=message_empty_field)])
+
+
+# Класс формы поездки
+class TripForm(FlaskForm):
+    message_adress = "Неверный формат адреса"
+    pickup_location = StringField("Место начала поездки",
+                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я] \
+                                      + \s\d{1,3} \
+                                                     (?:,\s*д\.\s*\d{1,3})$",
+                                                     message=message_adress)])
+    dropoff_location = StringField("Место начала поездки",
+                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я] \
+                                       + \s\d{1,3} \
+                                                     (?:,\s*д\.\s*\d{1,3})$",
+                                                      message=message_adress)])

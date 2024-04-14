@@ -7,7 +7,7 @@ db = SQLAlchemy()
 
 # Cоздаем модель User для базы данных
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
@@ -19,30 +19,33 @@ class User(db.Model):
 
 # Cоздаем модель Order для базы данных
 class Trip(db.Model):
-    __tablename__ = 'trips'
+    __tablename__ = "trips"
     trip_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    driver_id = db.Column(db.Integer, db.ForeignKey('drivers.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    driver_id = db.Column(db.Integer,
+                          db.ForeignKey("drivers.driver_id"), nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    start_time = db.Column(db.DateTime,
+                           nullable=False, default=datetime.utcnow)
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False)
 
     # Определяем отношение между таблицами Order и User
-    user = db.relationship('User', backref='orders')
+    user = db.relationship("User", backref="orders")
 
     # Определяем отношение между таблицами Order и Driver
-    driver = db.relationship('Driver', backref='orders')
+    driver = db.relationship("Driver", backref="orders")
 
     def __repr__(self):
-        return f"Order {self.trip_id} - User: {self.user_id}, Driver: {self.driver_id}, Status: {self.status}"
+        return f"Order {self.trip_id} - User: \
+    {self.user_id}, Driver: {self.driver_id}, Status: {self.status}"
 
 
 # Cоздаем модель Driver для базы данных
 class Driver(db.Model):
-    __tablename__ = 'drivers'
+    __tablename__ = "drivers"
     driver_id = db.Column(db.Integer, primary_key=True)
     driver_name = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
@@ -52,4 +55,5 @@ class Driver(db.Model):
     location = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
-        return f"Driver {self.driver_name}, Car {self.car_model}, Phone: {self.phone_number}"
+        return f"Driver {self.driver_name}, Car \
+    {self.car_model}, Phone: {self.phone_number}"
