@@ -6,7 +6,7 @@
     <title>Taxi Booking</title>
     <style>
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: "Montserrat", sans-serif;
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -88,19 +88,19 @@
                     <input type="password" id="password" name="password" required>
                 </p>
                 <input type="submit" value="Авторизироваться">
-                <button onclick="window.location.href='register.html'">Регистрация</button>
+                <button onclick="window.location.href='/register'">Регистрация</button>
             </form>
         </div>
     </div>
 
     <script>
         function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
 
             // Here you can send the login data to the backend for authentication
-            console.log("Email: " + email);
-            console.log("Password: " + password);
+            console.log(email);
+            console.log(password);
         }
     </script>
 </body>
