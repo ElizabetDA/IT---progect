@@ -1,23 +1,25 @@
-import connexion
 from models import db
 from flask_jwt_extended import JWTManager
+from flask import Flask
+from lokir import register_routes
+from flask_wtf.csrf import CSRFProtect
 
 
 # Создание экземпляра Flask приложения
-app = connexion.FlaskApp(__name__, specification_dir="./")
-app.add_api("swagger.yaml")
-flask_app = app.app
-jwt = JWTManager(flask_app)
+app = Flask(__name__)
+jwt = JWTManager(app)
 
 
 # Загрузка конфигурации Flask приложения
-flask_app.config.from_pyfile("config.py")
+app.config.from_pyfile("config.py")
+csrf = CSRFProtect(app)
 
 # Привязка SQLAlchemy к flask приложению
-db.init_app(flask_app)
+db.init_app(app)
+register_routes(app)
 
 if __name__ == "__main__":
     # Создание таблицы User, если она не созадана
-    with flask_app.app_context():
+    with app.app_context():
         db.create_all()
-    app.run()
+    app.run(debug=True)

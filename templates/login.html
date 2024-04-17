@@ -70,38 +70,27 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Авторизация</h1>
-        <div class="form-container">
-            <form method="post" action="/login" enctype="multipart/form-data" novalidate onsubmit="login(); return false;">
-                <!-- Защита от подделки межсайтовых запросов-->
-                <input type="hidden" name="csrf_token" value="your_csrf_token_here">
-                <!-- Получаем значения из полей -->
-                <p>
-                    <!-- Валидация Электронной почты-->
-                    <label for="email">Электронная почта:</label>
-                    <input type="email" id="email" name="email" required>
-                </p>
-                <p>
-                    <!-- Валидация Пароля-->
-                    <label for="password">Пароль:</label>
-                    <input type="password" id="password" name="password" required>
-                </p>
-                <input type="submit" value="Авторизироваться">
-                <button onclick="window.location.href='/register'">Регистрация</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            // Here you can send the login data to the backend for authentication
-            console.log(email);
-            console.log(password);
-        }
-    </script>
+    <h1>Авторизация</h1>
+    <!-- Создаем форму используя Jinja -->
+    <form method="post" action="/login" enctype="multipart/form-data" novalidate>
+        <!-- Защита от подделки межсайтовых запросов-->
+        {{ form.csrf_token }}
+        <!-- Получаем значения из полей -->
+        <p>
+            <!-- Валидация Электронной почты-->
+            {{ form.email.label }} {{ form.email() }}
+            {% for error in form.email.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+        <p>
+            <!-- Валидация Пароля-->
+            {{ form.password.label }} {{ form.password() }}
+            {% for error in form.password.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+        <input type="submit" value="Авторизоваться">
+    </form>
 </body>
 </html>

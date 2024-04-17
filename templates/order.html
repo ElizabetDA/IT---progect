@@ -3,7 +3,6 @@
     <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
         <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
         {{ form.csrf_token }}
-
         <!-- Поле для ввода места начала поездки -->
         <p>
             {{ form.pickup_location.label }}
