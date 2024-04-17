@@ -1,11 +1,11 @@
 from flask import render_template, request, \
-                  jsonify, make_response, redirect, url_for
-from models import db, User
+    jsonify, make_response, redirect, url_for
+from models import db, User, Trip
 from forms import RegistrationForm, LoginForm, TripForm
 from sqlalchemy.orm.exc import NoResultFound
 import hashlib
 from flask_jwt_extended import create_access_token, \
-                               jwt_required
+    jwt_required, get_jwt_identity
 
 
 # Функция получения домашней страницы
@@ -101,6 +101,15 @@ def register_routes(app):
         if form.validate_on_submit() is True:
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
+            user_id = get_jwt_identity()
+            fare = Trip.calculate_fare(pickup_location, dropoff_location)
+            new_trip = Trip(pickup_location=pickup_location,
+                            dropoff_location=dropoff_location,
+                            user_id=user_id,
+                            fare=fare,
+                            status="В ожидании")
+            db.session.add(new_trip)
+            db.session.commit()
             print(pickup_location)
             print(dropoff_location)
             return jsonify({"message": "Заказ успешно создан"}), 200
