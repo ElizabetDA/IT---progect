@@ -4,11 +4,9 @@ from flask import Flask
 from lokir import register_routes
 from flask_wtf.csrf import CSRFProtect
 
-
 # Создание экземпляра Flask приложения
 app = Flask(__name__)
 jwt = JWTManager(app)
-
 
 # Загрузка конфигурации Flask приложения
 app.config.from_pyfile("config.py")
