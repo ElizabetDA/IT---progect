@@ -43,15 +43,14 @@ class Trip(db.Model):
         return f"Order {self.trip_id} - User: \
     {self.user_id}, Driver: {self.driver_id}, Status: {self.status}"
 
+
     @staticmethod
     def calculate_fare(pickup_location, dropoff_location):
         return 1000
 
+
     def set_completed(self):
         self.status = "Завершен"
-        self.end_time = datetime.now(pytz.timezone('Europe/Moscow'))
-
-    def update_end_time(self):
         self.end_time = datetime.now(pytz.timezone('Europe/Moscow'))
 
 
