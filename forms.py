@@ -36,13 +36,12 @@ class LoginForm(FlaskForm):
 # Класс формы поездки
 class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
+    validate_street = r"^ул\.\s[A-Za-zА-Яа-я]+\sд\.\s\d{1,3}$"
     pickup_location = StringField("Место начала поездки",
-                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
-                                                     \sд\.\s\d{1,3}$",
+                                  validators=[Regexp(validate_street,
                                                      message=message_adress)])
-    dropoff_location = StringField("Место начала поездки",
-                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
-                                                      \sд\.\s\d{1,3}$",
+    dropoff_location = StringField("Место конца поездки",
+                                   validators=[Regexp(validate_street,
                                                       message=message_adress)])
 
 
