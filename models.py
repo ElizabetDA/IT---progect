@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import pytz
 
 # Создаем объект SQLAlchemy
 db = SQLAlchemy()
@@ -27,7 +28,7 @@ class Trip(db.Model):
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
     start_time = db.Column(db.DateTime,
-                           nullable=False, default=datetime.utcnow)
+                           nullable=False, default=datetime.now(pytz.timezone('Europe/Moscow')))
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False)
@@ -41,6 +42,14 @@ class Trip(db.Model):
     def __repr__(self):
         return f"Order {self.trip_id} - User: \
     {self.user_id}, Driver: {self.driver_id}, Status: {self.status}"
+
+    @staticmethod
+    def calculate_fare(pickup_location, dropoff_location):
+        return 1000
+
+    def set_completed(self):
+        self.status = "Завершен"
+        self.end_time = datetime.now(pytz.timezone('Europe/Moscow'))
 
 
 # Cоздаем модель Driver для базы данных
