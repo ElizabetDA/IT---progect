@@ -37,8 +37,10 @@ class LoginForm(FlaskForm):
 class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки",
-                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\sд\.\s\d{1,3}$",
+                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
+                                                     \sд\.\s\d{1,3}$",
                                                      message=message_adress)])
     dropoff_location = StringField("Место начала поездки",
-                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\sд\.\s\d{1,3}$",
+                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
+                                                      \sд\.\s\d{1,3}$",
                                                       message=message_adress)])
