@@ -1,0 +1,16 @@
+<h1>Личный кабинет</h1>
+<p>Имя пользователя: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+
+<h2>Мои заказы</h2>
+<ul>
+    {% for trip in trips %}
+        <li>
+            Откуда: {{ trip.pickup_location }} <br>
+            Куда: {{ trip.dropoff_location }} <br>
+            Стоимость: {{ trip.fare }} <br>
+            Статус: {{ trip.status }}
+        </li>
+        <br><br>
+    {% endfor %}
+</ul>
