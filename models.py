@@ -30,6 +30,9 @@ class Trip(db.Model):
     dropoff_location = db.Column(db.String(200), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False,
                            default=datetime.now(pytz.timezone('Europe/Moscow')))
+    start_time = db.Column(db.DateTime,
+                           nullable=False, default=datetime.
+                           now(pytz.timezone("Europe/Moscow")))
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
@@ -44,7 +47,7 @@ class Trip(db.Model):
 
     def set_completed(self):
         self.status = "Завершен"
-        self.end_time = datetime.now(pytz.timezone('Europe/Moscow'))
+        self.end_time = datetime.now(pytz.timezone("Europe/Moscow"))
 
 
 class Driver(db.Model):
