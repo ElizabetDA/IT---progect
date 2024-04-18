@@ -44,3 +44,12 @@ class TripForm(FlaskForm):
                                    validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
                                                       \sд\.\s\d{1,3}$",
                                                       message=message_adress)])
+
+
+class ChangePasswordForm(FlaskForm):
+    message_empty_field = "Поле не должно быть пустым"
+    message_password = "Неверный пароль"
+    old_password = PasswordField("Введите старый пароль", validators=[
+        InputRequired(message=message_empty_field)])
+    new_password = PasswordField("Введите новый пароль", validators=[
+        InputRequired(message=message_empty_field)])

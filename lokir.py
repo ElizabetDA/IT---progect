@@ -1,7 +1,7 @@
 from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip
-from forms import RegistrationForm, LoginForm, TripForm
+from forms import RegistrationForm, LoginForm, TripForm, ChangePasswordForm
 from sqlalchemy.orm.exc import NoResultFound
 import hashlib
 from flask_jwt_extended import create_access_token, \
@@ -122,6 +122,69 @@ def register_routes(app):
         # Возвращение подсказок пользователю
         return make_response(render_template("order.html", form=form), 400)
 
+
+    @app.route("/account", methods=["GET"])
+    @jwt_required()
+    def account():
+        # Получаем идентификатор авторизованного пользователя из JWT токена
+        user_id = get_jwt_identity()
+
+        # Извлекаем объект пользователя из базы данных по его идентификатору
+        user = User.query.get(user_id)
+
+        # Получаем заказы пользователя из связанной коллекции
+        user_trips = user.trips
+
+        # Рендерим шаблон account.html и передаем в него данные пользователя и его заказы
+        return render_template("account.html", user=user, trips=user_trips)
+
+    @app.route("/logout", methods=["GET"])
+    @jwt_required()
+    def logout():
+        # Создаем объект ответа, перенаправляющий пользователя на главную страницу
+        response = make_response(redirect(url_for("index")))
+
+        # Удаляем cookie с JWT токеном доступа, завершая сеанс пользователя
+        response.delete_cookie("access_token_cookie")
+
+        return response
+
+    @app.route("/change_password", methods=["GET"])
+    @jwt_required()
+    def change_password_get():
+        form = ChangePasswordForm()
+
+        # Рендерим шаблон change_password.html и передаем в него форму
+        return render_template("change_password.html", form=form)
+
+    @app.route("/change_password", methods=["POST"])
+    @jwt_required()
+    def change_password():
+        form = ChangePasswordForm(request.form)
+        if form.validate_on_submit():
+            # Получаем идентификатор авторизованного пользователя из JWT токена
+            user_id = get_jwt_identity()
+
+            # Извлекаем объект пользователя из базы данных по его идентификатору
+            user = User.query.get(user_id)
+
+            # Хешируем старый пароль из формы
+            old_password_hash = hashlib.sha256(form.old_password.data.encode()).hexdigest()
+
+            if old_password_hash != user.password_hash:
+                return jsonify({'message': 'Текущий пароль неверный'}), 400
+
+            # Устанавливаем новый пароль для пользователя
+            user.change_password(form.new_password.data)
+
+            # Добавляем измененного пользователя в сессию базы данных
+            db.session.add(user)
+
+            # Сохраняем изменения в базе данных
+            db.session.commit()
+
+            return jsonify({'message': 'Пароль успешно изменен'}), 200
+
     # Функция обновления access_token
     @app.route("/refresh", methods=["POST"])
     @jwt_required(refresh=True)
@@ -132,3 +195,4 @@ def register_routes(app):
         response.set_cookie("access_token_cookie",
                             value=new_access_token)
         return response
+
