@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import pytz, hashlib
+import pytz
+import hashlib
 
 db = SQLAlchemy()
 
@@ -27,13 +28,15 @@ class Trip(db.Model):
     driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"), nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.now(pytz.timezone('Europe/Moscow')))
+    start_time = db.Column(db.DateTime, nullable=False,
+                           default=datetime.now(pytz.timezone('Europe/Moscow')))
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
 
     def __repr__(self):
-        return f"Trip {self.id} - User: {self.user.username}, Driver: {self.driver.name if self.driver else None}, Status: {self.status}"
+        return (f"Trip {self.id} - User: {self.user.username},"
+                f"Driver: {self.driver.name if self.driver else None}, Status: {self.status}")
 
     @staticmethod
     def calculate_fare(pickup_location, dropoff_location):

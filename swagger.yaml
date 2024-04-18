@@ -22,16 +22,16 @@ components:
           description: Электронная почта
           type: string
         phone_number:
-          description: Номер телефона 
+          description: Номер телефона
           type: string
         car_model:
           description: Модель автомобиля
           type: string
-        car_license_plate: 
+        car_license_plate:
           description: Номерной знак автомобиля
           type: string
-        availability: 
-          description: Доступность 
+        availability:
+          description: Доступность
           type: string
         location:
           description: Местоположение такси
@@ -99,7 +99,7 @@ components:
         - end_time
         - fare
         - status
-        
+
     RegistrationForm:
       description: Информация о новом клиенте
       type: object
@@ -111,8 +111,8 @@ components:
           description: Электронная почта
           type: string
         password:
-            description: Пароль 
-            type: string
+          description: Пароль
+          type: string
       required:
         - username
         - email
@@ -123,14 +123,28 @@ components:
       type: object
       properties:
         email:
-          description: Электронная почта 
+          description: Электронная почта
           type: string
         password:
-            description: Пароль 
-            type: string
+          description: Пароль
+          type: string
       required:
         - email
         - password
+
+    ChangePasswordForm:
+      description: Форма для смены пароля
+      type: object
+      properties:
+        old_password:
+          description: Текущий пароль пользователя
+          type: string
+        new_password:
+          description: Новый пароль пользователя
+          type: string
+      required:
+        - old_password
+        - new_password
 
 paths:
   /:
@@ -149,11 +163,11 @@ paths:
       description: Регистрация нового пользователя
       operationId: lokir.registration
       requestBody:
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                $ref: "#/components/schemas/RegistrationForm"
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/RegistrationForm"
       responses:
         '200':
           description: Успешная регистрация
@@ -176,11 +190,11 @@ paths:
       description: Авторизация пользователя
       operationId: lokir.authorization
       requestBody:
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                  $ref: "#/components/schemas/LoginForm"
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/LoginForm"
       responses:
         '302':
           description: Успешная авторизация
@@ -219,5 +233,61 @@ paths:
       responses:
         "200":
           description: Заказ успешно создан
-        "400": 
+        "400":
           description: Неверный формат данных
+  /account:
+    get:
+      description: Получение информации об аккаунте авторизованного пользователя
+      operationId: lokir.account
+      responses:
+        '200':
+          description: Успешное получение информации об аккаунте
+          content:
+            text/html:
+              schema:
+                type: string
+        '401':
+          description: Пользователь не авторизован
+  /logout:
+    get:
+      description: Выход из аккаунта авторизованного пользователя
+      operationId: lokir.logout
+      responses:
+        '302':
+          description: Успешный выход из аккаунта
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL для перенаправления после выхода
+        '401':
+          description: Пользователь не авторизован
+  /change_password:
+    get:
+      description: Получение формы для смены пароля авторизованного пользователя
+      operationId: lokir.change_password_get
+      responses:
+        '200':
+          description: Успешное получение формы для смены пароля
+          content:
+            text/html:
+              schema:
+                type: string
+        '401':
+          description: Пользователь не авторизован
+    post:
+      description: Смена пароля авторизованного пользователя
+      operationId: lokir.change_password
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordForm'
+      responses:
+        '200':
+          description: Успешная смена пароля
+        '400':
+          description: Неверный текущий пароль
+        '401':
+          description: Пользователь не авторизован
