@@ -138,7 +138,7 @@ paths:
       description: Получение домашней страницы
       operationId: lokir.index
       responses:
-        '200':
+        "200":
           description: Домашняя страница
           content:
             text/html:
@@ -155,17 +155,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/RegistrationForm"
       responses:
-        '200':
+        "200":
           description: Успешная регистрация
-        '400':
+        "400":
           description: Неверный формат данных
-        '409':
+        "409":
           description: Пользователь с таким адресом электронной почты уже существует
     get:
       description: Сервер возвращает HTML форму для регистрации
       operationId: lokir.registrationForm
       responses:
-        '200':
+        "200":
           description: Форма регистрации возвращена
           content:
             text/html:
@@ -182,19 +182,19 @@ paths:
               schema:
                   $ref: "#/components/schemas/LoginForm"
       responses:
-        '302':
+        "302":
           description: Успешная авторизация
-        '400':
+        "400":
           description: Неверный формат данных
-        '401':
+        "401":
           description: Неверный пароль
-        '404':
+        "404":
           description: Пользователь не найден
     get:
       description: Сервер возвращает HTML форму для авторизации
       operationId: lokir.authorizationForm
       responses:
-        '200':
+        "200":
           description: Форма для авторизации возвращена
           content:
             text/html:
@@ -205,7 +205,7 @@ paths:
       description: Сервер возвращает HTML форму для заказа
       operationId: lokir.order_get
       responses:
-        '200':
+        "200":
           description: Форма для заказа возвращена
           content:
             text/html:
@@ -221,3 +221,13 @@ paths:
           description: Заказ успешно создан
         "400": 
           description: Неверный формат данных
+  /refresh:
+    post:
+      responses:
+        "302":
+          description: Токен успешно обновлен
+        "401":
+          description: refresh токен истек
+
+          
+
