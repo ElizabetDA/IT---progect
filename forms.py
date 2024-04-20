@@ -37,15 +37,16 @@ class LoginForm(FlaskForm):
 class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки",
-                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
-                                                     \sд\.\s\d{1,3}$",
+                                  validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я] \
+                                                     +\sд\.\s\d{1,3}$",
                                                      message=message_adress)])
     dropoff_location = StringField("Место начала поездки",
-                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я]+\
-                                                      \sд\.\s\d{1,3}$",
+                                   validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я] \
+                                                      +\sд\.\s\d{1,3}$",
                                                       message=message_adress)])
 
 
+# Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_password = "Неверный пароль"
@@ -53,3 +54,13 @@ class ChangePasswordForm(FlaskForm):
         InputRequired(message=message_empty_field)])
     new_password = PasswordField("Введите новый пароль", validators=[
         InputRequired(message=message_empty_field)])
+
+
+# Класс рабочей страницы водителя
+class PassageForm(FlaskForm):
+    message_empty_field = "Поле не должно быть пустым"
+    message_adress = "Неверный формат адреса"
+    location = StringField("Местоположение водителя",
+                           validators=[Regexp(r"^ул\.\s[A-Za-zА-Яа-я] \
+                                              +\sд\.\s\d{1,3}$",
+                                              message=message_adress)])
