@@ -1,0 +1,15 @@
+<body>
+    <h1>Путь до конечной точке маршрута</h1>
+    <form method="post" action="/passage" novalidate>
+        {{ form.csrf_token }}
+        <p>
+            Местоположение клиента: {{ pickup_location }} <br>
+            Конечная точка поездки: {{ dropoff_location }} <br>
+            Cтоимость поездки: {{ fare }}
+        </p>
+    
+        <!-- Кнопка отправки формы -->
+        <input type="hidden" name="form_type" value="endTrip">
+        <input type="submit" value="Завершить поездку">
+    </form>
+    </body>
