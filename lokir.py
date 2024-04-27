@@ -363,3 +363,17 @@ def register_routes(app):
             trip_in_process.setCompleted()
             db.session.commit()
             return make_response(redirect(url_for("getDriverPassage")))
+
+    @app.route("/driver_account", methods=["GET"])
+    @driver_required()
+    def driverAccount():
+        # Получаем идентификатор авторизованного водителя из JWT токена
+        driver_id = get_jwt_identity()
+        # Извлекаем объект пользователя из базы данных по его идентификатору
+        driver = Driver.query.get(driver_id)
+        # Получаем заказы пользователя из связанной коллекции
+        driver_trips = driver.trips
+        # Рендерим шаблон driverAccount.html и передаем
+        # в него данные пользователя и его заказы
+        return render_template("driverAccount.html", driver=driver,
+                               trips=driver_trips)
