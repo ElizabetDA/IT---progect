@@ -331,6 +331,7 @@ paths:
   /passage:
     get:
       description: Информация о поездке
+      operationId: lokir.driverPassage
       responses:
         "200":
           description: Получены актуальные данные о поездке
@@ -343,6 +344,19 @@ paths:
           description: Переход на следующий этап поездки
         "400":
           description: Неверный формат данных или нет доступных заказов
+        "401":
+          description: Водитель не авторизован
+    /driver_account:
+    get:
+      description: Получение информации об аккаунте авторизованного водителя
+      operationId: lokir.driverAccount
+      responses:
+        "200":
+          description: Успешное получение информации об аккаунте
+          content:
+            text/html:
+              schema:
+                type: string
         "401":
           description: Водитель не авторизован
 
