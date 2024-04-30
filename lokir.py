@@ -12,7 +12,7 @@ from flask_jwt_extended import create_access_token, \
 def register_routes(app):
     @app.route("/")
     def index():
-        return "<h1> Hello </h1>"
+        return render_template("index.html")
 
     # Функция регистрации
     @app.route("/register", methods=["POST"])
