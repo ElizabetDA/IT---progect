@@ -3,9 +3,11 @@ from flask_jwt_extended import JWTManager
 from flask import Flask
 from lokir import register_routes
 from flask_wtf.csrf import CSRFProtect
+import os
 
 # Создание экземпляра Flask приложения
 app = Flask(__name__)
+app.static_folder = os.path.join(app.root_path, 'static')
 jwt = JWTManager(app)
 
 # Загрузка конфигурации Flask приложения
