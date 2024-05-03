@@ -35,6 +35,7 @@ class Trip(db.Model):
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
+    len_way = db.Column(db.String(50), nullable=False)
 
     def changeStatus(self, status):
         self.status = status
@@ -47,9 +48,8 @@ class Trip(db.Model):
                 f"Driver: {self.driver.name if self.driver else None}, \
                 Status: {self.status}")
 
-    @staticmethod
-    def calculateFare(pickup_location, dropoff_location):
-        return 1000
+    def calculateFare(lenWay):
+        return lenWay * 0.02 + 100
 
     def setCompleted(self):
         self.status = "Завершен"
