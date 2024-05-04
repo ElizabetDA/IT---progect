@@ -5,10 +5,10 @@ from forms import RegistrationForm, LoginForm, TripForm, \
     ChangePasswordForm, PassageForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
-import hashlib
 from flask_jwt_extended import create_access_token, \
     jwt_required, get_jwt_identity, create_refresh_token, get_jwt
 from jwtCheck import driver_required, client_required
+import bcrypt
 
 
 # Функция получения домашней страницы
@@ -18,6 +18,7 @@ def register_routes(app):
         return "<h1> Hello </h1>"
 
     # Функция регистрации
+    # Функция регистрации
     @app.route("/register", methods=["POST"])
     def registration():
         form = RegistrationForm(request.form)
@@ -26,7 +27,8 @@ def register_routes(app):
             username = form.username.data
             email = form.email.data
             password = form.password.data
-            password_hash = hashlib.sha256(password.encode()).hexdigest()
+            password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
             print(username, email, password_hash)
             if User.query.filter_by(email=email).first():
                 return (
@@ -46,7 +48,7 @@ def register_routes(app):
             db.session.commit()
             # Все успешно
             return jsonify({"message":
-                            "Пользователь успешно зарегистрирован"}), 200
+                                "Пользователь успешно зарегистрирован"}), 200
 
         # Возвращение подсказок пользователю
         return make_response(render_template("register.html", form=form), 400)
@@ -61,16 +63,16 @@ def register_routes(app):
     @app.route("/login", methods=["POST"])
     def authorization():
         form = LoginForm(request.form)
-        # Валидация
         if form.validate_on_submit() is True:
             try:
                 email = form.email.data
+
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
                 # Сравниваем хэш введенного пароля с
                 # хэшем пароля найденного пользователя
-                password_hash = hashlib.sha256(password.encode()).hexdigest()
-                if password_hash == user.password_hash:
+
+                if user.checkPassword(password):
                     # Создание токена и переход на страницу создания заказа
                     # для уже авторизованного пользователя
                     access_token = create_access_token(identity=user.id,
@@ -178,23 +180,19 @@ def register_routes(app):
             # из базы данных по его идентификатору
             user = User.query.get(user_id)
 
-            # Хешируем старый пароль из формы
-            old_password_hash = hashlib.sha256
-            (form.old_password.data.encode()).hexdigest()
+            # Проверяем, совпадает ли старый пароль
+            if not user.checkPassword(form.old_password.data):
+                return jsonify({"message": "Неверный старый пароль"}), 400
 
-            if old_password_hash != user.password_hash:
-                return jsonify({"message": "Текущий пароль неверный"}), 400
-
-            # Устанавливаем новый пароль для пользователя
+            # Изменяем пароль
             user.changePassword(form.new_password.data)
-
-            # Добавляем измененного пользователя в сессию базы данных
-            db.session.add(user)
 
             # Сохраняем изменения в базе данных
             db.session.commit()
 
             return jsonify({"message": "Пароль успешно изменен"}), 200
+        else:
+            return jsonify({"message": "Ошибка валидации формы"}), 400
 
     # Функция обновления access_token
     @app.route("/refresh", methods=["POST"])
@@ -234,8 +232,8 @@ def register_routes(app):
                 driver = Driver.query.filter_by(email=email).one()
                 # Сравниваем хэш введенного пароля с
                 # хэшем пароля найденного водителя
-                password_hash = hashlib.sha256(password.encode()).hexdigest()
-                if password_hash == driver.password_hash:
+
+                if driver.checkPassword(password):
                     # Создание токена и переход на страницу создания заказа
                     # для уже авторизованного водителя
                     access_token = create_access_token(identity=driver.id,

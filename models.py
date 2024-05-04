@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+
 from datetime import datetime
 import pytz
-import hashlib
+import bcrypt
 
 db = SQLAlchemy()
 
@@ -18,7 +19,10 @@ class User(db.Model):
         return f"User {self.email}"
 
     def changePassword(self, password):
-        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
+        self.password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+    def checkPassword(self, password):
+        return bcrypt.checkpw(password.encode(), self.password_hash)
 
 
 class Trip(db.Model):
@@ -80,3 +84,9 @@ class Driver(db.Model):
     def __repr__(self):
         return f"Driver {self.name}, Car {self.car_model}, \
     Phone: {self.phone_number}"
+
+    def changePassword(self, password):
+        self.password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+    def checkPassword(self, password):
+        return bcrypt.checkpw(password.encode(), self.password_hash)
