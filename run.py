@@ -4,7 +4,6 @@ from flask import Flask
 from lokir import register_routes
 from flask_wtf.csrf import CSRFProtect
 import os
-import hashlib
 
 # Создание экземпляра Flask приложения
 app = Flask(__name__)
