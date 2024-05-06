@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import pytz
 import hashlib
+import math
 
 db = SQLAlchemy()
 
@@ -49,7 +50,7 @@ class Trip(db.Model):
                 Status: {self.status}")
 
     def calculateFare(lenWay):
-        return lenWay * 0.02 + 100
+        return math.ceil(lenWay * 0.02 + 100)
 
     def setCompleted(self):
         self.status = "Завершен"
