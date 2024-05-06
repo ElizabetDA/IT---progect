@@ -40,6 +40,7 @@ class TripForm(FlaskForm):
     dropoff_location = StringField("Место начала поездки")
 
 
+
 # Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
