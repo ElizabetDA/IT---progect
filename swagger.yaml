@@ -217,7 +217,7 @@ paths:
   /order:
     get:
       description: Сервер возвращает HTML форму для заказа
-      operationId: lokir.order_get
+      operationId: lokir.orderGet
       responses:
         "200":
           description: Форма для заказа возвращена
@@ -229,7 +229,7 @@ paths:
           description: Пользователь неавторизован(токен неверный или время его действия истекло)
     post:
       description: Получение данных о заказе сервером
-      operationId: lokir.order_create
+      operationId: lokir.orderCreate
       responses:
         "200":
           description: Заказ успешно создан
@@ -240,64 +240,125 @@ paths:
       description: Получение информации об аккаунте авторизованного пользователя
       operationId: lokir.account
       responses:
-        '200':
+        "200":
           description: Успешное получение информации об аккаунте
           content:
             text/html:
               schema:
                 type: string
-        '401':
+        "401":
           description: Пользователь не авторизован
   /logout:
     get:
       description: Выход из аккаунта авторизованного пользователя
       operationId: lokir.logout
       responses:
-        '302':
+        "302":
           description: Успешный выход из аккаунта
           headers:
             Location:
               schema:
                 type: string
               description: URL для перенаправления после выхода
-        '401':
+        "401":
           description: Пользователь не авторизован
   /change_password:
     get:
       description: Получение формы для смены пароля авторизованного пользователя
-      operationId: lokir.change_password_get
+      operationId: lokir.changePasswordGet
       responses:
-        '200':
+        "200":
           description: Успешное получение формы для смены пароля
           content:
             text/html:
               schema:
                 type: string
-        '401':
+        "401":
           description: Пользователь не авторизован
     post:
       description: Смена пароля авторизованного пользователя
-      operationId: lokir.change_password
+      operationId: lokir.changePassword
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ChangePasswordForm'
+              $ref: "#/components/schemas/ChangePasswordForm"
       responses:
-        '200':
+        "200":
           description: Успешная смена пароля
-        '400':
+        "400":
           description: Неверный текущий пароль
-        '401':
+        "401":
           description: Пользователь не авторизован
   /refresh:
     post:
+      operationId: lokir.refreshToken
       responses:
         "302":
           description: Токен успешно обновлен
         "401":
           description: refresh токен истек
+  /driver_login:
+    post:
+      description: Авторизация водителя
+      operationId: lokir.driverAuthorization
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/LoginForm"
+      responses:
+        "302":
+          description: Успешная авторизация
+        "400":
+          description: Неверный формат данных
+        "401":
+          description: Неверный пароль
+        "404":
+          description: Водитель не найден
+    get:
+      description: Сервер возвращает HTML форму для авторизации
+      operationId: lokir.driverAuthorizationForm
+      responses:
+        "200":
+          description: Форма для авторизации возвращена
+          content:
+            text/html:
+              schema:
+                type: string
+  /passage:
+    get:
+      description: Информация о поездке
+      operationId: lokir.driverPassage
+      responses:
+        "200":
+          description: Получены актуальные данные о поездке
+        "401":
+          description: Водитель не авторизован
+    post:
+      description: Выполняет поиск заказов, начало и завершение поездок.
+      responses:
+        "200":
+          description: Переход на следующий этап поездки
+        "400":
+          description: Неверный формат данных или нет доступных заказов
+        "401":
+          description: Водитель не авторизован
+    /driver_account:
+    get:
+      description: Получение информации об аккаунте авторизованного водителя
+      operationId: lokir.driverAccount
+      responses:
+        "200":
+          description: Успешное получение информации об аккаунте
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Водитель не авторизован
 
           
 
