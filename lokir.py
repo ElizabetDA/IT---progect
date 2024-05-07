@@ -15,7 +15,7 @@ from jwtCheck import driver_required, client_required
 def register_routes(app):
     @app.route("/")
     def index():
-        return "<h1> Hello </h1>"
+        return render_template("index.html")
 
     # Функция регистрации
     @app.route("/register", methods=["POST"])
