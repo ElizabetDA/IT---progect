@@ -11,7 +11,33 @@
             Расстояние: {{ trip.len_way }} м. <br>
             Стоимость: {{ trip.fare }} Р.<br>
             Статус: {{ trip.status }}
+            {% if trip.status == 'Завершена' %}
+                {% if not trip.driving_sum %}
+                    <form method="post" action="/account" novalidate>
+                        {{ form.csrf_token }}
+                        <p>
+                            {{ form.driving_score.label }} {{ form.driving_score(size=5) }}
+                            {% for error in form.driving_score.errors %}
+                                {{ error }}
+                            {% endfor %}
+                            <br>
+                            {{ form.driving_comfort.label }} {{ form.driving_comfort(size=5) }}
+                            {% for error in form.driving_comfort.errors %}
+                                {{ error }}
+                            {% endfor %}
+                            <br>
+                            {{ form.driving_polite.label }} {{ form.driving_polite(size=5) }}
+                            {% for error in form.driving_polite.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </p>
+                        <input type="hidden" name="trip_id" value={{ trip.id }}>
+                        <input type="submit" value="Оставить отзыв">
+                    </form>
+                {% else %}
+                    <p>Оценка: {{ trip.driving_sum }}</p>
+                {% endif %}
+            {% endif %}
         </li>
-        <br><br>
     {% endfor %}
 </ul>
