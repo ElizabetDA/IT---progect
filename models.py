@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
+from sqlalchemy.event import listens_for
 from datetime import datetime
 import pytz
 import hashlib
@@ -37,9 +39,20 @@ class Trip(db.Model):
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
     len_way = db.Column(db.String(50), nullable=False)
+    driving_score = db.Column(db.Integer)
+    driving_comfort = db.Column(db.Integer)
+    driving_polite = db.Column(db.Integer)
+    driving_sum = db.Column(db.Float)
 
     def changeStatus(self, status):
         self.status = status
+
+    def changeScore(self, driving_score, driving_comfort, driving_polite):
+        self.driving_score = driving_score
+        self.driving_comfort = driving_comfort
+        self.driving_polite = driving_polite
+        self.driving_sum = round((driving_score +
+                                  driving_comfort + driving_polite) / 3, 2)
 
     def chandeDriverId(self, driver_id):
         self.driver_id = driver_id
@@ -53,7 +66,7 @@ class Trip(db.Model):
         return math.ceil(lenWay * 0.02 + 100)
 
     def setCompleted(self):
-        self.status = "Завершен"
+        self.status = "Завершена"
         self.end_time = datetime.now(pytz.timezone("Europe/Moscow"))
 
 
@@ -71,6 +84,11 @@ class Driver(db.Model):
     location = db.Column(db.String(100), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
     trips = db.relationship("Trip", backref="driver", lazy="dynamic")
+    raiting = db.Column(db.Float)
+
+    def updateRaiting(self):
+        self.raiting = round(db.session.query(func.avg(
+            Trip.driving_sum)).filter(Trip.driver_id == self.id).scalar(), 2)
 
     def changeAvailability(self, availability):
         self.availability = availability
@@ -81,3 +99,4 @@ class Driver(db.Model):
     def __repr__(self):
         return f"Driver {self.name}, Car {self.car_model}, \
     Phone: {self.phone_number}"
+
