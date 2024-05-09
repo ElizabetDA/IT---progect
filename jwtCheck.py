@@ -27,10 +27,9 @@ def client_required():
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
             claims = get_jwt()
-            try:
-                claims["client"]
+            if claims["client"]:
                 return fn(*args, **kwargs)
-            except:
+            else:
                 return jsonify(msg="Доступ запрещен"), 403
 
         return decorator
