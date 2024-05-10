@@ -1,0 +1,72 @@
+body {
+    background-image: url("../images/background_login.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+/* Стилизуем поля для ввода почты и пароля */
+.input-field {
+    width: calc(100% - 22px); /* Устанавливаем ширину, учитывая padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Стилизуем кнопку отправки формы */
+input[type="submit"] {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #333;
+}
+
+/* Добавляем стили для ссылки на регистрацию */
+.register-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: inline-block; /* Делаем элемент блочным */
+    padding: 10px 20px; /* Задаем отступы */
+    background-color: black;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.register-link:hover {
+    background-color: #333;
+}
+
+/* Добавляем стили для контейнера регистрации */
+.register-container {
+    margin-top: 20px; /* Отступ сверху */
+}
