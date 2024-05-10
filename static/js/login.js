@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик отправки формы
     document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-        
+
         // Получаем данные из полей формы
         var formData = new FormData(this);
 
@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             // Обрабатываем успешный ответ от сервера
             console.log(data);
-            // Дополнительные действия, например, перенаправление пользователя на другую страницу
+            // Перенаправляем пользователя на страницу order.html
+            window.location.href = '/order.html';
         })
         .catch(error => {
             // Обрабатываем ошибки
