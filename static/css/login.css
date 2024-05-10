@@ -1,5 +1,5 @@
 body {
-    background-image: url("../images/background_login.jpg");
+    background-image: url("../images/background_12.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     font-family: Arial, sans-serif;
@@ -18,6 +18,11 @@ form {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: center;
+}
+
+/* Стилизуем контейнер для слова "Авторизация" */
+h1 {
+    margin-left: 23%;
 }
 
 /* Стилизуем поля для ввода почты и пароля */
@@ -60,6 +65,7 @@ input[type="submit"]:hover {
     background-color: black;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    margin-left: 32%;
 }
 
 .register-link:hover {
