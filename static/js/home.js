@@ -37,6 +37,9 @@ function initMap() {
 
                         // Обновляем значение поля "Откуда"
                         document.getElementById('pickupLocation').value = address;
+
+                        // Центрируем карту на текущем местоположении
+                        centerMap(address);
                     }
                 }
             };
@@ -48,6 +51,34 @@ function initMap() {
     } else {
         console.log('Геолокация не поддерживается данным браузером.');
     }
+
+    // Обработчик события нажатия клавиши Enter в поле "Откуда"
+    document.getElementById('pickupLocation').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            var address = this.value;
+            centerMap(address);
+        }
+    });
+}
+
+// Функция для центрирования и приближения карты к указанному адресу
+function centerMap(address) {
+    // Получаем координаты по адресу
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address);
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                var coords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+                map.setView(coords, 15); // Центрируем карту на указанных координатах
+                // Добавляем маркер на указанные координаты
+                var marker = DG.marker(coords).addTo(map);
+                marker.bindPopup(address).openPopup(); // Показываем всплывающее окно с указанным адресом
+            } else {
+                console.log('Адрес не найден.');
+            }
+        })
+        .catch(error => console.log('Ошибка при получении координат:', error));
 }
 
 // Запускаем инициализацию карты после загрузки страницы

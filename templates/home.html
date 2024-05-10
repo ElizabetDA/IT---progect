@@ -9,13 +9,22 @@
 <body>
     <div class="map-container" id="map"></div> <!-- Контейнер для карты -->
 
+    <div class="top-bar">
+        <div>
+            <button>О нас</button>
+            <button>Контакты</button>
+            <button>Q & A</button>
+        </div>
+        <button class="account-button" onclick="location.href='/account.html';">Аккаунт</button>
+    </div>
+
     <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
         <input type="text" id="pickupLocation" placeholder="Откуда">
         <input type="text" id="dropoffLocation" placeholder="Куда">
         <button class="auth-button" onclick="location.href='/login';">Авторизоваться для заказа</button> <!-- Кнопка -->
     </div>
 
-    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script> <!-- Подключаем API 2GIS -->
+    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full7KEY=261dd9c7-7968-4e32-924a-14a15afb00c7"></script> <!-- Подключаем API 2GIS -->
     <script src="../static/js/home.js"></script> <!-- Подключаем файл скриптов -->
 </body>
 </html>
