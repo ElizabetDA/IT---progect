@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static\main.css">
+    <link rel="stylesheet" href="static\booking.css">
+    <link rel="stylesheet" href="static\lk.css">
+    <title>Таксисты</title>
+</head>
+<body>
+    <header>
+        <h1>Таксисты</h1>
+        <img src="static/images/taxi_logo.png" alt="taxi logo" width="90px" height="30px">
+        <p>тише едешь, дальше будешь</p>
+    </header>
+
+    <section class="main-content">
+        <div class="box">
+            <a href="index.html"><h2>Главная</h2></a>
+        </div>
+        <div class="box">
+            <a href="account.html"><h2>Личный кабинет</h2></a>
+
+        </div>
+        <div class="box">
+            <a href="about.html"><h2>О нас</h2></a>
+        </div>
+
+    </section>
+    <div>
+        <img src="static/images/taxi1.jpg" width="487px" height="320px">
+        <img src="static/images/taxi2.jpg" width="487px" height="320px">
+        <img src="static/images/taxi3.jpg" width="487px" height="320px">
+    </div>
+    <main>
+        <form style="border:1px solid #ccc">
+            <div class="container">
+              <div class="clearfix">
+                <a href="register.html"><button type="button" class="regbtn">Регистрация</button></a>
+                <a href="login.html"><button type="button" class="regbtn">Вход</button></a>
+              </div>
+            </div>
+          </form>
+          <form style="border:1px solid #ccc">
+            <div class="container">
+                <h1>Личный кабинет</h1>
+                <p>Имя пользователя: {{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
+
+                <h2>Мои заказы</h2>
+                <ul>
+                    {% for trip in trips %}
+                        <li>
+                            <strong>Откуда:</strong> {{ trip.pickup_location }} <br>
+                            <strong>Куда:</strong> {{ trip.dropoff_location }} <br>
+                            <strong>Стоимость:</strong> {{ trip.fare }} <br>
+                            <strong>Статус:</strong> {{ trip.status }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+          </form>
+    </main>
+    <footer>
+        <p>8-800-535-35-35</p>
+        <a href="https://youtu.be/dQw4w9WgXcQ?si=DU9QuHfIWFx7K5HS"><img src="static/images/git.jpg" alt="гитхаб иконка" width="60px"></a>
+        <p>&copy; 2024 Таксисты. Все права защищены.</p>
+    </footer>
+</body>
+</html>
