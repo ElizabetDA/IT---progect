@@ -1,0 +1,21 @@
+<body>
+    <h1>Начать выполнять заказ</h1>
+    <form id="passageForm" method="post" action="/passage" enctype="multipart/form-data" novalidate>
+        <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
+        {{ form.csrf_token }}
+        <!-- Поле для ввода места начала поездки -->
+        <p>
+            {{ form.location.label }}
+            {{ form.location() }}
+            <!-- Вывод ошибок валидации места начала поездки -->
+            {% for error in form.location.errors %}
+                {{ error }}
+            {% endfor %}
+        </p>
+    
+        <!-- Поле для ввода места окончания поездки -->
+        <!-- Кнопка отправки формы -->
+        <input type="hidden" name="form_type" value="findOrder">
+        <input type="submit" value="Поиск заказа">
+    </form>
+    </body>
