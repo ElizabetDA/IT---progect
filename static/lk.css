@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, sans-serif; /* Устанавливаем шрифт */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Цвет фона */
+}
+
+.container {
+    max-width: 800px; /* Ширина контейнера */
+    margin: 20px auto; /* Выравнивание по центру */
+    background-color: #fff; /* Цвет фона контейнера */
+    padding: 20px;
+    border-radius: 8px; /* Закругляем углы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень блока */
+}
+
+h1 {
+    color: #333; /* Цвет заголовка */
+}
+
+p {
+    margin: 5px 0; /* Отступы абзацев */
+}
+
+ul {
+    list-style-type: none; /* Убираем маркеры списка */
+    padding: 0;
+}
+
+li {
+    margin-bottom: 20px; /* Отступ между элементами списка */
+    padding: 10px;
+    background-color: #f9f9f9; /* Цвет фона элемента списка */
+    border-radius: 8px; /* Закругляем углы */
+}
+
+h2 {
+    margin-top: 30px; /* Отступ сверху для второго заголовка */
+}

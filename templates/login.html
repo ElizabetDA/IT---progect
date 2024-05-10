@@ -1,96 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Booking</title>
-    <style>
-        body {
-            font-family: "Montserrat", sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #3B3052;
-        }
-
-        .container {
-            background-color: #FAF9FC;
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        form {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: #191919;
-        }
-
-        label {
-            margin-bottom: 10px;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="submit"],
-        button {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 20px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        input[type="email"] {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 20px;
-            outline: none;
-            background-color: #FAF9FC;
-            color: #3B3052;
-        }
-    </style>
+    <link rel="stylesheet" href="static\main.css">
+    <link rel="stylesheet" href="static\booking.css">
+    <title>Таксисты</title>
 </head>
 <body>
-    <h1>Авторизация</h1>
-    <!-- Создаем форму используя Jinja -->
-    <form method="post" action="/login" enctype="multipart/form-data" novalidate>
-        <!-- Защита от подделки межсайтовых запросов-->
-        {{ form.csrf_token }}
-        <!-- Получаем значения из полей -->
-        <p>
-            <!-- Валидация Электронной почты-->
-            {{ form.email.label }} {{ form.email() }}
-            {% for error in form.email.errors %}
-                {{ error }}
-            {% endfor %}
-        </p>
-        <p>
-            <!-- Валидация Пароля-->
-            {{ form.password.label }} {{ form.password() }}
-            {% for error in form.password.errors %}
-                {{ error }}
-            {% endfor %}
-        </p>
-        <input type="submit" value="Авторизоваться">
-    </form>
+    <header>
+        <h1>Таксисты</h1>
+        <img src="static/images/taxi_logo.png" alt="taxi logo" width="90px" height="30px">
+        <p>тише едешь, дальше будешь</p>
+    </header>
+
+    <section class="main-content">
+        <div class="box">
+            <a href="index.html"><h2>Главная</h2></a>
+        </div>
+        <div class="box">
+            <a href="account.html"><h2>Личный кабинет</h2></a>
+
+        </div>
+        <div class="box">
+            <a href="about.html"><h2>О нас</h2></a>
+        </div>
+
+    </section>
+    <div>
+        <img src="static/images/taxi1.jpg" width="487px" height="320px">
+        <img src="static/images/taxi2.jpg" width="487px" height="320px">
+        <img src="static/images/taxi3.jpg" width="487px" height="320px">
+    </div>
+    <main>
+        <form style="border:1px solid #ccc">
+  <div class="container">
+    <h1>Вход</h1>
+    <p>Пожалуйста, заполните эту форму, чтобы войти в учетную запись.</p>
+    <hr>
+
+    <label id="email"><b>Email</b></label>
+    <input type="text" placeholder="Введите вашу почту" name="email" required>
+
+    <label id="psw"><b>Пароль</b></label>
+    <input type="password" placeholder="Введите пароль" name="psw" required>
+
+    <label>
+      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Запомнить меня
+    </label>
+
+    <div class="clearfix">
+      <button type="button" class="cancelbtn">Отменить</button>
+      <button type="submit" class="signupbtn">Вход</button>
+    </div>
+  <div>
+    <p>Нет учетной записи?</p>
+    <a href="register.html"><p>Зарегистрироваться</p></a>
+</div>
+  </div>
+</form>
+    </main>
+    <footer>
+        <p>8-800-535-35-35</p>
+        <a href="https://youtu.be/dQw4w9WgXcQ?si=DU9QuHfIWFx7K5HS"><img src="static/images/git.jpg" alt="гитхаб иконка" width="60px"></a>
+        <p>&copy; 2024 Таксисты. Все права защищены.</p>
+    </footer>
 </body>
 </html>

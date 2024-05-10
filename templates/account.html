@@ -1,16 +1,69 @@
-<h1>Личный кабинет</h1>
-<p>Имя пользователя: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/main.css">
+    <link rel="stylesheet" href="static/booking.css">
+    <title>Таксисты</title>
+</head>
+<body>
+    <header>
+        <h1>Таксисты</h1>
+        <img src="static/images/taxi_logo.png" alt="taxi logo" width="90px" height="30px">
+        <p>тише едешь, дальше будешь</p>
+    </header>
 
-<h2>Мои заказы</h2>
-<ul>
-    {% for trip in trips %}
-        <li>
-            Откуда: {{ trip.pickup_location }} <br>
-            Куда: {{ trip.dropoff_location }} <br>
-            Стоимость: {{ trip.fare }} <br>
-            Статус: {{ trip.status }}
-        </li>
-        <br><br>
-    {% endfor %}
-</ul>
+    <section class="main-content">
+        <div class="box">
+            <a href="index.html"><h2>Главная</h2></a>
+        </div>
+        <div class="box">
+            <a href="account.html"><h2>Личный кабинет</h2></a>
+
+        </div>
+        <div class="box">
+            <a href="about.html"><h2>О нас</h2></a>
+        </div>
+        <div class="box">
+            <a href="sersices.html"><h2>Услуги</h2></a>
+        </div>
+    </section>
+    <div>
+        <img src="static/images/taxi1.jpg" width="487px" height="320px">
+        <img src="static/images/taxi2.jpg" width="487px" height="320px">
+        <img src="static/images/taxi3.jpg" width="487px" height="320px">
+    </div>
+    <main>
+        <form style="border:1px solid #ccc">
+  <div class="container">
+    <h1>Форма регистрации</h1>
+    <p>Пожалуйста, заполните эту форму, чтобы создать учетную запись.</p>
+    <hr>
+
+    <label id="email"><b>Email</b></label>
+    <input type="text" placeholder="Введите вашу почту" name="email" required>
+
+    <label id="psw"><b>Пароль</b></label>
+    <input type="password" placeholder="Введите пароль" name="psw" required>
+
+    <label>
+      <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Запомнить меня
+    </label>
+
+    <p>Создавая учетную запись, вы соглашаетесь с нашим <a href="https://youtu.be/dQw4w9WgXcQ?si=DU9QuHfIWFx7K5HS" style="color:dodgerblue">Условия и конфиденциальность</a>.</p>
+
+    <div class="clearfix">
+      <button type="button" class="cancelbtn">Отменить</button>
+      <button type="submit" class="signupbtn">Вход</button>
+    </div>
+  </div>
+</form>
+    </main>
+    <footer>
+        <p>8-800-535-35-35</p>
+        <a href="https://youtu.be/dQw4w9WgXcQ?si=DU9QuHfIWFx7K5HS"><img src="static/images/git.jpg" alt="гитхаб иконка" width="60px"></a>
+        <p>&copy; 2024 Таксисты. Все права защищены.</p>
+    </footer>
+</body>
+</html>
