@@ -7,36 +7,47 @@ function initMap() {
         zoom: 10 // Начальное масштабирование карты
     });
 
-    // Функция для обновления значения поля "Откуда"
-    function updatePickupLocation(address) {
-        document.getElementById('pickupLocation').value = address;
-    }
+    // Получаем текущее местоположение пользователя
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var userCoords = [position.coords.latitude, position.coords.longitude];
+            // Используем местоположение пользователя в качестве центра карты
+            map.setView(userCoords, 15); // Устанавливаем приближение на местоположение пользователя
 
-    // Функция для обработки события ввода адреса пользователем
-    function handleAddressInput() {
-        var inputAddress = document.getElementById('pickupLocation').value;
+            // Добавляем маркер на местоположение пользователя
+            var userMarker = DG.marker(userCoords).addTo(map);
+            userMarker.bindPopup('Ваше местоположение').openPopup(); // Отображаем всплывающее окно с названием местоположения
 
-        // Выполняем геокодирование введенного адреса
-        DG.geocoding().text(inputAddress).run(function (error, response) {
-            if (!error && response.results && response.results.length > 0) {
-                // Получаем координаты найденного адреса
-                var coords = response.results[0].position;
+            // Получаем адрес по координатам пользователя
+            var xhr = new XMLHttpRequest();
+            var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + userCoords[0] + '&lon=' + userCoords[1] + '&zoom=18&addressdetails=1';
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response && response.address) {
+                        var addressDetails = response.address;
 
-                // Устанавливаем центр карты и масштаб на найденный адрес
-                map.setView(coords, 15);
-                map.panTo(coords); // Центрируем карту на найденном адресе
+                        // Получаем необходимые части адреса (например, улицу и город)
+                        var street = addressDetails.road || '';
+                        var city = addressDetails.city || '';
+                        var address = street + ', ' + city;
 
-                // Обновляем значение поля "Откуда"
-                updatePickupLocation(inputAddress);
-            }
+                        console.log('Ваше местоположение:', address);
+
+                        // Обновляем значение поля "Откуда"
+                        document.getElementById('pickupLocation').value = address;
+                    }
+                }
+            };
+            xhr.send(null);
+
+        }, function () {
+            console.log('Не удалось получить текущее местоположение.');
         });
+    } else {
+        console.log('Геолокация не поддерживается данным браузером.');
     }
-
-    // Добавляем обработчик события ввода адреса
-    document.getElementById('pickupLocation').addEventListener('input', handleAddressInput);
-
-    // При загрузке страницы выполняем инициализацию карты
-    handleAddressInput();
 }
 
 // Запускаем инициализацию карты после загрузки страницы
