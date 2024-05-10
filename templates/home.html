@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Auth Button</title>
+    <link rel="stylesheet" href="../static/css/home.css"> <!-- Подключаем файл стилей -->
+</head>
+<body>
+    <div class="map-container" id="map"></div> <!-- Контейнер для карты -->
+
+    <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
+        <input type="text" id="pickupLocation" placeholder="Откуда">
+        <input type="text" id="dropoffLocation" placeholder="Куда">
+        <button class="auth-button" onclick="location.href='/login';">Авторизоваться для заказа</button> <!-- Кнопка -->
+    </div>
+
+    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script> <!-- Подключаем API 2GIS -->
+    <script src="../static/js/home.js"></script> <!-- Подключаем файл скриптов -->
+</body>
+</html>

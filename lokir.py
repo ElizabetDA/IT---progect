@@ -9,14 +9,13 @@ import hashlib
 from flask_jwt_extended import create_access_token, \
     jwt_required, get_jwt_identity, create_refresh_token, get_jwt
 from jwtCheck import driver_required, client_required
-from api import lenWay
 
 
 # Функция получения домашней страницы
 def register_routes(app):
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return render_template("home.html")
 
     # Функция регистрации
     @app.route("/register", methods=["POST"])
@@ -116,14 +115,12 @@ def register_routes(app):
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
             user_id = get_jwt_identity()
-            # Расчет длины маршрута
-            len_way = lenWay(pickup_location, dropoff_location)
-            fare = Trip.calculateFare(len_way)
+            fare = Trip.calculateFare(pickup_location, dropoff_location)
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании", len_way=len_way)
+                            status="В ожидании")
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)

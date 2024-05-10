@@ -1,0 +1,50 @@
+/* Стили для контейнера карты */
+.map-container {
+    width: 100vw; /* Полная ширина экрана */
+    height: 100vh; /* Полная высота экрана */
+    position: relative; /* Добавлено позиционирование */
+}
+
+/* Стили для полей ввода и кнопки */
+.button-input-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 10px; /* Отступ слева */
+    top: 50%; /* По центру высоты экрана */
+    transform: translateY(-50%); /* Центрируем по вертикали */
+    z-index: 2; /* Помещаем поверх карты */
+}
+
+.button-input-container input {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.auth-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-button:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для карты */
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Помещаем ниже полей и кнопки */
+    background-color: #ddd; /* Серый цвет вместо белого, чтобы отличить от фона */
+}
