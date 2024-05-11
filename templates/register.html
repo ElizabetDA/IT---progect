@@ -4,99 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taxi Booking</title>
-    <style>
-        body {
-            font-family: "Montserrat", sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #3B3052; /* Изменен цвет фона */
-        }
-
-        .container {
-            background-color: #FAF9FC; /* Фон отдельного окна */
-            padding: 50px;
-            border-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        form {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center; /* Центрируем надпись */
-            color: #191919; /* Изменяем цвет текста */
-        }
-
-        label {
-            margin-bottom: 10px;
-        }
-
-        input[type="text"],
-        input[type="password"],
-        input[type="submit"] {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 20px; /* Сделали поля овальными */
-            outline: none;
-            cursor: pointer; /* Изменяем вид курсора для кнопки */
-        }
-
-        input[type="email"] { /* Стили для поля электронной почты */
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 20px; /* Сделали поля овальными */
-            outline: none;
-            background-color: #FAF9FC; /* Фон поля */
-            color: #3B3052; /* Цвет текста */
-        }
-    </style>
+    <link rel="stylesheet" href="../static/css/register.css">
 </head>
 <body>
-<h1>Регистрация</h1>
-<!-- Создаем форму используя Jinja -->
-<form method="post" action="/register" enctype="multipart/form-data" novalidate>
-    <!-- Защита от подделки межсайтовых запросов-->
-    {{ form.csrf_token }}
-    <!-- Получаем значения из полей -->
-    <p>
-        <!-- Валидации имени (Только Кириллица)-->
-        {{ form.username.label }} {{ form.username() }}
-        {% for error in form.username.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
-    <p>
-        <!-- Валидация Электронной почты-->
-        {{ form.email.label }} {{ form.email() }}
-        {% for error in form.email.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
-    <p>
-        <!-- Валидация Пароля-->
-        {{ form.password.label }} {{ form.password() }}
-        {% for error in form.password.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
-    <input type="submit" value="Зарегистрироваться">
-</form>
+    <div class="container">
+        <h1>Регистрация</h1>
+        <form method="post" action="./templates/order.html" enctype="multipart/form-data" novalidate>
+            <!-- Защита от подделки межсайтовых запросов-->
+            {{ form.csrf_token }}
+            <!-- Получаем значения из полей -->
+            <p>
+                <!-- Валидации имени (Только Кириллица)-->
+                {{ form.username.label }} {{ form.username() }}
+                {% for error in form.username.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+            <p>
+                <!-- Валидация Электронной почты-->
+                {{ form.email.label }} {{ form.email() }}
+                {% for error in form.email.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+            <p>
+                <!-- Валидация Пароля-->
+                {{ form.password.label }} {{ form.password() }}
+                {% for error in form.password.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+            <input type="submit" value="Зарегистрироваться">
+        </form>
+    </div>
 </body>
 </html>
