@@ -30,6 +30,7 @@ class Trip(db.Model):
                           nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
+    payment_method = db.Column(db.String(60), nullable=False)
     start_time = db.Column(db.DateTime,
                            nullable=False, default=datetime.
                            now(pytz.timezone("Europe/Moscow")))
@@ -81,3 +82,33 @@ class Driver(db.Model):
     def __repr__(self):
         return f"Driver {self.name}, Car {self.car_model}, \
     Phone: {self.phone_number}"
+
+
+class Card(db.Model):
+    __tablename__ = 'cards'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    card_number = db.Column(db.String(64), nullable=False)
+    card_number_last4 = db.Column(db.String(4), nullable=False)
+    card_name = db.Column(db.String(64), nullable=False)
+    expiry_date = db.Column(db.String(64), nullable=False)
+    cvv = db.Column(db.Integer, nullable=False)
+    user = db.relationship('User', backref=db.backref('cards', lazy='dynamic'))
+
+    def __repr__(self):
+        return f"Card **** **** **** {self.card_number_last4} - User: {self.user.username}"
+
+    def hash_card_number(self):
+        self.card_number_last4 = self.card_number[-4:]
+        self.card_name = hashlib.sha256(self.card_number.encode()).hexdigest()
+        self.expiry_date = hashlib.sha256(str(self.expiry_date).encode()).hexdigest()
+        self.cvv = hashlib.sha256(str(self.cvv).encode()).hexdigest()
+
+    def validate_expiry_date(self):
+        try:
+            month, year = self.expiry_date.split('/')
+            expiry_date = datetime(int('20' + year), int(month), 1).date()
+            if expiry_date < datetime.now().date():
+                raise ValueError('Срок действия карты истек')
+        except ValueError as e:
+            raise e

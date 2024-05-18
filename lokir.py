@@ -1,8 +1,8 @@
 from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
-from models import db, User, Trip, Driver
+from models import db, User, Trip, Driver, Card
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm
+    ChangePasswordForm, PassageForm, CardForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 import hashlib
@@ -47,7 +47,7 @@ def register_routes(app):
             db.session.commit()
             # Все успешно
             return jsonify({"message":
-                            "Пользователь успешно зарегистрирован"}), 200
+                                "Пользователь успешно зарегистрирован"}), 200
 
         # Возвращение подсказок пользователю
         return make_response(render_template("register.html", form=form), 400)
@@ -98,7 +98,6 @@ def register_routes(app):
     @app.route("/login", methods=["GET"])
     def authorizationForm():
         form = LoginForm()
-        print("")
         return render_template("login.html", form=form)
 
     # Функция получения формы для заказа
@@ -116,11 +115,16 @@ def register_routes(app):
         if form.validate_on_submit() is True:
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
+            payment_method = form.payment_method.data
             user_id = get_jwt_identity()
+            user = User.query.get(user_id)
+            if payment_method == 'Карта' and user.cards.count() == 0:
+                return redirect(url_for('add_card'))
             len_way = lenWay(pickup_location, dropoff_location)
             fare = Trip.calculateFare(len_way)
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
+                            payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
                             status="В ожидании", len_way=len_way)
@@ -140,13 +144,13 @@ def register_routes(app):
 
         # Извлекаем объект пользователя из базы данных по его идентификатору
         user = User.query.get(user_id)
-
+        cards = user.cards.all()
         # Получаем заказы пользователя из связанной коллекции
         user_trips = user.trips
 
         # Рендерим шаблон account.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("account.html", user=user, trips=user_trips)
+        return render_template("account.html", user=user, trips=user_trips, cards=cards)
 
     @app.route("/logout", methods=["GET"])
     @jwt_required()
@@ -380,3 +384,28 @@ def register_routes(app):
         # в него данные пользователя и его заказы
         return render_template("driverAccount.html", driver=driver,
                                trips=driver_trips)
+
+    @app.route("/add_card", methods=["POST"])
+    @client_required()
+    def add_card():
+        form = CardForm(request.form)
+        if form.validate_on_submit():
+            user_id = get_jwt_identity()
+            card_number = form.card_number.data
+            card_name = form.card_name.data
+            expiry_date = form.expiry_date.data
+            cvv = form.cvv.data
+            new_card = Card(user_id=user_id, card_number=card_number, card_name=card_name, expiry_date=expiry_date,
+                            cvv=cvv)
+            new_card.validate_expiry_date()
+            new_card.hash_card_number()
+            db.session.add(new_card)
+            db.session.commit()
+            return jsonify({"message": "Карта успешно добавлена"}), 200
+        return make_response(render_template("add_card.html", form=form), 400)
+
+    @app.route("/add_card", methods=["GET"])
+    @client_required()
+    def get_add_card():
+        form = CardForm()
+        return render_template("add_card.html", form=form)
