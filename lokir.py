@@ -9,6 +9,7 @@ import hashlib
 from flask_jwt_extended import create_access_token, \
     jwt_required, get_jwt_identity, create_refresh_token, get_jwt
 from jwtCheck import driver_required, client_required
+from api import lenWay
 
 
 # Функция получения домашней страницы
@@ -97,6 +98,7 @@ def register_routes(app):
     @app.route("/login", methods=["GET"])
     def authorizationForm():
         form = LoginForm()
+        print("")
         return render_template("login.html", form=form)
 
     # Функция получения формы для заказа
@@ -111,23 +113,25 @@ def register_routes(app):
     @client_required()
     def orderCreate():
         form = TripForm(request.form)
-        if form.validate_on_submit() is True:
+        if form.validate_on_submit():
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
             user_id = get_jwt_identity()
-            fare = Trip.calculateFare(pickup_location, dropoff_location)
+            len_way = lenWay(pickup_location, dropoff_location)
+            fare = Trip.calculateFare(len_way)
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании")
+                            status="В ожидании", len_way=len_way)
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
             print(dropoff_location)
             return jsonify({"message": "Заказ успешно создан"}), 200
         # Возвращение подсказок пользователю
-        return make_response(render_template("order.html", form=form), 400)
+        errors = form.errors  # Получаем все ошибки валидации формы
+        return render_template("order.html", form=form, errors=errors), 400
 
     @app.route("/account", methods=["GET"])
     @client_required()

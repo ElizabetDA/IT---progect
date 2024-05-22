@@ -1,29 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map with Auth Button</title>
+    <link rel="stylesheet" href="../static/css/order.css"> <!-- Подключаем файл стилей -->
+</head>
 <body>
-<h1>Создать заказ</h1>
-<form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
-    <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
-    {{ form.csrf_token }}
-    <!-- Поле для ввода места начала поездки -->
-    <p>
-        {{ form.pickup_location.label }}
-        {{ form.pickup_location() }}
-        <!-- Вывод ошибок валидации места начала поездки -->
-        {% for error in form.pickup_location.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
+    <div class="map-container" id="map"></div> <!-- Контейнер для карты -->
 
-    <!-- Поле для ввода места окончания поездки -->
-    <p>
-        {{ form.dropoff_location.label }}
-        {{ form.dropoff_location() }}
-        <!-- Вывод ошибок валидации места окончания поездки -->
-        {% for error in form.dropoff_location.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
+    <div class="top-bar">
+        <div>
+            <button>О нас</button>
+            <button>Контакты</button>
+            <button>Q & A</button>
+            <button>Тарифы</button>
+        </div>
+        <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
+    </div>
 
-    <!-- Кнопка отправки формы -->
-    <input type="submit" value="Создать заказ">
-</form>
+    <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
+        <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
+            <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
+            {{ form.csrf_token }}
+            <!-- Поле для ввода места начала поездки -->
+            <p>
+                {{ form.pickup_location.label }}
+                {{ form.pickup_location() }}
+                <!-- Вывод ошибок валидации места начала поездки -->
+                {% for error in form.pickup_location.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+
+            <!-- Поле для ввода места окончания поездки -->
+            <p>
+                {{ form.dropoff_location.label }}
+                {{ form.dropoff_location() }}
+                <!-- Вывод ошибок валидации места окончания поездки -->
+                {% for error in form.dropoff_location.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+
+            <!-- Кнопка отправки формы -->
+            <input type="submit" class="auth-button" value="Создать заказ">
+        </form>
+    </div>
+
+    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full7KEY=261dd9c7-7968-4e32-924a-14a15afb00c7"></script> <!-- Подключаем API 2GIS -->
+    <script src="../static/js/order.js"></script> <!-- Подключаем файл скриптов -->
 </body>
+</html>
