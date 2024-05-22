@@ -411,7 +411,7 @@ def register_routes(app):
         form = CardForm()
         return render_template("add_card.html", form=form)
 
-    @app.route('/select_card', methods=['GET', 'POST'])
+    @app.route('/select_card', methods=['POST'])
     @client_required()
     def select_card():
         user_id = get_jwt_identity()
@@ -419,14 +419,18 @@ def register_routes(app):
         form = SelectCardForm(request.form)
         form.card.choices = [(card.id, f'**** **** **** {card.card_number_last4}') for card in user.cards.all()]
 
-        if request.method == 'POST' and form.validate_on_submit():
+        if form.validate_on_submit():
             selected_card_id = form.card.data
             trip = Trip.query.filter_by(user_id=user_id, status='В ожидании', payment_card_id=None).first()
             if trip:
                 trip.payment_card_id = selected_card_id
                 db.session.commit()
                 response = make_response(redirect(url_for('account')))
-
                 return response
+        return make_response(render_template("select_card.html", form=form), 400)
 
-        return render_template('select_card.html', form=form)
+    @app.route('/select_card', methods=['GET'])
+    @client_required()
+    def get_select_card():
+        form = SelectCardForm()
+        return render_template("select_card.html", form=form)
