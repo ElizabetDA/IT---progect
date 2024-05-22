@@ -393,12 +393,11 @@ def register_routes(app):
             db.session.commit()
 
             return jsonify({"message": "Имя успешно изменено"}), 200
-        else:
-            return jsonify({"message": "Имя не изменено"}), 400
+        return make_response(render_template("сhangeUsername.html", form=form), 400)
 
     @app.route("/change_username", methods=["GET"])
     @client_required()
     def changeUsernameGet():
         form = ChangeUsernameForm()
         # Рендерим шаблон change_password.html и передаем в него форму
-        return render_template("change_username.html", form=form)
+        return render_template("changeUsername.html", form=form)
