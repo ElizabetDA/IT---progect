@@ -2,7 +2,7 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver, Card
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm, CardForm
+    ChangePasswordForm, PassageForm, CardForm, SelectCardForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 import hashlib
@@ -117,9 +117,9 @@ def register_routes(app):
             dropoff_location = form.dropoff_location.data
             payment_method = form.payment_method.data
             user_id = get_jwt_identity()
-            user = User.query.get(user_id)
-            if payment_method == 'Карта' and user.cards.count() == 0:
-                return redirect(url_for('add_card'))
+            if payment_method == 'Карта':
+                return redirect(url_for('select_card'))
+
             len_way = lenWay(pickup_location, dropoff_location)
             fare = Trip.calculateFare(len_way)
             new_trip = Trip(pickup_location=pickup_location,
@@ -127,7 +127,8 @@ def register_routes(app):
                             payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании", len_way=len_way)
+                            status="В ожидании", len_way=len_way,
+                            payment_card_id=None)
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
@@ -409,3 +410,23 @@ def register_routes(app):
     def get_add_card():
         form = CardForm()
         return render_template("add_card.html", form=form)
+
+    @app.route('/select_card', methods=['GET', 'POST'])
+    @client_required()
+    def select_card():
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        form = SelectCardForm(request.form)
+        form.card.choices = [(card.id, f'**** **** **** {card.card_number_last4}') for card in user.cards.all()]
+
+        if request.method == 'POST' and form.validate_on_submit():
+            selected_card_id = form.card.data
+            trip = Trip.query.filter_by(user_id=user_id, status='В ожидании', payment_card_id=None).first()
+            if trip:
+                trip.payment_card_id = selected_card_id
+                db.session.commit()
+                response = make_response(redirect(url_for('account')))
+
+                return response
+
+        return render_template('select_card.html', form=form)

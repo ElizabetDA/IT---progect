@@ -31,6 +31,8 @@ class Trip(db.Model):
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
     payment_method = db.Column(db.String(60), nullable=False)
+    payment_card_id = db.Column(db.Integer, db.ForeignKey('cards.id'), nullable=True)
+    payment_card = db.relationship('Card', backref='trips')
     start_time = db.Column(db.DateTime,
                            nullable=False, default=datetime.
                            now(pytz.timezone("Europe/Moscow")))

@@ -41,6 +41,7 @@ class TripForm(FlaskForm):
     payment_method = SelectField('Способ оплаты', choices=[('Карта', 'Карта'), ('Наличные', 'Наличные')],
                                  validators=[InputRequired()])
 
+
 # Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
@@ -70,3 +71,7 @@ class CardForm(FlaskForm):
     expiry_date = StringField('Срок действия',
                               validators=[InputRequired(), Regexp(date_validate, message=message_date_validate)])
     cvv = StringField('CVV', validators=[InputRequired(), Length(min=3, max=3)])
+
+
+class SelectCardForm(FlaskForm):
+    card = SelectField('Выберите карту для оплаты', coerce=int)
