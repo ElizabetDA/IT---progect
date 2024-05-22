@@ -2,7 +2,8 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm
+    ChangePasswordForm, PassageForm, \
+    ChangeUsernameForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 from flask_jwt_extended import create_access_token, \
@@ -66,7 +67,6 @@ def register_routes(app):
         if form.validate_on_submit() is True:
             try:
                 email = form.email.data
-
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
                 # Сравниваем хэш введенного пароля с
@@ -375,3 +375,30 @@ def register_routes(app):
         # в него данные пользователя и его заказы
         return render_template("driverAccount.html", driver=driver,
                                trips=driver_trips)
+
+    @app.route("/change_username", methods=["POST"])
+    @client_required()
+    def changeUsername():
+        form = ChangeUsernameForm(request.form)
+        if form.validate_on_submit():
+            # Получаем идентификатор авторизованного пользователя из JWT токена
+            user_id = get_jwt_identity()
+
+            # Извлекаем объект пользователя
+            # из базы данных по его идентификатору
+            user = User.query.get(user_id)
+            user.username = form.new_username.data
+
+            # Сохраняем изменения в базе данных
+            db.session.commit()
+
+            return jsonify({"message": "Имя успешно изменено"}), 200
+        else:
+            return jsonify({"message": "Имя не изменено"}), 400
+
+    @app.route("/change_username", methods=["GET"])
+    @client_required()
+    def changeUsernameGet():
+        form = ChangeUsernameForm()
+        # Рендерим шаблон change_password.html и передаем в него форму
+        return render_template("change_username.html", form=form)

@@ -63,3 +63,8 @@ class PassageForm(FlaskForm):
     location = StringField("Местоположение водителя",
                            validators=[Regexp(adress_validate,
                                               message=message_adress)])
+
+
+class ChangeUsernameForm(FlaskForm):
+    message_empty_field = "Поле не должно быть пустым"
+    new_username = StringField("Введите новое имя", validators=[InputRequired(message=message_empty_field)])
