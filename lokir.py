@@ -113,7 +113,7 @@ def register_routes(app):
     @client_required()
     def orderCreate():
         form = TripForm(request.form)
-        if form.validate_on_submit() is True:
+        if form.validate_on_submit():
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
             user_id = get_jwt_identity()
@@ -130,7 +130,8 @@ def register_routes(app):
             print(dropoff_location)
             return jsonify({"message": "Заказ успешно создан"}), 200
         # Возвращение подсказок пользователю
-        return make_response(render_template("order.html", form=form), 400)
+        errors = form.errors  # Получаем все ошибки валидации формы
+        return render_template("order.html", form=form, errors=errors), 400
 
     @app.route("/account", methods=["GET"])
     @client_required()

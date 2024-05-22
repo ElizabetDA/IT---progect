@@ -1,17 +1,33 @@
-<h1>Личный кабинет</h1>
-<p>Имя пользователя: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="../static/css/account.css"> <!-- Подключаем файл стилей -->
+</head>
+<body>
+    <h1>Личный кабинет</h1>
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
 
-<h2>Мои заказы</h2>
-<ul>
-    {% for trip in trips %}
-        <li>
-            Откуда: {{ trip.pickup_location }} <br>
-            Куда: {{ trip.dropoff_location }} <br>
-            Расстояние: {{ trip.len_way }} м. <br>
-            Стоимость: {{ trip.fare }} Р.<br>
-            Статус: {{ trip.status }}
-        </li>
-        <br><br>
-    {% endfor %}
-</ul>
+    <h2>Мои заказы</h2>
+    <ul>
+        {% for trip in trips %}
+            <li>
+                Откуда: {{ trip.pickup_location }} <br>
+                Куда: {{ trip.dropoff_location }} <br>
+                Расстояние: {{ trip.len_way }} м. <br>
+                Стоимость: {{ trip.fare }} Р.<br>
+                Статус: {{ trip.status }}
+            </li>
+            <br><br>
+        {% endfor %}
+    </ul>
+
+    <!-- Кнопка для смены пароля -->
+    <button class="change-password-button" onclick="location.href='/change_password';">Сменить пароль</button>
+
+    <script src="../static/js/account.js"></script> <!-- Подключаем файл скриптов -->
+</body>
+</html>
