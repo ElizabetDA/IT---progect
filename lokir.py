@@ -9,6 +9,7 @@ from flask_wtf import FlaskForm
 from flask_jwt_extended import create_access_token, \
     jwt_required, get_jwt_identity, create_refresh_token, get_jwt
 from jwtCheck import driver_required, client_required
+from api import lenWay
 import bcrypt
 
 
@@ -16,7 +17,7 @@ import bcrypt
 def register_routes(app):
     @app.route("/")
     def index():
-        return "<h1> Hello </h1>"
+        return render_template("home.html")
 
     # Функция регистрации
     # Функция регистрации
@@ -99,6 +100,7 @@ def register_routes(app):
     @app.route("/login", methods=["GET"])
     def authorizationForm():
         form = LoginForm()
+        print("")
         return render_template("login.html", form=form)
 
     # Функция получения формы для заказа
@@ -117,12 +119,13 @@ def register_routes(app):
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
             user_id = get_jwt_identity()
-            fare = Trip.calculateFare(pickup_location, dropoff_location)
+            len_way = lenWay(pickup_location, dropoff_location)
+            fare = Trip.calculateFare(len_way)
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании")
+                            status="В ожидании", len_way=len_way)
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
