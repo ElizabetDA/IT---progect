@@ -146,6 +146,39 @@ components:
         - old_password
         - new_password
 
+    CardForm:
+      description: Форма для добавления карты
+      type: object
+      properties:
+        card_number:
+          description: Номер карты
+          type: string
+        card_name:
+          description: Имя на карте
+          type: string
+        expiry_date:
+          description: Срок действия
+          type: string
+        cvv:
+          description: CVV
+          type: string
+      required:
+        - card_number
+        - card_name
+        - expiry_date
+        - cvv
+
+    SelectCardForm:
+      description: Форма для выбора карты
+      type: object
+      properties:
+        card_id:
+          description: Идентификатор карты
+          type: integer
+      required:
+        - card_id
+
+
 paths:
   /:
     get:
@@ -346,7 +379,7 @@ paths:
           description: Неверный формат данных или нет доступных заказов
         "401":
           description: Водитель не авторизован
-    /driver_account:
+  /driver_account:
     get:
       description: Получение информации об аккаунте авторизованного водителя
       operationId: lokir.driverAccount
@@ -359,6 +392,57 @@ paths:
                 type: string
         "401":
           description: Водитель не авторизован
-
-          
-
+  /add_card:
+    post:
+      description: Добавление карты клиентом
+      operationId: lokir.add_card
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CardForm"
+      responses:
+        "200":
+          description: Карта успешно добавлена
+        "400":
+          description: Неверный формат данных
+    get:
+      description: Сервер возвращает HTML форму для добавления карты
+      operationId: lokir.get_add_card
+      responses:
+        "200":
+          description: Форма для добавления карты возвращена
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Пользователь не авторизован
+  /select_card:
+    post:
+      description: Выбор карты клиентом для оплаты заказа
+      operationId: lokir.select_card
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/SelectCardForm"
+      responses:
+        "302":
+          description: Карта успешно выбрана
+        "400":
+          description: Неверный формат данных
+    get:
+      description: Сервер возвращает HTML форму для выбора карты
+      operationId: lokir.get_select_card
+      responses:
+        "200":
+          description: Форма для выбора карты возвращена
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Пользователь не авторизован
