@@ -15,4 +15,7 @@
     <!-- Кнопка отправки формы -->
     <input type="submit" value="Сменить имя">
 </form>
+{% if same_username_error %}
+    <p>{{ same_username_error }}</p>
+{% endif %}
 </body>

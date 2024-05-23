@@ -146,6 +146,16 @@ components:
         - old_password
         - new_password
 
+    ChangeUsernameForm:
+      description: Форма для смены имени пользователя
+      type: object
+      properties:
+        new_username:
+          description: Новое имя пользователя
+          type: string
+      required:
+        - new_username
+
 paths:
   /:
     get:
@@ -346,7 +356,7 @@ paths:
           description: Неверный формат данных или нет доступных заказов
         "401":
           description: Водитель не авторизован
-    /driver_account:
+  /driver_account:
     get:
       description: Получение информации об аккаунте авторизованного водителя
       operationId: lokir.driverAccount
@@ -359,6 +369,34 @@ paths:
                 type: string
         "401":
           description: Водитель не авторизован
+  /change_username:
+    get:
+      description: Получение формы для смены имени авторизованного пользователя
+      operationId: lokir.changeUsernameGet
+      responses:
+        "200":
+          description: Успешное получение формы для смены имени
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Пользователь не авторизован
+    post:
+      description: Смена имени авторизованного пользователя
+      operationId: lokir.changeUsername
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ChangeUsernameForm"
+      responses:
+        "200":
+          description: Успешная смена имени
+        "400":
+          description: Ошибка валидации формы или новое имя совпадает со старым
+        "401":
+          description: Пользователь не авторизован
 
-          
 

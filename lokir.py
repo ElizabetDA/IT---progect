@@ -27,7 +27,7 @@ def register_routes(app):
         # Валидация
         if form.validate_on_submit() is True:
             username = form.username.data
-            email = form.email.data
+            email = form.email.data.lower()
             password = form.password.data
             password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
@@ -67,7 +67,7 @@ def register_routes(app):
         form = LoginForm(request.form)
         if form.validate_on_submit() is True:
             try:
-                email = form.email.data
+                email = form.email.data.lower()
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
                 # Сравниваем хэш введенного пароля с
@@ -185,7 +185,15 @@ def register_routes(app):
 
             # Проверяем, совпадает ли старый пароль
             if not user.checkPassword(form.old_password.data):
-                return jsonify({"message": "Неверный старый пароль"}), 400
+                return make_response(
+                    render_template("changePassword.html",
+                                    form=form,
+                                    error_message="Неверный старый пароль"), 400)
+            if user.checkPassword(form.new_password.data):
+                return make_response(
+                    render_template("changePassword.html",
+                                    form=form,
+                                    same_password_error="Новый пароль не должен совпадать со старым"), 400)
 
             # Изменяем пароль
             user.changePassword(form.new_password.data)
@@ -390,13 +398,18 @@ def register_routes(app):
             # Извлекаем объект пользователя
             # из базы данных по его идентификатору
             user = User.query.get(user_id)
+            if user.username == form.new_username.data:
+                return make_response(
+                    render_template("changeUsername.html",
+                                    form=form,
+                                    same_username_error="Новое имя не должно совпадать со старым"), 400)
             user.username = form.new_username.data
 
             # Сохраняем изменения в базе данных
             db.session.commit()
 
             return jsonify({"message": "Имя успешно изменено"}), 200
-        return make_response(render_template("сhangeUsername.html", form=form), 400)
+        return make_response(render_template("changeUsername.html", form=form), 400)
 
     @app.route("/change_username", methods=["GET"])
     @client_required()
