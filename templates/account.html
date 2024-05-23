@@ -1,19 +1,8 @@
 <h1>Личный кабинет</h1>
 <p>Имя пользователя: {{ user.username }}</p>
 <p>Email: {{ user.email }}</p>
-
-<h2>Привязанные карты</h2>
-{% if cards %}
-    <ul>
-        {% for card in cards %}
-            <li>
-                **** **** **** {{ card.card_number_last4 }}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Нет привязанных карт.</p>
-{% endif %}
+<p>Предпочтительный способ оплаты: {{ user.payment_method }}</p>
+<a href="{{ url_for('change_payment_method') }}">Изменить способ оплаты</a>
 <h2>Мои заказы</h2>
 <ul>
     {% for trip in trips %}
@@ -23,12 +12,7 @@
             Расстояние: {{ trip.len_way }} м. <br>
             Стоимость: {{ trip.fare }} Р.<br>
             Статус: {{ trip.status }}<br>
-            {% if trip.payment_card_id %}
-                {% set payment_card = trip.payment_card %}
-                Карта: {{ payment_card.card_number_last4 }}
-            {% else %}
-                Способ оплаты: {{ trip.payment_method }}
-            {% endif %}
+            Cпособ оплаты : {{ trip.payment_method }}<br>
         </li>
         <br><br>
     {% endfor %}

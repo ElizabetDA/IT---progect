@@ -1,8 +1,0 @@
-<form method="post" action="/add_card">
-    {{ form.csrf_token }}
-    <p>{{ form.card_number.label }} {{ form.card_number() }}</p>
-    <p>{{ form.card_name.label }} {{ form.card_name() }}</p>
-    <p>{{ form.expiry_date.label }} {{ form.expiry_date() }}</p>
-    <p>{{ form.cvv.label }} {{ form.cvv() }}</p>
-    <button type="submit">Добавить карту</button>
-</form>

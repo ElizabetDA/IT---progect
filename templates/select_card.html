@@ -1,7 +1,0 @@
-<h1>Выберите карту для оплаты</h1>
-<form method="post" action="{{ url_for('select_card') }}">
-    {{ form.csrf_token }}
-    {{ form.card.label }}<br>
-    {{ form.card }}<br>
-    <input type="submit" value="Оплатить">
-</form>

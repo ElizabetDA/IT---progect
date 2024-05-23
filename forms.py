@@ -38,8 +38,6 @@ class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки")
     dropoff_location = StringField("Место начала поездки")
-    payment_method = SelectField('Способ оплаты', choices=[('Карта', 'Карта'), ('Наличные', 'Наличные')],
-                                 validators=[InputRequired()])
 
 
 # Класс формы смены пароля
@@ -59,19 +57,5 @@ class PassageForm(FlaskForm):
     location = StringField("Местоположение водителя")
 
 
-class CardForm(FlaskForm):
-    date_validate = r"^(0[1-9]|1[0-2])\/([0-9]{2})"
-    message_date_validate = 'Неверный формат даты'
-    name_validate = r"^[A-Z ]+$"
-    message_name_validate = 'Имя должно содержать только заглавные буквы и пробелы'
-
-    card_number = StringField('Номер карты', validators=[InputRequired(), Length(min=16, max=16)])
-    card_name = StringField('Имя на карте',
-                            validators=[InputRequired(), Regexp(name_validate, message=message_name_validate)])
-    expiry_date = StringField('Срок действия',
-                              validators=[InputRequired(), Regexp(date_validate, message=message_date_validate)])
-    cvv = StringField('CVV', validators=[InputRequired(), Length(min=3, max=3)])
-
-
-class SelectCardForm(FlaskForm):
-    card = SelectField('Выберите карту для оплаты', coerce=int)
+class ChangePaymentMethodForm(FlaskForm):
+    payment_method = SelectField("Способ оплаты", choices=[("Наличные", "Наличные"), ("Карта", "Карта")])

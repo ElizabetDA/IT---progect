@@ -1,8 +1,8 @@
 from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
-from models import db, User, Trip, Driver, Card
+from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm, CardForm, SelectCardForm
+    ChangePasswordForm, PassageForm, ChangePaymentMethodForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 import hashlib
@@ -115,20 +115,20 @@ def register_routes(app):
         if form.validate_on_submit() is True:
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
-            payment_method = form.payment_method.data
             user_id = get_jwt_identity()
-            if payment_method == 'Карта':
-                return redirect(url_for('select_card'))
-
+            user = User.query.get(user_id)
             len_way = lenWay(pickup_location, dropoff_location)
             fare = Trip.calculateFare(len_way)
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
-                            payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
                             status="В ожидании", len_way=len_way,
-                            payment_card_id=None)
+                            )
+            payment_method = user.payment_method
+
+            # Сохраняем способ оплаты в новом заказе
+            new_trip.set_payment_method(payment_method)
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
@@ -145,13 +145,12 @@ def register_routes(app):
 
         # Извлекаем объект пользователя из базы данных по его идентификатору
         user = User.query.get(user_id)
-        cards = user.cards.all()
         # Получаем заказы пользователя из связанной коллекции
         user_trips = user.trips
 
         # Рендерим шаблон account.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("account.html", user=user, trips=user_trips, cards=cards)
+        return render_template("account.html", user=user, trips=user_trips)
 
     @app.route("/logout", methods=["GET"])
     @jwt_required()
@@ -386,51 +385,21 @@ def register_routes(app):
         return render_template("driverAccount.html", driver=driver,
                                trips=driver_trips)
 
-    @app.route("/add_card", methods=["POST"])
+    @app.route("/change_payment_method", methods=["POST"])
     @client_required()
-    def add_card():
-        form = CardForm(request.form)
+    def change_payment_method():
+        form = ChangePaymentMethodForm(request.form)
         if form.validate_on_submit():
             user_id = get_jwt_identity()
-            card_number = form.card_number.data
-            card_name = form.card_name.data
-            expiry_date = form.expiry_date.data
-            cvv = form.cvv.data
-            new_card = Card(user_id=user_id, card_number=card_number, card_name=card_name, expiry_date=expiry_date,
-                            cvv=cvv)
-            new_card.validate_expiry_date()
-            new_card.hash_card_number()
-            db.session.add(new_card)
+            user = User.query.get(user_id)
+            payment_method = form.payment_method.data
+            user.set_payment_method(payment_method)
             db.session.commit()
-            return jsonify({"message": "Карта успешно добавлена"}), 200
-        return make_response(render_template("add_card.html", form=form), 400)
+            return redirect(url_for("account"))
 
-    @app.route("/add_card", methods=["GET"])
+
+    @app.route("/change_payment_method", methods=["GET"])
     @client_required()
-    def get_add_card():
-        form = CardForm()
-        return render_template("add_card.html", form=form)
-
-    @app.route('/select_card', methods=['POST'])
-    @client_required()
-    def select_card():
-        user_id = get_jwt_identity()
-        user = User.query.get(user_id)
-        form = SelectCardForm(request.form)
-        form.card.choices = [(card.id, f'**** **** **** {card.card_number_last4}') for card in user.cards.all()]
-
-        if form.validate_on_submit():
-            selected_card_id = form.card.data
-            trip = Trip.query.filter_by(user_id=user_id, status='В ожидании', payment_card_id=None).first()
-            if trip:
-                trip.payment_card_id = selected_card_id
-                db.session.commit()
-                response = make_response(redirect(url_for('account')))
-                return response
-        return make_response(render_template("select_card.html", form=form), 400)
-
-    @app.route('/select_card', methods=['GET'])
-    @client_required()
-    def get_select_card():
-        form = SelectCardForm()
-        return render_template("select_card.html", form=form)
+    def get_change_payment_method():
+        form = ChangePaymentMethodForm()
+        return render_template("changePaymentMethod.html", form=form)

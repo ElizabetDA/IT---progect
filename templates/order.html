@@ -23,14 +23,6 @@
         {% endfor %}
     </p>
 
-    <p>
-        {{ form.payment_method.label }}
-        {{ form.payment_method() }}
-        <!-- Вывод ошибок валидации выбора способа оплаты -->
-        {% for error in form.payment_method.errors %}
-            {{ error }}
-        {% endfor %}
-    </p>
 
     <!-- Кнопка отправки формы -->
     <input type="submit" value="Создать заказ">
