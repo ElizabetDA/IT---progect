@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,7 @@
                     Расстояние: {{ trip.len_way }} м. <br>
                     Стоимость: {{ trip.fare }} Р.<br>
                     Статус: {{ trip.status }}
+                    Cпособ оплаты : {{ trip.payment_method }}<br>
                 </li>
             {% endfor %}
         </ul>

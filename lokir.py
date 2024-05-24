@@ -123,7 +123,6 @@ def register_routes(app):
     @app.route("/login", methods=["GET"])
     def authorizationForm():
         form = LoginForm()
-        print("")
         return render_template("login.html", form=form)
 
     # Функция получения формы для заказа
@@ -144,11 +143,14 @@ def register_routes(app):
             user_id = get_jwt_identity()
             len_way = lenWay(pickup_location, dropoff_location)
             fare = Trip.calculateFare(len_way)
+            payment_method = form.payment_method.data
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
+                            payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании", len_way=len_way)
+                            status="В ожидании", len_way=len_way,
+                            )
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
@@ -165,7 +167,6 @@ def register_routes(app):
 
         # Извлекаем объект пользователя из базы данных по его идентификатору
         user = User.query.get(user_id)
-
         # Получаем заказы пользователя из связанной коллекции
         user_trips = user.trips
         form = ForScore()
