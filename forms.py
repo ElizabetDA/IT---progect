@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
-from wtforms import StringField, PasswordField, IntegerField, validators
+from wtforms import StringField, PasswordField, IntegerField, validators, SelectField
 
 
 # Класс формы регистрации
@@ -57,7 +57,6 @@ class PassageForm(FlaskForm):
     location = StringField("Местоположение водителя")
 
 
-
 class ChangeUsernameForm(FlaskForm):
     message_name = "Имя должно содеражать только русские буквы"
     message_empty_field = "Поле не должно быть пустым"
@@ -66,6 +65,7 @@ class ChangeUsernameForm(FlaskForm):
         validators=[
             InputRequired(message=message_empty_field),
             Regexp(r"^[А-Яа-яЁё]+$", message=message_name)])
+
 
 class ForScore(FlaskForm):
     driving_score = IntegerField(
@@ -77,4 +77,3 @@ class ForScore(FlaskForm):
     driving_polite = IntegerField(
         "Вежливость водителя",
         validators=[validators.NumberRange(min=1, max=5)])
-
