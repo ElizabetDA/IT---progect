@@ -146,6 +146,17 @@ components:
         - old_password
         - new_password
 
+    ChangePaymentMethodForm:
+      description: Форма для выбора способа оплаты
+      type: object
+      properties:
+        payment_method:
+          description: Способ оплаты (Наличные или Карта)
+          type: string
+      required:
+        - payment_method
+
+
 paths:
   /:
     get:
@@ -346,7 +357,7 @@ paths:
           description: Неверный формат данных или нет доступных заказов
         "401":
           description: Водитель не авторизован
-    /driver_account:
+  /driver_account:
     get:
       description: Получение информации об аккаунте авторизованного водителя
       operationId: lokir.driverAccount
@@ -359,6 +370,37 @@ paths:
                 type: string
         "401":
           description: Водитель не авторизован
-
-          
-
+  /change_payment_method:
+    get:
+      description: Получение формы для изменения способа оплаты авторизованного пользователя
+      operationId: lokir.change_payment_method
+      responses:
+        "200":
+          description: Успешное получение формы для изменения способа оплаты
+          content:
+            text/html:
+              schema:
+                type: string
+        "401":
+          description: Пользователь не авторизован
+    post:
+      description: Изменение способа оплаты авторизованного пользователя
+      operationId: lokir.change_payment_method
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/ChangePaymentMethodForm"
+      responses:
+        "302":
+          description: Успешное изменение способа оплаты
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL для перенаправления после изменения способа оплаты
+        "400":
+          description: Неверный формат данных
+        "401":
+          description: Пользователь не авторизован

@@ -41,6 +41,10 @@
                     {{ error }}
                 {% endfor %}
             </p>
+          <p>
+              {{ form.csrf_token }}
+              {{ form.payment_method.label }} {{ form.payment_method }}
+          </p>
 
             <!-- Кнопка отправки формы -->
             <input type="submit" class="auth-button" value="Создать заказ">

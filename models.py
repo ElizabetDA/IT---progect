@@ -32,6 +32,7 @@ class Trip(db.Model):
                           nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
+    payment_method = db.Column(db.String(50), nullable=False)
     start_time = db.Column(db.DateTime,
                            nullable=False, default=datetime.
                            now(pytz.timezone("Europe/Moscow")))
@@ -68,6 +69,9 @@ class Trip(db.Model):
     def setCompleted(self):
         self.status = "Завершена"
         self.end_time = datetime.now(pytz.timezone("Europe/Moscow"))
+
+    def set_payment_method(self, payment_method):
+        self.payment_method = payment_method
 
 
 class Driver(db.Model):
