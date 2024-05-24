@@ -38,6 +38,8 @@ class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки")
     dropoff_location = StringField("Место начала поездки")
+    payment_method = SelectField('Способ оплаты', choices=[('Карта', 'Карта'), ('Наличные', 'Наличные')],
+                                 validators=[InputRequired()])
 
 
 # Класс формы смены пароля
@@ -55,7 +57,3 @@ class PassageForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_adress = "Неверный формат адреса"
     location = StringField("Местоположение водителя")
-
-
-class ChangePaymentMethodForm(FlaskForm):
-    payment_method = SelectField("Способ оплаты", choices=[("Наличные", "Наличные"), ("Карта", "Карта")])

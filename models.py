@@ -13,7 +13,6 @@ class User(db.Model):
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
-    payment_method = db.Column(db.String(50), nullable=False, default="Наличные")
     trips = db.relationship("Trip", backref="user", lazy="dynamic")
 
     def __repr__(self):
@@ -21,9 +20,6 @@ class User(db.Model):
 
     def changePassword(self, password):
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
-
-    def set_payment_method(self, payment_method):
-        self.payment_method = payment_method
 
 
 class Trip(db.Model):

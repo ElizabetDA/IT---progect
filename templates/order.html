@@ -23,6 +23,8 @@
         {% endfor %}
     </p>
 
+    {{ form.csrf_token }}
+    {{ form.payment_method.label }} {{ form.payment_method }}
 
     <!-- Кнопка отправки формы -->
     <input type="submit" value="Создать заказ">

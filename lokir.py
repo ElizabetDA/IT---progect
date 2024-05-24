@@ -2,7 +2,7 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm, ChangePaymentMethodForm
+    ChangePasswordForm, PassageForm
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 import hashlib
@@ -116,19 +116,16 @@ def register_routes(app):
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
             user_id = get_jwt_identity()
-            user = User.query.get(user_id)
             len_way = lenWay(pickup_location, dropoff_location)
             fare = Trip.calculateFare(len_way)
+            payment_method = form.payment_method.data
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
+                            payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
                             status="В ожидании", len_way=len_way,
                             )
-            payment_method = user.payment_method
-
-            # Сохраняем способ оплаты в новом заказе
-            new_trip.set_payment_method(payment_method)
             db.session.add(new_trip)
             db.session.commit()
             print(pickup_location)
@@ -384,22 +381,3 @@ def register_routes(app):
         # в него данные пользователя и его заказы
         return render_template("driverAccount.html", driver=driver,
                                trips=driver_trips)
-
-    @app.route("/change_payment_method", methods=["POST"])
-    @client_required()
-    def change_payment_method():
-        form = ChangePaymentMethodForm(request.form)
-        if form.validate_on_submit():
-            user_id = get_jwt_identity()
-            user = User.query.get(user_id)
-            payment_method = form.payment_method.data
-            user.set_payment_method(payment_method)
-            db.session.commit()
-            return redirect(url_for("account"))
-
-
-    @app.route("/change_payment_method", methods=["GET"])
-    @client_required()
-    def get_change_payment_method():
-        form = ChangePaymentMethodForm()
-        return render_template("changePaymentMethod.html", form=form)
