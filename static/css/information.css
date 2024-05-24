@@ -129,30 +129,3 @@ footer {
     height: 30px;
     z-index: 2;
 }
-/* Дополнительные стили для страницы аккаунта */
-
-/* Стили для информации о пользователе */
-.content-section {
-    margin-top: 40px; /* Увеличим отступ сверху */
-}
-
-/* Стили для списка заказов */
-.content-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.content-section ul li {
-    margin-bottom: 20px;
-}
-
-/* Стили для кнопки смены пароля */
-.change-password-button {
-    margin-top: 20px;
-}
-
-/* Стили для футера */
-footer {
-    position: fixed;
-    bottom: 0;
-}

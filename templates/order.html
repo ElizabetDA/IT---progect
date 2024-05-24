@@ -11,10 +11,9 @@
 
     <div class="top-bar">
         <div>
-            <button>О нас</button>
-            <button>Контакты</button>
-            <button>Q & A</button>
-            <button>Тарифы</button>
+            <button class="about_us-button" onclick="location.href='/information';">О нас</button>
+            <button class="about_us-button" onclick="location.href='/order';">Заказать такси</button>
+            <button class="about_us-button" onclick="location.href='/pricing';">Тарифы</button>
         </div>
         <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
     </div>
@@ -47,6 +46,7 @@
             <input type="submit" class="auth-button" value="Создать заказ">
         </form>
     </div>
+
 
     <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full7KEY=261dd9c7-7968-4e32-924a-14a15afb00c7"></script> <!-- Подключаем API 2GIS -->
     <script src="../static/js/order.js"></script> <!-- Подключаем файл скриптов -->

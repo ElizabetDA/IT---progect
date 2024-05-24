@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тарифы - Таксисты</title>
+    <link rel="stylesheet" href="../static/css/pricing.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <button class="about_us-button" onclick="location.href='/information';">О нас</button>
+            <button class="about_us-button" onclick="location.href='/order';">Заказать такси</button>
+            <button class="about_us-button" onclick="location.href='/pricing';">Тарифы</button>
+        </div>
+        <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
+    </div>
+    <header>
+        <h1>Тарифы</h1>
+    </header>
+
+    <main>
+        <section class="tariffs-section">
+            <div class="tariff-container">
+                <div class="tariff-content">
+                    <div class="tariff">
+                        <h2>Стандартный тариф</h2>
+                        <p>
+                            Стандартный тариф предоставляет доступ к базовым услугам такси. Этот тариф подходит для ежедневных поездок по городу.
+                        </p>
+                        <p>
+                            Стоимость: 100 рублей за поездку.
+                        </p>
+                    </div>
+                    <div class="car-image">
+                        <img src="../images/car.jpg" alt="Изображение автомобиля">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tariff-container">
+                <div class="tariff-content">
+                    <div class="tariff">
+                        <h2>Премиум тариф</h2>
+                        <p>
+                            Премиум тариф предлагает дополнительные удобства, такие как автомобили более высокого класса и персональный водитель.
+                        </p>
+                        <p>
+                            Стоимость: 200 рублей за поездку.
+                        </p>
+                    </div>
+                    <div class="car-image">
+                        <img src="../images/premium_car.jpg" alt="Изображение премиум автомобиля">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tariff-container">
+                <div class="tariff-content">
+                    <div class="tariff">
+                        <h2>Эконом тариф</h2>
+                        <p>
+                            Эконом тариф предлагает доступные цены для стандартных поездок. Этот тариф подходит для тех, кто хочет сэкономить деньги.
+                        </p>
+                        <p>
+                            Стоимость: 50 рублей за поездку.
+                        </p>
+                    </div>
+                    <div class="car-image">
+                        <img src="../images/economy_car.jpg" alt="Изображение эконом автомобиля">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="order-button-container">
+        <button class="order-button" onclick="location.href='/order';">Заказать такси</button>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Такси Таксисты. Все права защищены.</p>
+        </div>
+    </footer>
+    <script src="../static/js/home.js"></script>
+</body>
+</html>

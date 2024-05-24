@@ -1,0 +1,103 @@
+/* Общие стили для body */
+body {
+    background-image: url("../images/background_12.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Располагаем элементы вертикально */
+    align-items: center; /* Выравниваем элементы по центру по горизонтали */
+    justify-content: flex-start; /* Выравниваем элементы по началу по вертикали */
+    height: 100vh;
+    padding-top: 60px; /* Отступ сверху для top-bar */
+}
+
+/* Стили для верхней полосы */
+.top-bar {
+    background-color: #000; /* Черный цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 10px 20px; /* Отступы */
+    display: flex; /* Располагаем элементы в строку */
+    justify-content: space-between; /* Распределение элементов по краям */
+    position: fixed; /* Фиксированное позиционирование */
+    top: 0; /* Полоса находится в верхней части экрана */
+    width: 100%; /* Ширина полосы равна ширине экрана */
+    z-index: 2; /* Помещаем над картой */
+}
+
+/* Стили для кнопок в верхней полосе */
+.top-bar button {
+    background-color: #fff; /* Белый фон */
+    color: #000; /* Черный цвет текста */
+    border: none; /* Убираем границу */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 20px; /* Закругленные углы */
+    cursor: pointer; /* Изменяем указатель при наведении */
+    margin-right: 10px; /* Отступ между кнопками */
+}
+
+/* Стили для кнопки аккаунта */
+.account-button {
+    background-color: #1FBF57; /* Зеленый цвет */
+    color: #fff; /* Белый цвет текста */
+    border: none; /* Убираем границу */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 20px; /* Закругленные углы */
+    cursor: pointer; /* Изменяем указатель при наведении */
+    position: absolute; /* Абсолютное позиционирование */
+    right: 50px; /* Перемещаем кнопку влево */
+}
+
+/* Стилизуем заголовок */
+h1 {
+    text-align: center; /* Центрируем текст */
+    margin-top: 20px; /* Отступ сверху */
+    margin-bottom: 20px; /* Устанавливаем отступ снизу */
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили для секции о нас */
+.about-section {
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+    padding: 20px; /* Отступы */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center; /* Центрирование текста */
+    max-width: 800px; /* Максимальная ширина контейнера */
+    width: calc(100% - 40px); /* Ширина контейнера с отступами */
+    margin-top: 20px; /* Отступ сверху */
+}
+
+/* Стили для содержимого о нас */
+.about-content {
+    text-align: left; /* Выравнивание текста по левому краю */
+}
+
+/* Стили для изображения */
+.about-image {
+    text-align: center; /* Центрируем изображение */
+    margin-top: 20px; /* Отступ сверху */
+}
+
+.about-image img {
+    max-width: 50%; /* Изменяем максимальную ширину изображения */
+    border-radius: 10px; /* Закругленные углы */
+}
+
+/* Стили для футера */
+footer {
+    background-color: #000; /* Черный цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 20px 0; /* Отступы */
+    text-align: center; /* Центрируем текст */
+    position: fixed; /* Фиксированное позиционирование */
+    bottom: 0; /* Полоса находится в нижней части экрана */
+    width: 100%; /* Ширина полосы равна ширине экрана */
+    z-index: 2; /* Помещаем над картой */
+}
