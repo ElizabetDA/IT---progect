@@ -1,0 +1,105 @@
+/* Общие стили для всей страницы */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.map-container {
+    width: 100vw; /* Полная ширина экрана */
+    height: calc(100vh - 50px); /* Полная высота экрана за вычетом высоты верхней полосы */
+    margin-top: 50px; /* Отступ сверху, чтобы контейнер начинался после верхней полосы */
+    pointer-events: none; /* Отключаем события мыши для контейнера карты */
+}
+
+
+/* Стили для верхней полосы */
+.top-bar {
+    background-color: #000; /* Черный цвет фона */
+    color: #fff; /* Белый цвет текста */
+    padding: 10px 20px; /* Отступы */
+    display: flex; /* Располагаем элементы в строку */
+    justify-content: space-between; /* Распределение элементов по краям */
+    position: absolute; /* Абсолютное позиционирование */
+    width: 100%; /* Ширина полосы равна ширине экрана */
+    z-index: 2; /* Помещаем над картой */
+}
+
+/* Стили для кнопок в верхней полосе */
+.top-bar button {
+    background-color: #fff; /* Белый фон */
+    color: #000; /* Черный цвет текста */
+    border: none; /* Убираем границу */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 20px; /* Закругленные углы */
+    cursor: pointer; /* Изменяем указатель при наведении */
+    margin-right: 10px; /* Отступ между кнопками */
+}
+
+/* Стили для кнопки аккаунта */
+.account-button {
+    background-color: #1FBF57; /* Зеленый цвет */
+    color: #fff; /* Белый цвет текста */
+    border: none; /* Убираем границу */
+    padding: 10px 20px; /* Отступы */
+    border-radius: 20px; /* Закругленные углы */
+    cursor: pointer; /* Изменяем указатель при наведении */
+    margin-right: 1px; /* Отступ справа */
+    position: absolute; /* Абсолютное позиционирование */
+    right: 50px; /* Перемещаем кнопку влево */
+}
+
+
+
+/* Стили для кнопок управления картой */
+.map-controls {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 50px; /* Учитываем высоту верхней полосы */
+    right: 20px; /* Отступ справа */
+    z-index: 3; /* Помещаем над картой и верхней полосой */
+}
+
+/* Стили для полей ввода и кнопки */
+.button-input-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 10px; /* Отступ слева */
+    top: 50%; /* По центру высоты экрана */
+    transform: translateY(-50%); /* Центрируем по вертикали */
+    z-index: 2; /* Помещаем поверх карты */
+}
+
+.button-input-container input {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    border: 1px solid #000; /* Черная рамка */
+    background-color: #fff; /* Белый фон */
+    color: #000; /* Черный текст */
+}
+
+.auth-button {
+    background-color: #000; /* Черный фон */
+    color: #fff; /* Белый текст */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.auth-button:hover {
+    background-color: #333; /* Темно-серый фон при наведении */
+}
+
+/* Стили для карты */
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Помещаем под верхнюю полосу */
+}
