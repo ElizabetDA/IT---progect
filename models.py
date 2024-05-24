@@ -4,8 +4,6 @@ from datetime import datetime
 import pytz
 import hashlib
 import math
-import bcrypt
-
 
 db = SQLAlchemy()
 
@@ -22,10 +20,10 @@ class User(db.Model):
         return f"User {self.email}"
 
     def changePassword(self, password):
-        self.password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
 
     def checkPassword(self, password):
-        return bcrypt.checkpw(password.encode(), self.password_hash)
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
 
 
 class Trip(db.Model):
@@ -89,7 +87,7 @@ class Driver(db.Model):
     Phone: {self.phone_number}"
 
     def changePassword(self, password):
-        self.password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
 
     def checkPassword(self, password):
-        return bcrypt.checkpw(password.encode(), self.password_hash)
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()

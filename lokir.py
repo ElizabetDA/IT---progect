@@ -10,7 +10,7 @@ from flask_jwt_extended import create_access_token, \
     jwt_required, get_jwt_identity, create_refresh_token, get_jwt
 from jwtCheck import driver_required, client_required
 from api import lenWay
-import bcrypt
+import hashlib
 
 
 # Функция получения домашней страницы
@@ -29,7 +29,7 @@ def register_routes(app):
             username = form.username.data
             email = form.email.data.lower()
             password = form.password.data
-            password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+            password_hash = hashlib.sha256(password.encode()).hexdigest()
 
             print(username, email, password_hash)
             if User.query.filter_by(email=email).first():
