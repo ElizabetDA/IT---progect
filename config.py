@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-SECRET_KEY = "MAI52"
+SECRET_KEY = 'MAI52'
 SQLALCHEMY_DATABASE_URI = "sqlite:///database.db"
 JWT_SECRET_KEY = "MAI52"
 JWT_TOKEN_LOCATION = "cookies"

@@ -23,6 +23,9 @@ class User(db.Model):
     def changePassword(self, password):
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
 
+    def checkPassword(self, password):
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+
 
 class Trip(db.Model):
     __tablename__ = "trips"
@@ -104,3 +107,5 @@ class Driver(db.Model):
         return f"Driver {self.name}, Car {self.car_model}, \
     Phone: {self.phone_number}"
 
+    def checkPassword(self, password):
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()

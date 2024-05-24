@@ -56,8 +56,18 @@ class PassageForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_adress = "Неверный формат адреса"
     location = StringField("Местоположение водителя")
-    
-    
+
+
+class ChangeUsernameForm(FlaskForm):
+    message_name = "Имя должно содеражать только русские буквы"
+    message_empty_field = "Поле не должно быть пустым"
+    new_username = StringField(
+        "Введите новое имя:",
+        validators=[
+            InputRequired(message=message_empty_field),
+            Regexp(r"^[А-Яа-яЁё]+$", message=message_name)])
+
+
 class ForScore(FlaskForm):
     driving_score = IntegerField(
         "Стиль вождения",

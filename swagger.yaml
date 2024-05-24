@@ -117,7 +117,7 @@ components:
         - username
         - email
         - password
-    
+
     LoginForm:
       description: Информация о сущесвтующем клиенте
       type: object
