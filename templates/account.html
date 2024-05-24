@@ -1,17 +1,52 @@
-<h1>Личный кабинет</h1>
-<p>Имя пользователя: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
-<h2>Мои заказы</h2>
-<ul>
-    {% for trip in trips %}
-        <li>
-            Откуда: {{ trip.pickup_location }} <br>
-            Куда: {{ trip.dropoff_location }} <br>
-            Расстояние: {{ trip.len_way }} м. <br>
-            Стоимость: {{ trip.fare }} Р.<br>
-            Статус: {{ trip.status }}<br>
-            Cпособ оплаты : {{ trip.payment_method }}<br>
-        </li>
-        <br><br>
-    {% endfor %}
-</ul>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="../static/css/account.css"> <!-- Подключаем файл общих стилей -->
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Личный кабинет</h1>
+        <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
+    </div>
+
+    <div class="content-section">
+        <h2>Данные пассажира</h2>
+        <p>Имя: {{ passenger.name }}</p>
+        <p>Номер телефона: {{ passenger.phone }}</p>
+        <p>Дата рождения: {{ passenger.birth_date }}</p>
+    </div>
+
+    <div class="content-section">
+        <h2>Информация о пользователе</h2>
+        <p>Имя пользователя: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+    </div>
+
+    <div class="content-section">
+        <h2>Мои заказы</h2>
+        <ul>
+            {% for trip in trips %}
+                <li>
+                    Откуда: {{ trip.pickup_location }} <br>
+                    Куда: {{ trip.dropoff_location }} <br>
+                    Расстояние: {{ trip.len_way }} м. <br>
+                    Стоимость: {{ trip.fare }} Р.<br>
+                    Статус: {{ trip.status }}
+                    Cпособ оплаты : {{ trip.payment_method }}<br>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Кнопка для смены пароля -->
+    <div class="content-section">
+        <button class="change-password-button" onclick="location.href='/change_password';">Сменить пароль</button>
+    </div>
+
+    <script src="../static/js/account.js"></script> <!-- Подключаем файл скриптов -->
+</body>
+</html>

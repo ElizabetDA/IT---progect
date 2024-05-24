@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.validators import InputRequired, Email, Regexp, Length
-from wtforms import StringField, PasswordField, SelectField
+from wtforms.validators import InputRequired, Email, Regexp
+from wtforms import StringField, PasswordField, IntegerField, validators, SelectField
 
 
 # Класс формы регистрации
@@ -41,7 +41,6 @@ class TripForm(FlaskForm):
     payment_method = SelectField('Способ оплаты', choices=[('Карта', 'Карта'), ('Наличные', 'Наличные')],
                                  validators=[InputRequired()])
 
-
 # Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
@@ -57,3 +56,15 @@ class PassageForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_adress = "Неверный формат адреса"
     location = StringField("Местоположение водителя")
+    
+    
+class ForScore(FlaskForm):
+    driving_score = IntegerField(
+        "Стиль вождения",
+        validators=[validators.NumberRange(min=1, max=5)])
+    driving_comfort = IntegerField(
+        "Комфорт",
+        validators=[validators.NumberRange(min=1, max=5)])
+    driving_polite = IntegerField(
+        "Вежливость водителя",
+        validators=[validators.NumberRange(min=1, max=5)])

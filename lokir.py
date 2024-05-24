@@ -2,7 +2,7 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-    ChangePasswordForm, PassageForm
+    ChangePasswordForm, PassageForm, ForScore
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
 import hashlib
@@ -17,6 +17,26 @@ def register_routes(app):
     @app.route("/")
     def index():
         return render_template("home.html")
+
+    @app.route("/about_us", methods=["GET"])
+    def about_us():
+        return render_template("about_us.html")
+
+    @app.route("/information", methods=["GET"])
+    def information():
+        return render_template("information.html")
+
+    @app.route("/contacts", methods=["GET"])
+    def contacts():
+        return render_template("contacts.html")
+
+    @app.route("/qa", methods=["GET"])
+    def qa():
+        return render_template("qa.html")
+
+    @app.route("/pricing", methods=["GET"])
+    def pricing():
+        return render_template("pricing.html")
 
     # Функция регистрации
     @app.route("/register", methods=["POST"])
@@ -136,7 +156,7 @@ def register_routes(app):
 
     @app.route("/account", methods=["GET"])
     @client_required()
-    def account():
+    def accountGet():
         # Получаем идентификатор авторизованного пользователя из JWT токена
         user_id = get_jwt_identity()
 
@@ -144,10 +164,30 @@ def register_routes(app):
         user = User.query.get(user_id)
         # Получаем заказы пользователя из связанной коллекции
         user_trips = user.trips
-
+        form = ForScore()
         # Рендерим шаблон account.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("account.html", user=user, trips=user_trips)
+        return render_template("account.html", user=user,
+                               trips=user_trips, form=form)
+
+    @app.route("/account", methods=["POST"])
+    @client_required()
+    def accountPost():
+        form = ForScore(request.form)
+        trip_id = request.form.get("trip_id")
+        if form.validate_on_submit() is True:
+            # Извлекаем объект поездки из базы данных по
+            # ее пользователя
+            trip = Trip.query.get(trip_id)
+            driver = Driver.query.get(trip.driver_id)
+            driving_score = form.driving_score.data
+            driving_comfort = form.driving_comfort.data
+            driving_polite = form.driving_polite.data
+            trip.changeScore(driving_score, driving_comfort, driving_polite)
+            db.session.commit()
+            driver.updateRaiting()
+            db.session.commit()
+        return redirect(url_for("accountGet"))
 
     @app.route("/logout", methods=["GET"])
     @jwt_required()
