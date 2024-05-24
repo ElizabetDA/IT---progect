@@ -1,4 +1,3 @@
-/* Общие стили для body */
 body {
     background-image: url("../images/background_12.jpg");
     background-size: cover;
@@ -11,11 +10,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: 100vh;
+    height: 100vh;
     padding-top: 60px;
 }
 
-/* Стили для верхней полосы */
 .top-bar {
     background-color: #000;
     color: #fff;
@@ -28,7 +26,6 @@ body {
     z-index: 2;
 }
 
-/* Стили для кнопок в верхней полосе */
 .top-bar button {
     background-color: #fff;
     color: #000;
@@ -39,7 +36,6 @@ body {
     margin-right: 10px;
 }
 
-/* Стили для кнопки аккаунта */
 .account-button {
     background-color: #1FBF57;
     color: #fff;
@@ -51,7 +47,6 @@ body {
     right: 50px;
 }
 
-/* Стилизуем заголовок */
 h1 {
     text-align: center;
     margin-top: 20px;
@@ -62,97 +57,105 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-/* Стили для секций */
-.content-section {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    max-width: 800px;
-    width: calc(100% - 40px);
-    margin-top: 20px;
-}
-
-/* Стили для формы */
-form {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin-top: 20px;
-}
-
-/* Стили для группы полей */
-.form-group {
-    margin-bottom: 15px;
-}
-
-/* Стилизуем поля для ввода */
-.input-field {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-top: 5px;
-    border: none;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 16px;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Стилизуем кнопку отправки формы */
-.submit-button {
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.tariffs-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
-.submit-button:hover {
-    background-color: #333;
+.tariff-container {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    max-width: 800px;
+    width: calc(100% - 40px);
 }
 
-/* Стили для футера */
+.tariff-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tariff {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.car-image img {
+    max-width: 200px;
+    border-radius: 10px;
+}
+
+.order-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.order-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    height: 40px;
+    width: 200px;
+}
+
+.user-info-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin: 20px;
+    max-width: 800px;
+    width: calc(100% - 40px);
+    text-align: center; /* Добавлено выравнивание текста по центру */
+}
+
+.user-info-text {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px; /* Добавлен отступ снизу для разделения текста и кнопки */
+}
+
+.change-password-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s; /* Добавлен эффект перехода для изменения цвета фона при наведении */
+}
+
+.change-password-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+}
+
+.trips-history-container {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 800px;
+    width: calc(100% - 40px);
+}
+
 footer {
-    background-color: transparent;
+    background-color: #000;
     color: #fff;
     padding: 5px 0;
     text-align: center;
-    width: 100%;
-    height: 30px;
-    z-index: 2;
-}
-/* Дополнительные стили для страницы аккаунта */
-
-/* Стили для информации о пользователе */
-.content-section {
-    margin-top: 40px; /* Увеличим отступ сверху */
-}
-
-/* Стили для списка заказов */
-.content-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.content-section ul li {
-    margin-bottom: 20px;
-}
-
-/* Стили для кнопки смены пароля */
-.change-password-button {
-    margin-top: 20px;
-}
-
-/* Стили для футера */
-footer {
     position: fixed;
     bottom: 0;
+    width: 100%;
+    z-index: 2;
 }

@@ -3,12 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Map with Auth Button</title>
-    <link rel="stylesheet" href="../static/css/order.css"> <!-- Подключаем файл стилей -->
+    <title>Создание заказа</title>
+    <style>
+        html, body, #container {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #container {
+            position: absolute;
+            top: 55px; /* Отступ сверху */
+            bottom: 0;
+            width: 100%;
+        }
+        #controls {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+        }
+        #controls input, #controls button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #controls button {
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+        #controls button:hover {
+            background-color: #555;
+        }
+        #info {
+            margin-top: 10px;
+        }
+        #info p {
+            margin: 5px 0;
+        }
+        .top-bar {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2;
+        }
+        .top-bar button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        .map-controls {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            z-index: 3;
+        }
+        #paymentMethod {
+        margin: 5px;
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        color: #000;
+        box-sizing: border-box;
+        }
+
+        #paymentMethod option {
+        background-color: #fff;
+        color: #000;
+        }
+
+        #paymentMethod:hover {
+        background-color: #f0f0f0;
+        }
+
+        #paymentMethod:focus {
+        outline: none;
+        }
+
+        #rates {
+        margin: 5px;
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        color: #000;
+        box-sizing: border-box;
+        }
+
+        #rates option {
+        background-color: #fff;
+        color: #000;
+        }
+
+        #rates:hover {
+        background-color: #f0f0f0;
+        }
+
+        #rates:focus {
+        outline: none;
+        }
+
+    </style>
 </head>
 <body>
-    <div class="map-container" id="map"></div> <!-- Контейнер для карты -->
-
     <div class="top-bar">
         <div>
             <button class="about_us-button" onclick="location.href='/information';">О нас</button>
@@ -17,42 +136,275 @@
         </div>
         <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
     </div>
-
-    <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
-        <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
-            <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
-            {{ form.csrf_token }}
-            <!-- Поле для ввода места начала поездки -->
-            <p>
-                {{ form.pickup_location.label }}
-                {{ form.pickup_location() }}
-                <!-- Вывод ошибок валидации места начала поездки -->
-                {% for error in form.pickup_location.errors %}
-                    {{ error }}
-                {% endfor %}
-            </p>
-
-            <!-- Поле для ввода места окончания поездки -->
-            <p>
-                {{ form.dropoff_location.label }}
-                {{ form.dropoff_location() }}
-                <!-- Вывод ошибок валидации места окончания поездки -->
-                {% for error in form.dropoff_location.errors %}
-                    {{ error }}
-                {% endfor %}
-            </p>
-          <p>
-              {{ form.csrf_token }}
-              {{ form.payment_method.label }} {{ form.payment_method }}
-          </p>
-
-            <!-- Кнопка отправки формы -->
-            <input type="submit" class="auth-button" value="Создать заказ">
-        </form>
+    <div id="container"></div>
+    <div id="controls">
+        <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
+        <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
+        <button id="geoLocation">Мое местоположение</button>
+        <button id="reset">Сбросить точки</button>
+        <div id="info">
+            <p>Стоимость: <span id="fare">-</span></p>
+            <p>Время: <span id="duration">-</span></p>
+            <p>Расстояние: <span id="distance">-</span></p>
+        </div>
+        <select id="paymentMethod">
+            <option value="cash">Наличные</option>
+            <option value="card">Карта</option>
+        </select>
+        <select id="rates">
+            <option value="cash">Стандартный тариф</option>
+            <option value="card">Премиум тариф</option>
+            <option value="card">Эконом тариф</option>
+        </select>
+        <button id="orderBtn">Заказать</button>
     </div>
 
 
-    <script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full7KEY=261dd9c7-7968-4e32-924a-14a15afb00c7"></script> <!-- Подключаем API 2GIS -->
-    <script src="../static/js/order.js"></script> <!-- Подключаем файл скриптов -->
+    <script src="https://mapgl.2gis.com/api/js/v1"></script>
+    <script src="https://unpkg.com/@2gis/mapgl-directions@^2/dist/directions.js"></script>
+    <script>
+        let pickupMarker;
+        let dropoffMarker;
+        let routeLine;
+
+        const apiKey = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db'; // Ваш ключ API
+        const directionsApiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
+        const mapStyle = '9db719f1-1ab1-4e0e-903f-4c9fa77c10e7';  // Замените на ваш идентификатор стиля карты
+
+
+        const map = new mapgl.Map('container', {
+            center: [55.7558, 37.6173],
+            zoom: 12,
+            key: apiKey,
+            style: mapStyle,
+        });
+
+        const directions = new mapgl.Directions(map, {
+            directionsApiKey: directionsApiKey,
+        });
+
+        function geocodeAddressNominatim(address, callback) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&addressdetails=1&limit=1`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Geocoding response from Nominatim:', data);
+                    if (data.length > 0) {
+                        const { lat, lon } = data[0];
+                        callback([parseFloat(lon), parseFloat(lat)]);
+                    } else {
+                        console.error('Geocoding result does not contain point data:', data);
+                        alert(`Не удалось найти координаты для адреса: ${address}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Geocoding failed with error:', error);
+                    alert('Ошибка геокодирования:', error.message);
+                });
+        }
+
+        function createMarker(coordinates) {
+            return new mapgl.Marker(map, {
+                coordinates: coordinates,
+                icon: 'https://docs.2gis.com/img/dotMarker.svg',
+                draggable: true,
+                zIndex: 999
+            });
+        }
+
+        function updateRoute() {
+            if (pickupMarker && dropoffMarker) {
+                const pickupCoords = pickupMarker.getCoordinates();
+                const dropoffCoords = dropoffMarker.getCoordinates();
+
+                directions.carRoute({
+                    points: [pickupCoords, dropoffCoords],
+                    type: 'jam', // Использование пробок для расчета времени
+                    style: {
+                        routeLineWidth: [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            10, 3, // 3 pixels at zoom level 10
+                            14, 1.5 // 1.5 pixels at zoom level 14
+                        ],
+                        routeLineColor: '#000000',
+                        substrateLineWidth: [
+                            'interpolate',
+                            ['linear'],
+                            ['zoom'],
+                            10, 3, // 3 pixels at zoom level 10
+                            14, 1.5 // 1.5 pixels at zoom level 14
+                        ],
+                        substrateLineColor: '#FFFFFF',
+                        haloLineWidth: 5,
+                        haloLineColor: '#000000'
+                    }
+                }).then(route => {
+                    console.log('Route response:', route);
+                    if (!route || !route.routes || !route.routes[0]) {
+                        console.error('Invalid route response:', route);
+                        return;
+                    }
+                    if (routeLine) {
+                        routeLine.destroy();
+                    }
+                    routeLine = new mapgl.Polyline(map, {
+                        coordinates: route.routes[0].geometry,
+                        color: '#000000',
+                        width: 2,
+                    });
+
+                    const bounds = routeLine.getBounds();
+                    map.fitBounds({
+                        northEast: [bounds[1][0], bounds[1][1]],
+                        southWest: [bounds[0][0], bounds[0][1]],
+                    });
+
+                    // Рассчитываем стоимость, время и расстояние поездки
+                    const length = route.routes[0].distance;
+                    const duration = route.routes[0].duration;
+                    const fare = Math.ceil(length * 0.02 + 100);
+
+                    document.getElementById('fare').textContent = fare + ' руб.';
+                    document.getElementById('duration').textContent = Math.ceil(duration / 60) + ' мин.';
+                    document.getElementById('distance').textContent = (length / 1000).toFixed(2) + ' км';
+
+                    // Логирование для отладки
+                    console.log('Distance:', length, 'meters');
+                    console.log('Duration:', duration, 'seconds');
+                    console.log('Fare:', fare, 'руб.');
+                }).catch(error => {
+                    console.error('Route calculation error:', error);
+                });
+            }
+        }
+
+        function success(pos) {
+            const center = [pos.coords.longitude, pos.coords.latitude];
+            map.setCenter(center);
+            if (pickupMarker) {
+                pickupMarker.setCoordinates(center);
+            } else {
+                pickupMarker = createMarker(center);
+                pickupMarker.on('dragend', updateRoute);
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&zoom=18&addressdetails=1`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Reverse geocoding response:', data);
+                    if (data && data.address) {
+                        const street = data.address.road || '';
+                        const houseNumber = data.address.house_number || '';
+                        const address = street + ' ' + houseNumber;
+                        document.getElementById('pickupLocation').value = address;
+                    }
+                })
+                .catch(error => {
+                    console.error('Reverse geocoding error:', error);
+                });
+        }
+
+        function error() {
+            alert('Не удалось определить местоположение');
+        }
+
+        function geoFindMe() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(success, error);
+            } else {
+                alert('Геолокация не поддерживается вашим браузером');
+            }
+        }
+
+        function updateMarkerAndRoute(marker, addressInput) {
+            const address = addressInput.value.trim();
+            if (address) {
+                geocodeAddressNominatim(address, function(coordinates) {
+                    marker.setCoordinates(coordinates);
+                    updateRoute();
+                });
+            }
+        }
+
+        document.getElementById('geoLocation').addEventListener('click', geoFindMe);
+        document.getElementById('reset').addEventListener('click', function() {
+            if (pickupMarker) {
+                pickupMarker.destroy();
+                pickupMarker = null;
+            }
+            if (dropoffMarker) {
+                dropoffMarker.destroy();
+                dropoffMarker = null;
+            }
+            if (routeLine) {
+                routeLine.destroy();
+                routeLine = null;
+            }
+            document.getElementById('pickupLocation').value = '';
+            document.getElementById('dropoffLocation').value = '';
+            document.getElementById('fare').textContent = '-';
+            document.getElementById('duration').textContent = '-';
+            document.getElementById('distance').textContent = '-';
+        });
+
+        document.getElementById('pickupLocation').addEventListener('change', function() {
+            if (!pickupMarker) {
+                pickupMarker = createMarker([55.7558, 37.6173]);
+                pickupMarker.on('dragend', updateRoute);
+            }
+            updateMarkerAndRoute(pickupMarker, this);
+        });
+
+        document.getElementById('dropoffLocation').addEventListener('change', function() {
+            if (!dropoffMarker) {
+                dropoffMarker = createMarker([55.7512, 37.6184]);
+                dropoffMarker.on('dragend', updateRoute);
+            }
+            updateMarkerAndRoute(dropoffMarker, this);
+        });
+
+        document.getElementById('orderBtn').addEventListener('click', function() {
+            const pickupLocation = document.getElementById('pickupLocation').value;
+            const dropoffLocation = document.getElementById('dropoffLocation').value;
+
+            if (!pickupLocation || !dropoffLocation) {
+                alert('Пожалуйста, введите оба адреса');
+                return;
+            }
+
+            fetch('/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    pickup_location: pickupLocation,
+                    dropoff_location: dropoffLocation
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    alert('Ошибка создания заказа');
+                }
+            })
+            .catch(error => {
+                console.error('Order creation error:', error);
+                alert('Не удалось создать заказ');
+            });
+        });
+
+        map.on('idle', () => {
+            const controls = document.querySelector('.mapgl-controls-bottom-right');
+            if (controls) {
+                controls.style.bottom = '60px';
+                controls.style.right = '20px';
+            }
+        });
+    </script>
 </body>
 </html>
