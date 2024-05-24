@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Регистрация</h1>
-        <form method="post" action="/order" enctype="multipart/form-data" novalidate>
+        <form method="post" action="/register" enctype="multipart/form-data" novalidate>
             <!-- Защита от подделки межсайтовых запросов-->
             {{ form.csrf_token }}
             <!-- Получаем значения из полей -->

@@ -18,6 +18,26 @@ def register_routes(app):
     def index():
         return render_template("home.html")
 
+    @app.route("/about_us", methods=["GET"])
+    def about_us():
+        return render_template("about_us.html")
+
+    @app.route("/information", methods=["GET"])
+    def information():
+        return render_template("information.html")
+
+    @app.route("/contacts", methods=["GET"])
+    def contacts():
+        return render_template("contacts.html")
+
+    @app.route("/qa", methods=["GET"])
+    def qa():
+        return render_template("qa.html")
+
+    @app.route("/pricing", methods=["GET"])
+    def pricing():
+        return render_template("pricing.html")
+
     # Функция регистрации
     @app.route("/register", methods=["POST"])
     def registration():

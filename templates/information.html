@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таксисты - О нас</title>
+    <link rel="stylesheet" href="../static/css/information.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <button class="about_us-button" onclick="location.href='/information';">О нас</button>
+            <button class="about_us-button" onclick="location.href='/order';">Заказать такси</button>
+            <button class="about_us-button" onclick="location.href='/pricing';">Тарифы</button>
+        </div>
+        <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
+    </div>
+
+    <header>
+        <h1>Таксисты</h1>
+    </header>
+
+    <main>
+        <section id="about" class="content-section">
+            <h2>О нас</h2>
+            <p>
+                Добро пожаловать в "Таксисты" – вашу надежную службу такси. Мы предлагаем высококачественные услуги, чтобы ваши поездки были комфортными и безопасными.
+            </p>
+        </section>
+
+        <section id="contacts" class="content-section">
+            <h2>Контакты</h2>
+            <p>Телефон: +7 (123) 456-78-90</p>
+            <p>Email: info@taxisti.ru</p>
+            <p>Адрес: ул. Примерная, 123, Москва, Россия</p>
+        </section>
+
+        <section id="qa" class="content-section">
+            <h2>Q & A</h2>
+
+            <form action="/submit_question" method="post">
+                    <div class="form-group">
+                        <label for="name">Ваше имя:</label>
+                        <input type="text" id="name" name="name" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Ваш email:</label>
+                        <input type="email" id="email" name="email" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Сообщение:</label>
+                        <textarea id="message" name="message" class="input-field" rows="5" required></textarea>
+                    </div>
+                    <input type="submit" value="Отправить" class="submit-button">
+                </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Таксисты. Все права защищены.</p>
+        </div>
+    </footer>
+    <script src="../static/js/home.js"></script>
+</body>
+</html>
