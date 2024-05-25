@@ -127,8 +127,47 @@ def register_routes(app):
     @app.route("/order", methods=["GET"])
     @client_required()
     def orderGet():
-        form = TripForm()
-        return render_template("order.html", form=form)
+        user_id = get_jwt_identity()
+        statuses = ["В ожидании", "Водитель едет к вам",
+                    "В пути к конечной точке маршрута"]
+        trip = Trip.query.filter(Trip.status.in_(statuses),
+                                 Trip.user_id == user_id).first()
+        if trip is None:
+            form = TripForm()
+            return render_template("order.html", form=form)
+        else:
+            if trip.status == "В ожидании":
+                pickup_location = trip.pickup_location
+                dropoff_location = trip.dropoff_location
+                len_way = trip.len_way
+                fare = trip.fare
+                status = trip.status
+                rate = trip.rate
+                return render_template("trip.html",
+                                       pickup_location=pickup_location,
+                                       dropoff_location=dropoff_location,
+                                       len_way=len_way,
+                                       fare=fare, status=status, rate=rate)
+            else:
+                driver_id = trip.driver_id
+                driver = Driver.query.filter_by(id=driver_id).first()
+                car = driver.car_model
+                license_plate = driver.license_plate
+                taxist = driver.username
+                pickup_location = trip.pickup_location
+                dropoff_location = trip.dropoff_location
+                len_way = trip.len_way
+                fare = trip.fare
+                status = trip.status
+                rate = trip.rate
+                return render_template("trip.html",
+                                       pickup_location=pickup_location,
+                                       dropoff_location=dropoff_location,
+                                       len_way=len_way,
+                                       fare=fare, status=status, car=car,
+                                       license_plate=license_plate,
+                                       taxist=taxist, rate=rate)
+
 
     # Функция создания заказа
     @app.route("/order", methods=["POST"])
