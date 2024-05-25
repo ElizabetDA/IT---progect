@@ -73,35 +73,27 @@ def register_routes(app):
     @app.route("/login", methods=["POST"])
     def authorization():
         form = LoginForm(request.form)
-        if form.validate_on_submit() is True:
+        if form.validate_on_submit():
             try:
                 email = form.email.data.lower()
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
-                # Сравниваем хэш введенного пароля с
-                # хэшем пароля найденного пользователя
+                # Сравниваем хэш введенного пароля с хэшем пароля найденного пользователя
 
                 if user.checkPassword(password):
-                    # Создание токена и переход на страницу создания заказа
-                    # для уже авторизованного пользователя
-                    access_token = create_access_token(identity=user.id,
-                                                       additional_claims={
-                                                           "client": True})
-                    refresh_token = create_refresh_token(identity=user.id,
-                                                         additional_claims={
-                                                             "client": True})
+                    access_token = create_access_token(identity=user.id, additional_claims={"client": True})
+                    refresh_token = create_refresh_token(identity=user.id, additional_claims={"client": True})
                     response = make_response(redirect(url_for("orderGet")))
-                    response.set_cookie("refresh_token_cookie",
-                                        value=refresh_token,
-                                        httponly=True, secure=True)
-                    response.set_cookie("access_token_cookie",
-                                        value=access_token)
+                    response.set_cookie("refresh_token_cookie", value=refresh_token, httponly=True, secure=True)
+                    response.set_cookie("access_token_cookie", value=access_token)
                     return response
                 else:
-                    return jsonify({"message": "Неверный пароль"}), 401
+                    return render_template("error.html", message="Неверный пароль",
+                                           previous_url=url_for("authorizationForm"))
             except NoResultFound:
-                return jsonify({"message": "Пользователь не найден"}), 404
-        # Возвращение подсказок пользователю
+                return render_template("error.html", message="Пользователь не найден",
+                                       previous_url=url_for("authorizationForm"))
+
         return make_response(render_template("login.html", form=form), 400)
 
     # Функция получения формы авторизации
@@ -155,29 +147,31 @@ def register_routes(app):
                                        license_plate=license_plate,
                                        taxist=taxist, rate=rate)
 
-
-    # Функция создания заказа
     @app.route("/order", methods=["POST"])
     @client_required()
     def orderCreate():
         form = TripForm(request.form)
         if form.validate_on_submit():
-            pickup_location = form.pickup_location.data
-            dropoff_location = form.dropoff_location.data
-            rate = form.rate.data
-            user_id = get_jwt_identity()
-            len_way = lenWay(pickup_location, dropoff_location)
-            fare = Trip.calculateFare(len_way, rate)
-            payment_method = form.payment_method.data
-            new_trip = Trip(pickup_location=pickup_location,
-                            dropoff_location=dropoff_location,
-                            payment_method=payment_method,
-                            user_id=user_id,
-                            fare=fare,
-                            status="В ожидании", len_way=len_way, rate=rate)
-            db.session.add(new_trip)
-            db.session.commit()
-            return render_template("success.html", message="Заказ успешно создан", next_url=url_for("orderGet"))
+            try:
+                pickup_location = form.pickup_location.data
+                dropoff_location = form.dropoff_location.data
+                rate = form.rate.data
+                user_id = get_jwt_identity()
+                len_way = lenWay(pickup_location, dropoff_location)
+                fare = Trip.calculateFare(len_way, rate)
+                payment_method = form.payment_method.data
+                new_trip = Trip(pickup_location=pickup_location,
+                                dropoff_location=dropoff_location,
+                                payment_method=payment_method,
+                                user_id=user_id,
+                                fare=fare,
+                                status="В ожидании", len_way=len_way, rate=rate)
+                db.session.add(new_trip)
+                db.session.commit()
+                return render_template("success.html", message="Заказ успешно создан", next_url=url_for("orderGet"))
+            except Exception as e:
+                return render_template("error.html", message="Не удалось создать заказ. Пожалуйста, попробуйте снова.",
+                                       previous_url=url_for("orderGet"))
 
         return make_response(render_template("order.html", form=form), 400)
 
