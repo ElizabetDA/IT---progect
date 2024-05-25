@@ -139,6 +139,21 @@ h1 {
     background-color: #808080; /* Цвет фона при наведении */
 }
 
+.change-username-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s; /* Добавлен эффект перехода для изменения цвета фона при наведении */
+}
+
+.change-username-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+}
+
 .trips-history-container {
     margin-top: 20px;
     padding: 20px;

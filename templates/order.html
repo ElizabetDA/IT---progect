@@ -122,7 +122,7 @@
         }
 
         #rates:focus {
-            outline: none;
+            outline: none.
         }
     </style>
 </head>
@@ -141,14 +141,14 @@
         <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
         <button id="geoLocation" type="button">Мое местоположение</button>
         <button id="reset" type="button">Сбросить точки</button>
-        <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
+        <div class="button-input-container">
             <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
                 <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
                 {{ form.csrf_token }}
                 <!-- Поле для ввода места начала поездки -->
                 <p>
                     {{ form.pickup_location.label }}
-                    {{ form.pickup_location() }}
+                    {{ form.pickup_location(id="form_pickup_location") }}
                     <!-- Вывод ошибок валидации места начала поездки -->
                     {% for error in form.pickup_location.errors %}
                         {{ error }}
@@ -158,7 +158,7 @@
                 <!-- Поле для ввода места окончания поездки -->
                 <p>
                     {{ form.dropoff_location.label }}
-                    {{ form.dropoff_location() }}
+                    {{ form.dropoff_location(id="form_dropoff_location") }}
                     <!-- Вывод ошибок валидации места окончания поездки -->
                     {% for error in form.dropoff_location.errors %}
                         {{ error }}
@@ -166,7 +166,7 @@
                 </p>
                 <p>
                     {{ form.payment_method.label }} {{ form.payment_method }}
-                    {{ form.rate.label}} {{ form.rate }}
+                    {{ form.rate.label }} {{ form.rate }}
                 </p>
 
                 <!-- Кнопка отправки формы -->
@@ -184,8 +184,7 @@
 
         const apiKey = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db'; // Ваш ключ API
         const directionsApiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
-        const mapStyle = '9db719f1-1ab1-4e0e-903f-4c9fa77c10e7';  // Замените на ваш идентификатор стиля карты
-
+        const mapStyle = '9db719f1-1ab1-4e0e-903f-4c9fa77c10e7'; // Замените на ваш идентификатор стиля карты
 
         const map = new mapgl.Map('container', {
             center: [55.7558, 37.6173],
@@ -208,12 +207,12 @@
                         callback([parseFloat(lon), parseFloat(lat)]);
                     } else {
                         console.error('Geocoding result does not contain point data:', data);
-                        alert(`Не удалось найти координаты для адреса: ${address}`);
+                        alert('Не удалось найти координаты для адреса: ' + address);
                     }
                 })
                 .catch(error => {
                     console.error('Geocoding failed with error:', error);
-                    alert('Ошибка геокодирования:', error.message);
+                    alert('Ошибка геокодирования: ' + error.message);
                 });
         }
 
@@ -313,7 +312,7 @@
                         const houseNumber = data.address.house_number || '';
                         const address = street + ' ' + houseNumber;
                         document.getElementById('pickupLocation').value = address;
-                        document.getElementById('{{ form.pickup_location.id }}').value = address; // Синхронизация поля формы
+                        document.getElementById('form_pickup_location').value = address; // Синхронизация поля формы
                     }
                 })
                 .catch(error => {
@@ -359,29 +358,29 @@
             }
             document.getElementById('pickupLocation').value = '';
             document.getElementById('dropoffLocation').value = '';
-            document.getElementById('{{ form.pickup_location.id }}').value = '';
-            document.getElementById('{{ form.dropoff_location.id }}').value = '';
+            document.getElementById('form_pickup_location').value = '';
+            document.getElementById('form_dropoff_location').value = '';
             document.getElementById('fare').textContent = '-';
             document.getElementById('duration').textContent = '-';
             document.getElementById('distance').textContent = '-';
         });
 
-        document.getElementById('pickupLocation').addEventListener('change', function() {
+        document.getElementById('pickupLocation').addEventListener('input', function() {
             if (!pickupMarker) {
                 pickupMarker = createMarker([55.7558, 37.6173]);
                 pickupMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(pickupMarker, this);
-            document.getElementById('{{ form.pickup_location.id }}').value = this.value; // Синхронизация поля формы
+            document.getElementById('form_pickup_location').value = this.value; // Синхронизация поля формы
         });
 
-        document.getElementById('dropoffLocation').addEventListener('change', function() {
+        document.getElementById('dropoffLocation').addEventListener('input', function() {
             if (!dropoffMarker) {
                 dropoffMarker = createMarker([55.7512, 37.6184]);
                 dropoffMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(dropoffMarker, this);
-            document.getElementById('{{ form.dropoff_location.id }}').value = this.value; // Синхронизация поля формы
+            document.getElementById('form_dropoff_location').value = this.value; // Синхронизация поля формы
         });
 
         document.getElementById('orderForm').addEventListener('submit', function(event) {
