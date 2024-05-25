@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
-from sqlalchemy.event import listens_for
 from datetime import datetime
 import pytz
 import hashlib
@@ -24,7 +23,8 @@ class User(db.Model):
         self.password_hash = hashlib.sha256(password.encode()).hexdigest()
 
     def checkPassword(self, password):
-        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+        return self.password_hash == hashlib.sha256(
+            password.encode()).hexdigest()
 
 
 class Trip(db.Model):
@@ -43,6 +43,7 @@ class Trip(db.Model):
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
     len_way = db.Column(db.String(50), nullable=False)
+    rate = db.Column(db.String(100))
     driving_score = db.Column(db.Integer)
     driving_comfort = db.Column(db.Integer)
     driving_polite = db.Column(db.Integer)
@@ -66,8 +67,15 @@ class Trip(db.Model):
                 f"Driver: {self.driver.name if self.driver else None}, \
                 Status: {self.status}")
 
-    def calculateFare(lenWay):
-        return math.ceil(lenWay * 0.02 + 100)
+    def calculateFare(lenWay, rate):
+        fix = 0
+        if rate == "Экономный":
+            fix = 50
+        elif rate == "Стандартный":
+            fix = 100
+        elif rate == "Премиум":
+            fix = 200
+        return math.ceil(lenWay * 0.02 + fix)
 
     def setCompleted(self):
         self.status = "Завершена"
@@ -91,6 +99,7 @@ class Driver(db.Model):
     location = db.Column(db.String(100), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
     trips = db.relationship("Trip", backref="driver", lazy="dynamic")
+    rate = db.Column(db.String(100))
     raiting = db.Column(db.Float)
 
     def updateRaiting(self):
@@ -108,4 +117,5 @@ class Driver(db.Model):
     Phone: {self.phone_number}"
 
     def checkPassword(self, password):
-        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+        return self.password_hash == hashlib.sha256(
+            password.encode()).hexdigest()

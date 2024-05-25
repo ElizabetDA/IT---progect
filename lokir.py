@@ -2,10 +2,8 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-
     ChangePasswordForm, PassageForm, \
-    ChangeUsernameForm, \
-    ChangePasswordForm, PassageForm, ForScore
+    ChangeUsernameForm, ForScore
 
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
@@ -73,7 +71,7 @@ def register_routes(app):
             db.session.commit()
             # Все успешно
             return jsonify({"message":
-                                "Пользователь успешно зарегистрирован"}), 200
+                            "Пользователь успешно зарегистрирован"}), 200
 
         # Возвращение подсказок пользователю
         return make_response(render_template("register.html", form=form), 400)
@@ -140,16 +138,17 @@ def register_routes(app):
         if form.validate_on_submit() is True:
             pickup_location = form.pickup_location.data
             dropoff_location = form.dropoff_location.data
+            rate = form.rate.data
             user_id = get_jwt_identity()
             len_way = lenWay(pickup_location, dropoff_location)
-            fare = Trip.calculateFare(len_way)
+            fare = Trip.calculateFare(len_way, rate)
             payment_method = form.payment_method.data
             new_trip = Trip(pickup_location=pickup_location,
                             dropoff_location=dropoff_location,
                             payment_method=payment_method,
                             user_id=user_id,
                             fare=fare,
-                            status="В ожидании", len_way=len_way,
+                            status="В ожидании", len_way=len_way, rate=rate
                             )
             db.session.add(new_trip)
             db.session.commit()
@@ -232,12 +231,14 @@ def register_routes(app):
                 return make_response(
                     render_template("changePassword.html",
                                     form=form,
-                                    error_message="Неверный старый пароль"), 400)
+                                    error_message="Неверный старый пароль"),
+                    400)
             if user.checkPassword(form.new_password.data):
                 return make_response(
                     render_template("changePassword.html",
                                     form=form,
-                                    same_password_error="Новый пароль не должен совпадать со старым"), 400)
+                                    same_password_error="Новый пароль не \
+                                    должен совпадать со старым"), 400)
 
             # Изменяем пароль
             user.changePassword(form.new_password.data)
@@ -247,7 +248,8 @@ def register_routes(app):
 
             return jsonify({"message": "Пароль успешно изменен"}), 200
         else:
-            return jsonify({"message": "Ошибка валидации формы"}), 400
+            return make_response(render_template("changePassword.html",
+                                                 form=form), 400)
 
     # Функция обновления access_token
     @app.route("/refresh", methods=["POST"])
@@ -366,8 +368,10 @@ def register_routes(app):
             form = PassageForm(request.form)
             if form.validate_on_submit() is True:
                 # Находим первый заказ с текущим статусом "В ожидании"
+                # и соответсвующим рейтингом
                 status = "В ожидании"
-                trip_in_waiting = Trip.query.filter_by(status=status).first()
+                trip_in_waiting = Trip.query.filter_by(
+                    status=status, rate=driver.rate).first()
                 if trip_in_waiting is None:
                     return jsonify({"message": "Нет доступных заказов"}), 400
                 # Меняем статусы поезкди и водителя
@@ -428,7 +432,8 @@ def register_routes(app):
         driver_trips = driver.trips
         # Рендерим шаблон driverAccount.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("driverAccount.html", driver=driver, trips=driver_trips)
+        return render_template("driverAccount.html",
+                               driver=driver, trips=driver_trips)
 
     @app.route("/change_username", methods=["POST"])
     @client_required()
@@ -445,14 +450,16 @@ def register_routes(app):
                 return make_response(
                     render_template("changeUsername.html",
                                     form=form,
-                                    same_username_error="Новое имя не должно совпадать со старым"), 400)
+                                    same_username_error="Новое имя не \
+                                    должно совпадать со старым"), 400)
             user.username = form.new_username.data
 
             # Сохраняем изменения в базе данных
             db.session.commit()
 
             return jsonify({"message": "Имя успешно изменено"}), 200
-        return make_response(render_template("changeUsername.html", form=form), 400)
+        return make_response(render_template("changeUsername.html",
+                                             form=form), 400)
 
     @app.route("/change_username", methods=["GET"])
     @client_required()
