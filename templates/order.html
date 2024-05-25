@@ -78,53 +78,52 @@
             z-index: 3;
         }
         #paymentMethod {
-        margin: 5px;
-        padding: 10px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        color: #000;
-        box-sizing: border-box;
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #000;
+            box-sizing: border-box;
         }
 
         #paymentMethod option {
-        background-color: #fff;
-        color: #000;
+            background-color: #fff;
+            color: #000;
         }
 
         #paymentMethod:hover {
-        background-color: #f0f0f0;
+            background-color: #f0f0f0;
         }
 
         #paymentMethod:focus {
-        outline: none;
+            outline: none;
         }
 
         #rates {
-        margin: 5px;
-        padding: 10px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        color: #000;
-        box-sizing: border-box;
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #000;
+            box-sizing: border-box;
         }
 
         #rates option {
-        background-color: #fff;
-        color: #000;
+            background-color: #fff;
+            color: #000;
         }
 
         #rates:hover {
-        background-color: #f0f0f0;
+            background-color: #f0f0f0;
         }
 
         #rates:focus {
-        outline: none;
+            outline: none;
         }
-
     </style>
 </head>
 <body>
@@ -140,25 +139,41 @@
     <div id="controls">
         <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
         <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
-        <button id="geoLocation">Мое местоположение</button>
-        <button id="reset">Сбросить точки</button>
-        <div id="info">
-            <p>Стоимость: <span id="fare">-</span></p>
-            <p>Время: <span id="duration">-</span></p>
-            <p>Расстояние: <span id="distance">-</span></p>
-        </div>
-        <select id="paymentMethod">
-            <option value="cash">Наличные</option>
-            <option value="card">Карта</option>
-        </select>
-        <select id="rates">
-            <option value="cash">Стандартный тариф</option>
-            <option value="card">Премиум тариф</option>
-            <option value="card">Эконом тариф</option>
-        </select>
-        <button id="orderBtn">Заказать</button>
-    </div>
+        <button id="geoLocation" type="button">Мое местоположение</button>
+        <button id="reset" type="button">Сбросить точки</button>
+        <div class="button-input-container"> <!-- Контейнер для кнопки и полей ввода -->
+            <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
+                <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
+                {{ form.csrf_token }}
+                <!-- Поле для ввода места начала поездки -->
+                <p>
+                    {{ form.pickup_location.label }}
+                    {{ form.pickup_location() }}
+                    <!-- Вывод ошибок валидации места начала поездки -->
+                    {% for error in form.pickup_location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
 
+                <!-- Поле для ввода места окончания поездки -->
+                <p>
+                    {{ form.dropoff_location.label }}
+                    {{ form.dropoff_location() }}
+                    <!-- Вывод ошибок валидации места окончания поездки -->
+                    {% for error in form.dropoff_location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.payment_method.label }} {{ form.payment_method }}
+                    {{ form.rate.label}} {{ form.rate }}
+                </p>
+
+                <!-- Кнопка отправки формы -->
+                <input type="submit" class="auth-button" value="Создать заказ">
+            </form>
+        </div>
+    </div>
 
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
     <script src="https://unpkg.com/@2gis/mapgl-directions@^2/dist/directions.js"></script>
@@ -298,6 +313,7 @@
                         const houseNumber = data.address.house_number || '';
                         const address = street + ' ' + houseNumber;
                         document.getElementById('pickupLocation').value = address;
+                        document.getElementById('{{ form.pickup_location.id }}').value = address; // Синхронизация поля формы
                     }
                 })
                 .catch(error => {
@@ -343,6 +359,8 @@
             }
             document.getElementById('pickupLocation').value = '';
             document.getElementById('dropoffLocation').value = '';
+            document.getElementById('{{ form.pickup_location.id }}').value = '';
+            document.getElementById('{{ form.dropoff_location.id }}').value = '';
             document.getElementById('fare').textContent = '-';
             document.getElementById('duration').textContent = '-';
             document.getElementById('distance').textContent = '-';
@@ -354,6 +372,7 @@
                 pickupMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(pickupMarker, this);
+            document.getElementById('{{ form.pickup_location.id }}').value = this.value; // Синхронизация поля формы
         });
 
         document.getElementById('dropoffLocation').addEventListener('change', function() {
@@ -362,9 +381,11 @@
                 dropoffMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(dropoffMarker, this);
+            document.getElementById('{{ form.dropoff_location.id }}').value = this.value; // Синхронизация поля формы
         });
 
-        document.getElementById('orderBtn').addEventListener('click', function() {
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
             const pickupLocation = document.getElementById('pickupLocation').value;
             const dropoffLocation = document.getElementById('dropoffLocation').value;
 
