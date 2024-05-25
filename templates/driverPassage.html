@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Аккаунт водителя</title>
-    <link rel="stylesheet" href="../static/css/account.css">
+    <link rel="stylesheet" href="../static/css/qa.css">
 </head>
 <body>
+    <div class="top-bar">
+        <div>
+            <button class="about_us-button" onclick="location.href='/passage';">Заказ</button>
+        </div>
+        <button class="account-button" onclick="location.href='/driverAccount';">Аккаунт</button>
+    </div>
     <h1>Начать выполнять заказ</h1>
     <form id="passageForm" method="post" action="/passage" enctype="multipart/form-data" novalidate>
         <!-- CSRF токен для защиты от подделки межсайтовых запросов -->

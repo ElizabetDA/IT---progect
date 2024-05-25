@@ -1,8 +1,8 @@
 body {
     background-image: url("../images/background_12.jpg");
     background-size: cover;
-    background-repeat: no-repeat;
-    font-family: Arial, sans-serif;
+    background-size: auto; /* Изменено на auto, чтобы фон был исходного размера */
+    background-repeat: repeat; /* Фон повторяется по горизонтали и вертикали */
     color: white;
     margin: 0;
     padding: 0;
