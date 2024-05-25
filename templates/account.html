@@ -1,22 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Личный кабинет</title>
-    <link rel="stylesheet" href="../static/css/account.css"> <!-- Подключаем файл общих стилей -->
+    <title>Таксисты</title>
+    <link rel="stylesheet" href="../static/css/account.css">
 </head>
 <body>
     <div class="top-bar">
-        <h1>Личный кабинет</h1>
+        <div>
+            <button class="about_us-button" onclick="location.href='/information';">О нас</button>
+            <button class="about_us-button" onclick="location.href='/order';">Заказать такси</button>
+            <button class="about_us-button" onclick="location.href='/pricing';">Тарифы</button>
+        </div>
         <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
     </div>
-
-    <div class="content-section">
-        <h2>Информация о пользователе</h2>
-        <p>Имя пользователя: {{ user.username }}</p>
-        <p>Email: {{ user.email }}</p>
+  
+    <div class="content-section user-info-container">
+        <div class="user-info-text">
+            <h2>Информация о пользователе</h2>
+            <p>Имя пользователя: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
+        <a href="/change_password" class="change-password-button">Сменить пароль</a>
     </div>
+
 
     <div class="content-section">
         <h2>Мои заказы</h2>
@@ -28,41 +36,10 @@
                     Расстояние: {{ trip.len_way }} м. <br>
                     Стоимость: {{ trip.fare }} Р.<br>
                     Статус: {{ trip.status }}
-                    {% if trip.status == 'Завершена' %}
-                        {% if not trip.driving_sum %}
-                        <form method="post" action="/account" novalidate>
-                            {{ form.csrf_token }}
-                            <p>
-                                {{ form.driving_score.label }} {{ form.driving_score(size=5) }}
-                                {% for error in form.driving_score.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            <br>
-                                {{ form.driving_comfort.label }} {{ form.driving_comfort(size=5) }}
-                                {% for error in form.driving_comfort.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            <br>
-                                {{ form.driving_polite.label }} {{ form.driving_polite(size=5) }}
-                                {% for error in form.driving_polite.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </p>
-                            <input type="hidden" name="trip_id" value={{ trip.id }}>
-                            <input type="submit" value="Оставить отзыв">
-                        </form>
-                        {% else %}
-                            <p>Оценка: {{ trip.driving_sum }}</p>
-                        {% endif %}
-                    {% endif %}
+                    Cпособ оплаты : {{ trip.payment_method }}<br>
                 </li>
             {% endfor %}
         </ul>
-    </div>
-
-    <!-- Кнопка для смены пароля -->
-    <div class="content-section">
-        <button class="change-password-button" onclick="location.href='/change_password';">Сменить пароль</button>
     </div>
 
     <script src="../static/js/account.js"></script> <!-- Подключаем файл скриптов -->
