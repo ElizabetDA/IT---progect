@@ -185,24 +185,6 @@ h1 {
     align-items: flex-start;
 }
 
-.submit-review-button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s, transform 0.3s; /* Добавлены эффекты перехода */
-    align-self: center; /* Кнопка по центру */
-    margin-top: 10px;
-}
-
-.submit-review-button:hover {
-    background-color: #000; /* Цвет фона при наведении */
-    transform: scale(1.05); /* Увеличение при наведении */
-}
-
 footer {
     background-color: #000;
     color: #fff;
@@ -213,3 +195,31 @@ footer {
     width: 100%;
     z-index: 2;
 }
+
+/* account.css */
+.order-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #000;
+}
+
+.order-container li {
+    list-style: none;
+}
+
+.submit-review-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.submit-review-button:hover {
+    background-color: #45a049;
+}
+

@@ -45,6 +45,17 @@
         #controls button:hover {
             background-color: #555;
         }
+
+        .auth-button {
+            background-color: #000;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+        .auth-button:hover {
+            background-color: #555;
+        }
+
         #info {
             margin-top: 10px;
         }
@@ -140,7 +151,7 @@
                 </p>
 
                 <!-- Кнопка отправки формы -->
-                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ">
+                <input id="create" type="submit" class="auth-button" value="Создать заказ">
             </form>
         </div>
         <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
@@ -360,30 +371,6 @@
                 alert('Пожалуйста, введите оба адреса');
                 return;
             }
-
-            fetch('/order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                },
-                body: JSON.stringify({
-                    pickup_location: pickupLocation,
-                    dropoff_location: dropoffLocation
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert('Ошибка создания заказа');
-                }
-            })
-            .catch(error => {
-                console.error('Order creation error:', error);
-                alert('Заказ успешно создан');
-            });
         });
 
         map.on('idle', () => {
