@@ -170,10 +170,10 @@ def register_routes(app):
                 db.session.add(new_trip)
                 db.session.commit()
                 return render_template("success.html", message="Заказ успешно создан",
-                                    next_url=url_for("orderGet"))
-            except Exception as e:
+                                       next_url=url_for("orderGet"))
+            except Exception:
                 return render_template("error.html", message="Не удалось создать заказ. Пожалуйста, попробуйте снова.",
-                                   previous_url=url_for("orderGet"))
+                                       previous_url=url_for("orderGet"))
 
     @app.route("/account", methods=["GET"])
     @client_required()

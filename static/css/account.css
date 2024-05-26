@@ -55,7 +55,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .tariffs-section {
@@ -70,7 +69,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
     max-width: 800px;
     width: calc(100% - 40px);
@@ -112,7 +110,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: 20px;
     max-width: 800px;
     width: calc(100% - 40px);
@@ -155,14 +152,55 @@ h1 {
     background-color: #808080; /* Цвет фона при наведении */
 }
 
-.trips-history-container {
-    margin-top: 20px;
+.my-orders-container, .my-reviews-container {
+    margin: 20px;
     padding: 20px;
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     max-width: 800px;
     width: calc(100% - 40px);
+}
+
+.my-orders-container h2, .my-reviews-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.my-orders-container ul, .my-reviews-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.my-orders-container li, .my-reviews-container li {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.my-reviews-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.submit-review-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s; /* Добавлены эффекты перехода */
+    align-self: center; /* Кнопка по центру */
+    margin-top: 10px;
+}
+
+.submit-review-button:hover {
+    background-color: #000; /* Цвет фона при наведении */
+    transform: scale(1.05); /* Увеличение при наведении */
 }
 
 footer {
