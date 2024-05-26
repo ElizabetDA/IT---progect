@@ -16,33 +16,108 @@ import hashlib
 
 # Функция получения домашней страницы
 def register_routes(app):
+    """Регистрирует маршруты для приложения Flask.
+
+    Args:
+        app (Flask): Объект приложения Flask.
+
+    Returns:
+        None
+    """
+
     @app.route("/")
     def index():
+
+        """Обрабатывает запрос на главную страницу.
+
+        Args:
+
+        Returns:
+            str: HTML-код главной страницы.
+        """
+
         return render_template("home.html")
 
     @app.route("/about_us", methods=["GET"])
     def about_us():
+
+        """Обрабатывает запрос на страницу "О нас".
+
+        Args:
+
+        Returns:
+            str: HTML-код страницы "О нас".
+        """
+
         return render_template("about_us.html")
 
     @app.route("/information", methods=["GET"])
     def information():
+
+        """Обрабатывает запрос на страницу "Информация".
+
+        Args:
+        Returns:
+            str: HTML-код страницы "Информация".
+        """
+
         return render_template("information.html")
 
     @app.route("/contacts", methods=["GET"])
     def contacts():
+
+        """Обрабатывает запрос на страницу "Контакты".
+
+        Args:
+
+
+        Returns:
+            str: HTML-код страницы "Контакты".
+        """
+
         return render_template("contacts.html")
 
     @app.route("/qa", methods=["GET"])
     def qa():
+
+        """Обрабатывает запрос на страницу "Часто задаваемые вопросы".
+
+        Args:
+
+
+        Returns:
+            str: HTML-код страницы "Часто задаваемые вопросы".
+        """
+
         return render_template("qa.html")
 
     @app.route("/pricing", methods=["GET"])
     def pricing():
+
+        """Обрабатывает запрос на страницу "Цены".
+
+        Args:
+
+
+        Returns:
+            str: HTML-код страницы "Цены".
+        """
+
         return render_template("pricing.html")
 
     # Функция регистрации
     @app.route("/register", methods=["POST"])
     def registration():
+
+        """Обрабатывает запрос на регистрацию нового пользователя.
+
+        Args:
+
+        Returns:
+            str: HTML-код страницы с сообщением об успешной регистрации
+            или ошибке.
+        """
+
         form = RegistrationForm(request.form)
         if form.validate_on_submit():
             username = form.username.data
@@ -66,12 +141,30 @@ def register_routes(app):
     # Функция получения формы регистрации
     @app.route("/register", methods=["GET"])
     def registrationForm():
+
+        """Обрабатывает запрос на получение формы регистрации.
+
+        Args:
+
+        Returns:
+            str: HTML-код формы регистрации.
+        """
+
         form = RegistrationForm()
         return render_template("register.html", form=form)
 
     # Функция авторизации
     @app.route("/login", methods=["POST"])
     def authorization():
+
+        """Обрабатывает запрос на авторизацию существующего пользователя.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешной авторизации
+            или ошибке.
+        """
+
         form = LoginForm(request.form)
         if form.validate_on_submit():
             try:
@@ -99,6 +192,14 @@ def register_routes(app):
     # Функция получения формы авторизации
     @app.route("/login", methods=["GET"])
     def authorizationForm():
+
+        """Обрабатывает запрос на получение формы авторизации.
+
+        Args:
+        Returns:
+            str: HTML-код формы авторизации.
+        """
+
         form = LoginForm()
         return render_template("login.html", form=form)
 
@@ -106,6 +207,14 @@ def register_routes(app):
     @app.route("/order", methods=["GET"])
     @client_required()
     def orderGet():
+
+        """Обрабатывает запрос на получение формы заказа.
+
+        Args:
+        Returns:
+            str: HTML-код формы заказа.
+        """
+
         user_id = get_jwt_identity()
         statuses = ["В ожидании", "Водитель едет к вам",
                     "В пути к конечной точке маршрута"]
@@ -151,6 +260,15 @@ def register_routes(app):
     @app.route("/order", methods=["POST"])
     @client_required()
     def orderCreate():
+
+        """Обрабатывает запрос на создание нового заказа.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешном создании заказа
+            или ошибке.
+        """
+
         form = TripForm(request.form)
         if form.validate_on_submit():
             try:
@@ -178,6 +296,14 @@ def register_routes(app):
     @app.route("/account", methods=["GET"])
     @client_required()
     def accountGet():
+
+        """Обрабатывает запрос на получение страницы аккаунта клиента.
+
+        Args:
+        Returns:
+            str: HTML-код страницы аккаунта клиента.
+        """
+
         # Получаем идентификатор авторизованного пользователя из JWT токена
         user_id = get_jwt_identity()
 
@@ -194,6 +320,15 @@ def register_routes(app):
     @app.route("/account", methods=["POST"])
     @client_required()
     def accountPost():
+
+        """Обрабатывает запрос на отправку оценки поездки.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешной отправке оценки
+            или ошибке.
+        """
+
         form = ForScore(request.form)
         trip_id = request.form.get("trip_id")
         if form.validate_on_submit() is True:
@@ -213,6 +348,15 @@ def register_routes(app):
     @app.route("/logout", methods=["GET"])
     @jwt_required()
     def logout():
+
+        """Обрабатывает запрос на выход из аккаунта.
+
+        Args:
+        Returns:
+            Response: Ответ с перенаправлением на главную страницу
+            и удалением cookie с JWT токеном доступа.
+        """
+
         # Создаем объект ответа, перенаправляющий
         # пользователя на главную страницу
         response = make_response(redirect(url_for("index")))
@@ -226,6 +370,14 @@ def register_routes(app):
     @app.route("/change_password", methods=["GET"])
     @client_required()
     def changePasswordGet():
+
+        """Обрабатывает запрос на получение формы смены пароля.
+
+        Args:
+        Returns:
+            str: HTML-код формы смены пароля.
+        """
+
         form = ChangePasswordForm()
 
         # Рендерим шаблон change_password.html и передаем в него форму
@@ -234,6 +386,15 @@ def register_routes(app):
     @app.route("/change_password", methods=["POST"])
     @client_required()
     def changePassword():
+
+        """Обрабатывает запрос на смену пароля.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешной смене пароля
+            или ошибке.
+        """
+
         form = ChangePasswordForm(request.form)
         if form.validate_on_submit():
             user_id = get_jwt_identity()
@@ -255,6 +416,14 @@ def register_routes(app):
     @app.route("/refresh", methods=["POST"])
     @jwt_required(refresh=True)
     def refreshToken():
+
+        """Обрабатывает запрос на обновление JWT токена доступа.
+
+        Args:
+        Returns:
+            Response: Ответ с обновленным JWT токеном доступа.
+        """
+
         current_user = get_jwt_identity()
         claims = get_jwt()
         if "client" in claims:
@@ -275,11 +444,28 @@ def register_routes(app):
 
     @app.route("/driver_login", methods=["GET"])
     def driverAuthorizationForm():
+
+        """Обрабатывает запрос на получение формы авторизации водителя.
+
+        Args:
+        Returns:
+            str: HTML-код формы авторизации водителя.
+        """
+
         form = LoginForm()
         return render_template("driverLogin.html", form=form)
 
     @app.route("/driver_login", methods=["POST"])
     def driverAuthorization():
+
+        """Обрабатывает запрос на авторизацию водителя.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешной авторизации
+            водителя или ошибке.
+        """
+
         form = LoginForm(request.form)
         # Валидация
         if form.validate_on_submit() is True:
@@ -319,6 +505,14 @@ def register_routes(app):
     @app.route("/passage", methods=["GET"])
     @driver_required()
     def getDriverPassage():
+
+        """Обрабатывает запрос на получение формы поиска заказов для водителя.
+
+        Args:
+        Returns:
+            str: HTML-код формы поиска заказов для водителя.
+        """
+
         driver_id = get_jwt_identity()
         driver = Driver.query.filter_by(id=driver_id).first()
         # Возвращает форму поиска закаказа,
@@ -360,6 +554,15 @@ def register_routes(app):
     @app.route("/passage", methods=["POST"])
     @driver_required()
     def driverPassage():
+
+        """Обрабатывает запрос на создание заказа для водителя.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешном создании заказа
+            для водителя или ошибке.
+        """
+
         form_type = request.form.get("form_type")
         driver_id = get_jwt_identity()
         driver = Driver.query.filter_by(id=driver_id).first()
@@ -413,6 +616,14 @@ def register_routes(app):
     @app.route("/driver_account", methods=["GET"])
     @driver_required()
     def driverAccount():
+
+        """Обрабатывает запрос на получение страницы аккаунта водителя.
+
+        Args:
+        Returns:
+            str: HTML-код страницы аккаунта водителя.
+        """
+
         # Получаем идентификатор авторизованного водителя из JWT токена
         driver_id = get_jwt_identity()
         # Извлекаем объект пользователя из базы данных по его идентификатору
@@ -427,6 +638,15 @@ def register_routes(app):
     @app.route("/change_username", methods=["POST"])
     @client_required()
     def changeUsername():
+
+        """Обрабатывает запрос на смену имени пользователя.
+
+        Args:
+        Returns:
+            str: HTML-код страницы с сообщением об успешной смене имени
+            или ошибке.
+        """
+
         form = ChangeUsernameForm(request.form)
         if form.validate_on_submit():
             user_id = get_jwt_identity()
@@ -444,6 +664,14 @@ def register_routes(app):
     @app.route("/change_username", methods=["GET"])
     @client_required()
     def changeUsernameGet():
+
+        """Обрабатывает запрос на получение формы смены имени пользователя.
+
+        Args:
+        Returns:
+            str: HTML-код формы смены имени пользователя.
+        """
+
         form = ChangeUsernameForm()
         # Рендерим шаблон change_password.html и передаем в него форму
         return render_template("changeUsername.html", form=form)

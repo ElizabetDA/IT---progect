@@ -4,8 +4,6 @@ from flask import Flask
 from lokir import register_routes
 from flask_wtf.csrf import CSRFProtect
 import os
-import hashlib
-
 
 # Создание экземпляра Flask приложения
 app = Flask(__name__)
@@ -18,7 +16,7 @@ csrf = CSRFProtect(app)
 # Привязка SQLAlchemy к flask приложению
 db.init_app(app)
 register_routes(app)
-print(hashlib.sha256("123".encode()).hexdigest())
+
 if __name__ == "__main__":
     # Создание таблицы User, если она не созадана
     with app.app_context():

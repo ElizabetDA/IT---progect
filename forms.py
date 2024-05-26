@@ -6,6 +6,9 @@ from wtforms import StringField, PasswordField, \
 
 # Класс формы регистрации
 class RegistrationForm(FlaskForm):
+
+    """Форма регистрации нового пользователя."""
+
     message_empty_field = "Поле не должно быть пустым"
     message_name = "Имя должно содеражать только русские буквы"
     message_email = "Неверный почтовый адрес"
@@ -25,6 +28,9 @@ class RegistrationForm(FlaskForm):
 
 # Класс формы авторизации
 class LoginForm(FlaskForm):
+
+    """Форма авторизации существующего пользователя."""
+
     message_empty_field = "Поле не должно быть пустым"
     message_email = "Неверный почтовый адрес"
     email = StringField("Введите Email", validators=[
@@ -36,6 +42,9 @@ class LoginForm(FlaskForm):
 
 # Класс формы поездки
 class TripForm(FlaskForm):
+
+    """Форма создания заказа на поездку."""
+
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки")
     dropoff_location = StringField("Место начала поездки")
@@ -49,6 +58,9 @@ class TripForm(FlaskForm):
 
 # Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):
+
+    """Форма смены пароля пользователя."""
+
     message_empty_field = "Поле не должно быть пустым"
     message_password = "Неверный пароль"
     old_password = PasswordField("Введите старый пароль", validators=[
@@ -59,12 +71,23 @@ class ChangePasswordForm(FlaskForm):
 
 # Класс рабочей страницы водителя
 class PassageForm(FlaskForm):
+    """Форма поиска заказов для водителя.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     message_empty_field = "Поле не должно быть пустым"
     message_adress = "Неверный формат адреса"
     location = StringField("Местоположение водителя")
 
 
 class ChangeUsernameForm(FlaskForm):
+
+    """Форма смены имени пользователя."""
+
     message_name = "Имя должно содеражать только русские буквы"
     message_empty_field = "Поле не должно быть пустым"
     new_username = StringField(
@@ -75,6 +98,9 @@ class ChangeUsernameForm(FlaskForm):
 
 
 class ForScore(FlaskForm):
+
+    """Форма оценки поездки пользователем."""
+
     driving_score = IntegerField(
         "Стиль вождения",
         validators=[validators.NumberRange(min=1, max=5)])
