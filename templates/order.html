@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание заказа</title>
+    <title>2GIS Map API</title>
     <style>
         html, body, #container {
             margin: 0;
@@ -28,7 +28,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             font-family: Arial, sans-serif;
         }
-        #controls input, #controls button {
+        #controls input, #controls button, #controls select {
             margin: 5px;
             padding: 10px;
             font-size: 14px;
@@ -45,6 +45,19 @@
         #controls button:hover {
             background-color: #555;
         }
+
+        .auth-button{
+        background-color: #000;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+        }
+
+        #auth-button:hover {
+            background-color: #555;
+        }
+
+
         #info {
             margin-top: 10px;
         }
@@ -78,53 +91,25 @@
             z-index: 3;
         }
         #paymentMethod {
-        margin: 5px;
-        padding: 10px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        color: #000;
-        box-sizing: border-box;
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #000;
+            box-sizing: border-box;
         }
-
         #paymentMethod option {
-        background-color: #fff;
-        color: #000;
+            background-color: #fff;
+            color: #000;
         }
-
         #paymentMethod:hover {
-        background-color: #f0f0f0;
+            background-color: #f0f0f0;
         }
-
         #paymentMethod:focus {
-        outline: none;
+            outline: none;
         }
-
-        #rates {
-        margin: 5px;
-        padding: 10px;
-        font-size: 14px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        color: #000;
-        box-sizing: border-box;
-        }
-
-        #rates option {
-        background-color: #fff;
-        color: #000;
-        }
-
-        #rates:hover {
-        background-color: #f0f0f0;
-        }
-
-        #rates:focus {
-        outline: none;
-        }
-
     </style>
 </head>
 <body>
@@ -138,27 +123,44 @@
     </div>
     <div id="container"></div>
     <div id="controls">
-        <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
-        <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
-        <button id="geoLocation">Мое местоположение</button>
-        <button id="reset">Сбросить точки</button>
-        <div id="info">
-            <p>Стоимость: <span id="fare">-</span></p>
-            <p>Время: <span id="duration">-</span></p>
-            <p>Расстояние: <span id="distance">-</span></p>
-        </div>
-        <select id="paymentMethod">
-            <option value="cash">Наличные</option>
-            <option value="card">Карта</option>
-        </select>
-        <select id="rates">
-            <option value="cash">Стандартный тариф</option>
-            <option value="card">Премиум тариф</option>
-            <option value="card">Эконом тариф</option>
-        </select>
-        <button id="orderBtn">Заказать</button>
-    </div>
+        <div class="button-input-container">
+            <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
+            <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
+            <button id="geoLocation">Мое местоположение</button>
+            <button id="reset">Сбросить точки</button>
+            <!-- Контейнер для кнопки и полей ввода -->
+            <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
+                <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
+                {{ form.csrf_token }}
+                <!-- Поле для ввода места начала поездки -->
+                <p style="display:none;">
+                    {{ form.pickup_location.label }}
+                    {{ form.pickup_location(id="formPickupLocation") }}
+                    <!-- Вывод ошибок валидации места начала поездки -->
+                    {% for error in form.pickup_location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
 
+                <!-- Поле для ввода места окончания поездки -->
+                <p style="display:none;">
+                    {{ form.dropoff_location.label }}
+                    {{ form.dropoff_location(id="formDropoffLocation") }}
+                    <!-- Вывод ошибок валидации места окончания поездки -->
+                    {% for error in form.dropoff_location.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.payment_method.label }} {{ form.payment_method }}
+                    {{ form.rate.label }} {{ form.rate }}
+                </p>
+
+                <!-- Кнопка отправки формы -->
+                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ" onclick="copyAndPasteAddresses()">
+            </form>
+        </div>
+    </div>
 
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
     <script src="https://unpkg.com/@2gis/mapgl-directions@^2/dist/directions.js"></script>
@@ -167,10 +169,9 @@
         let dropoffMarker;
         let routeLine;
 
-        const apiKey = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db'; // Ваш ключ API
+        const apiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
         const directionsApiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
-        const mapStyle = '9db719f1-1ab1-4e0e-903f-4c9fa77c10e7';  // Замените на ваш идентификатор стиля карты
-
+        const mapStyle = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db';  // Замените на ваш идентификатор стиля карты
 
         const map = new mapgl.Map('container', {
             center: [55.7558, 37.6173],
@@ -384,18 +385,6 @@
                     dropoff_location: dropoffLocation
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    alert('Ошибка создания заказа');
-                }
-            })
-            .catch(error => {
-                console.error('Order creation error:', error);
-                alert('Не удалось создать заказ');
-            });
         });
 
         map.on('idle', () => {
@@ -405,6 +394,23 @@
                 controls.style.right = '20px';
             }
         });
+
+        // Функция для копирования и вставки адресов
+        function copyAndPasteAddresses() {
+            const pickupInput = document.getElementById('pickupLocation');
+            const dropoffInput = document.getElementById('dropoffLocation');
+            const formPickupInput = document.querySelector('input[name="pickup_location"]');
+            const formDropoffInput = document.querySelector('input[name="dropoff_location"]');
+
+            if (pickupInput && dropoffInput && formPickupInput && formDropoffInput) {
+                formPickupInput.value = pickupInput.value;
+                formDropoffInput.value = dropoffInput.value;
+            } else {
+                alert('Не удалось найти поля для копирования адресов.');
+            }
+        }
+
+        document.getElementById('copyAddresses').addEventListener('click', copyAndPasteAddresses);
     </script>
 </body>
 </html>

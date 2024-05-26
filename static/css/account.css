@@ -1,7 +1,8 @@
 body {
     background-image: url("../images/background_12.jpg");
     background-size: cover;
-    background-repeat: no-repeat;
+    background-size: auto; /* Изменено на auto, чтобы фон был исходного размера */
+    background-repeat: repeat; /* Фон повторяется по горизонтали и вертикали */
     font-family: Arial, sans-serif;
     color: white;
     margin: 0;
@@ -54,7 +55,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .tariffs-section {
@@ -69,7 +69,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
     max-width: 800px;
     width: calc(100% - 40px);
@@ -111,7 +110,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0.5);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     margin: 20px;
     max-width: 800px;
     width: calc(100% - 40px);
@@ -139,14 +137,52 @@ h1 {
     background-color: #808080; /* Цвет фона при наведении */
 }
 
-.trips-history-container {
-    margin-top: 20px;
+.change-username-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s; /* Добавлен эффект перехода для изменения цвета фона при наведении */
+}
+
+.change-username-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+}
+
+.my-orders-container, .my-reviews-container {
+    margin: 20px;
     padding: 20px;
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     max-width: 800px;
     width: calc(100% - 40px);
+}
+
+.my-orders-container h2, .my-reviews-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.my-orders-container ul, .my-reviews-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.my-orders-container li, .my-reviews-container li {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.my-reviews-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 footer {
@@ -159,3 +195,31 @@ footer {
     width: 100%;
     z-index: 2;
 }
+
+/* account.css */
+.order-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #000;
+}
+
+.order-container li {
+    list-style: none;
+}
+
+.submit-review-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.submit-review-button:hover {
+    background-color: #45a049;
+}
+

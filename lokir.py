@@ -2,10 +2,8 @@ from flask import render_template, request, \
     jsonify, make_response, redirect, url_for
 from models import db, User, Trip, Driver
 from forms import RegistrationForm, LoginForm, TripForm, \
-
     ChangePasswordForm, PassageForm, \
-    ChangeUsernameForm, \
-    ChangePasswordForm, PassageForm, ForScore
+    ChangeUsernameForm, ForScore
 
 from sqlalchemy.orm.exc import NoResultFound
 from flask_wtf import FlaskForm
@@ -43,39 +41,26 @@ def register_routes(app):
         return render_template("pricing.html")
 
     # Функция регистрации
-    # Функция регистрации
     @app.route("/register", methods=["POST"])
     def registration():
         form = RegistrationForm(request.form)
-        # Валидация
-        if form.validate_on_submit() is True:
+        if form.validate_on_submit():
             username = form.username.data
             email = form.email.data.lower()
             password = form.password.data
             password_hash = hashlib.sha256(password.encode()).hexdigest()
 
-            print(username, email, password_hash)
             if User.query.filter_by(email=email).first():
-                return (
-                    jsonify(
-                        {
-                            "message": "Пользователь с таким \
-                                адресом электронной почты уже существует"
-                        }
-                    ),
-                    409,
-                )
+                return render_template("error.html",
+                                       message="Пользователь с таким адресом электронной почты уже существует",
+                                       previous_url=url_for("registrationForm"))
 
-            new_user = User(username=username, email=email,
-                            password_hash=password_hash)
-            # Добавляем пользователя в БД
+            new_user = User(username=username, email=email, password_hash=password_hash)
             db.session.add(new_user)
             db.session.commit()
-            # Все успешно
-            return jsonify({"message":
-                                "Пользователь успешно зарегистрирован"}), 200
+            return render_template("success.html", message="Пользователь успешно зарегистрирован",
+                                   next_url=url_for("authorizationForm"))
 
-        # Возвращение подсказок пользователю
         return make_response(render_template("register.html", form=form), 400)
 
     # Функция получения формы регистрации
@@ -88,35 +73,27 @@ def register_routes(app):
     @app.route("/login", methods=["POST"])
     def authorization():
         form = LoginForm(request.form)
-        if form.validate_on_submit() is True:
+        if form.validate_on_submit():
             try:
                 email = form.email.data.lower()
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
-                # Сравниваем хэш введенного пароля с
-                # хэшем пароля найденного пользователя
+                # Сравниваем хэш введенного пароля с хэшем пароля найденного пользователя
 
                 if user.checkPassword(password):
-                    # Создание токена и переход на страницу создания заказа
-                    # для уже авторизованного пользователя
-                    access_token = create_access_token(identity=user.id,
-                                                       additional_claims={
-                                                           "client": True})
-                    refresh_token = create_refresh_token(identity=user.id,
-                                                         additional_claims={
-                                                             "client": True})
+                    access_token = create_access_token(identity=user.id, additional_claims={"client": True})
+                    refresh_token = create_refresh_token(identity=user.id, additional_claims={"client": True})
                     response = make_response(redirect(url_for("orderGet")))
-                    response.set_cookie("refresh_token_cookie",
-                                        value=refresh_token,
-                                        httponly=True, secure=True)
-                    response.set_cookie("access_token_cookie",
-                                        value=access_token)
+                    response.set_cookie("refresh_token_cookie", value=refresh_token, httponly=True, secure=True)
+                    response.set_cookie("access_token_cookie", value=access_token)
                     return response
                 else:
-                    return jsonify({"message": "Неверный пароль"}), 401
+                    return render_template("error.html", message="Неверный пароль",
+                                           previous_url=url_for("authorizationForm"))
             except NoResultFound:
-                return jsonify({"message": "Пользователь не найден"}), 404
-        # Возвращение подсказок пользователю
+                return render_template("error.html", message="Пользователь не найден",
+                                       previous_url=url_for("authorizationForm"))
+
         return make_response(render_template("login.html", form=form), 400)
 
     # Функция получения формы авторизации
@@ -129,35 +106,74 @@ def register_routes(app):
     @app.route("/order", methods=["GET"])
     @client_required()
     def orderGet():
-        form = TripForm()
-        return render_template("order.html", form=form)
+        user_id = get_jwt_identity()
+        statuses = ["В ожидании", "Водитель едет к вам",
+                    "В пути к конечной точке маршрута"]
+        trip = Trip.query.filter(Trip.status.in_(statuses),
+                                 Trip.user_id == user_id).first()
+        if trip is None:
+            form = TripForm()
+            return render_template("order.html", form=form)
+        else:
+            if trip.status == "В ожидании":
+                pickup_location = trip.pickup_location
+                dropoff_location = trip.dropoff_location
+                len_way = trip.len_way
+                fare = trip.fare
+                status = trip.status
+                rate = trip.rate
+                return render_template("trip.html",
+                                       pickup_location=pickup_location,
+                                       dropoff_location=dropoff_location,
+                                       len_way=len_way,
+                                       fare=fare, status=status, rate=rate)
+            else:
+                driver_id = trip.driver_id
+                driver = Driver.query.filter_by(id=driver_id).first()
+                car = driver.car_model
+                license_plate = driver.license_plate
+                taxist = driver.username
+                pickup_location = trip.pickup_location
+                dropoff_location = trip.dropoff_location
+                len_way = trip.len_way
+                fare = trip.fare
+                status = trip.status
+                rate = trip.rate
+                return render_template("trip.html",
+                                       pickup_location=pickup_location,
+                                       dropoff_location=dropoff_location,
+                                       len_way=len_way,
+                                       fare=fare, status=status, car=car,
+                                       license_plate=license_plate,
+                                       taxist=taxist, rate=rate)
 
     # Функция создания заказа
     @app.route("/order", methods=["POST"])
     @client_required()
     def orderCreate():
         form = TripForm(request.form)
-        if form.validate_on_submit() is True:
-            pickup_location = form.pickup_location.data
-            dropoff_location = form.dropoff_location.data
-            user_id = get_jwt_identity()
-            len_way = lenWay(pickup_location, dropoff_location)
-            fare = Trip.calculateFare(len_way)
-            payment_method = form.payment_method.data
-            new_trip = Trip(pickup_location=pickup_location,
-                            dropoff_location=dropoff_location,
-                            payment_method=payment_method,
-                            user_id=user_id,
-                            fare=fare,
-                            status="В ожидании", len_way=len_way,
-                            )
-            db.session.add(new_trip)
-            db.session.commit()
-            print(pickup_location)
-            print(dropoff_location)
-            return jsonify({"message": "Заказ успешно создан"}), 200
-        # Возвращение подсказок пользователю
-        return make_response(render_template("order.html", form=form), 400)
+        if form.validate_on_submit():
+            try:
+                pickup_location = form.pickup_location.data
+                dropoff_location = form.dropoff_location.data
+                rate = form.rate.data
+                user_id = get_jwt_identity()
+                len_way = lenWay(pickup_location, dropoff_location)
+                fare = Trip.calculateFare(len_way, rate)
+                payment_method = form.payment_method.data
+                new_trip = Trip(pickup_location=pickup_location,
+                                dropoff_location=dropoff_location,
+                                payment_method=payment_method,
+                                user_id=user_id,
+                                fare=fare,
+                                status="В ожидании", len_way=len_way, rate=rate)
+                db.session.add(new_trip)
+                db.session.commit()
+                return render_template("success.html", message="Заказ успешно создан",
+                                       next_url=url_for("orderGet"))
+            except Exception:
+                return render_template("error.html", message="Не удалось создать заказ. Пожалуйста, попробуйте снова.",
+                                       previous_url=url_for("orderGet"))
 
     @app.route("/account", methods=["GET"])
     @client_required()
@@ -220,34 +236,20 @@ def register_routes(app):
     def changePassword():
         form = ChangePasswordForm(request.form)
         if form.validate_on_submit():
-            # Получаем идентификатор авторизованного пользователя из JWT токена
             user_id = get_jwt_identity()
-
-            # Извлекаем объект пользователя
-            # из базы данных по его идентификатору
             user = User.query.get(user_id)
-
-            # Проверяем, совпадает ли старый пароль
             if not user.checkPassword(form.old_password.data):
-                return make_response(
-                    render_template("changePassword.html",
-                                    form=form,
-                                    error_message="Неверный старый пароль"), 400)
+                return render_template("error.html", message="Неверный старый пароль",
+                                       previous_url=url_for("changePasswordGet"))
             if user.checkPassword(form.new_password.data):
-                return make_response(
-                    render_template("changePassword.html",
-                                    form=form,
-                                    same_password_error="Новый пароль не должен совпадать со старым"), 400)
+                return render_template("error.html", message="Новый пароль не должен совпадать со старым",
+                                       previous_url=url_for("changePasswordGet"))
 
-            # Изменяем пароль
             user.changePassword(form.new_password.data)
-
-            # Сохраняем изменения в базе данных
             db.session.commit()
+            return render_template("success.html", message="Пароль успешно изменен", next_url=url_for("accountGet"))
 
-            return jsonify({"message": "Пароль успешно изменен"}), 200
-        else:
-            return jsonify({"message": "Ошибка валидации формы"}), 400
+        return make_response(render_template("changePassword.html", form=form), 400)
 
     # Функция обновления access_token
     @app.route("/refresh", methods=["POST"])
@@ -361,20 +363,19 @@ def register_routes(app):
         form_type = request.form.get("form_type")
         driver_id = get_jwt_identity()
         driver = Driver.query.filter_by(id=driver_id).first()
-        # Водитель нажал "Поиск заказа"
+
         if form_type == "findOrder":
             form = PassageForm(request.form)
-            if form.validate_on_submit() is True:
-                # Находим первый заказ с текущим статусом "В ожидании"
+            if form.validate_on_submit():
                 status = "В ожидании"
-                trip_in_waiting = Trip.query.filter_by(status=status).first()
+                trip_in_waiting = Trip.query.filter_by(status=status, rate=driver.rate).first()
                 if trip_in_waiting is None:
-                    return jsonify({"message": "Нет доступных заказов"}), 400
-                # Меняем статусы поезкди и водителя
+                    return render_template("error.html", message="Нет доступных заказов",
+                                           previous_url=url_for("getDriverPassage"))
+
                 driver.changeAvailability("В поездке")
                 trip_in_waiting.changeStatus("Водитель едет к вам")
                 trip_in_waiting.chandeDriverId(driver_id)
-                # Получаем местоположение клиента из объекта trip_in_waiting
                 pickup_location = trip_in_waiting.pickup_location
                 dropoff_location = trip_in_waiting.dropoff_location
                 db.session.commit()
@@ -382,16 +383,12 @@ def register_routes(app):
                                        pickup_location=pickup_location,
                                        dropoff_location=dropoff_location,
                                        form=form)
-            return make_response(render_template("driverPassage.html",
-                                                 form=form), 400)
-        # Водитель подъехал к начальной точке и нажал "Начать поездку"
+            return make_response(render_template("driverPassage.html", form=form), 400)
+
         elif form_type == "startTrip":
             form = FlaskForm(request.form)
-            driver_id = get_jwt_identity()
             status = "Водитель едет к вам"
-            trip_in_process = Trip.query.filter_by(driver_id=driver_id,
-                                                   status=status).first()
-            # Меняем статус поездки
+            trip_in_process = Trip.query.filter_by(driver_id=driver_id, status=status).first()
             trip_in_process.changeStatus("В пути к конечной точке маршрута")
             pickup_location = trip_in_process.pickup_location
             dropoff_location = trip_in_process.dropoff_location
@@ -401,21 +398,17 @@ def register_routes(app):
                                    pickup_location=pickup_location,
                                    dropoff_location=dropoff_location,
                                    fare=fare, form=form)
-        # Водитель нажал "Завершить поездку"
+
         elif form_type == "endTrip":
-            driver_id = get_jwt_identity()
             status = "В пути к конечной точке маршрута"
-            trip_in_process = Trip.query.filter_by(driver_id=driver_id,
-                                                   status=status).first()
+            trip_in_process = Trip.query.filter_by(driver_id=driver_id, status=status).first()
             fare = trip_in_process.fare
-            driver = Driver.query.filter_by(id=driver_id).first()
             driver.changeAvailability("Свободен")
-            # Зачисляем деньги в колонку balance водителя
             driver.addMoneyForTrip(fare)
-            # Завершаем поездку
             trip_in_process.setCompleted()
             db.session.commit()
-            return make_response(redirect(url_for("getDriverPassage")))
+            return render_template("success.html", message="Поездка успешно завершена",
+                                   next_url=url_for("getDriverPassage"))
 
     @app.route("/driver_account", methods=["GET"])
     @driver_required()
@@ -428,30 +421,24 @@ def register_routes(app):
         driver_trips = driver.trips
         # Рендерим шаблон driverAccount.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("driverAccount.html", driver=driver, trips=driver_trips)
+        return render_template("driverAccount.html",
+                               driver=driver, trips=driver_trips)
 
     @app.route("/change_username", methods=["POST"])
     @client_required()
     def changeUsername():
         form = ChangeUsernameForm(request.form)
         if form.validate_on_submit():
-            # Получаем идентификатор авторизованного пользователя из JWT токена
             user_id = get_jwt_identity()
-
-            # Извлекаем объект пользователя
-            # из базы данных по его идентификатору
             user = User.query.get(user_id)
             if user.username == form.new_username.data:
-                return make_response(
-                    render_template("changeUsername.html",
-                                    form=form,
-                                    same_username_error="Новое имя не должно совпадать со старым"), 400)
+                return render_template("error.html", message="Новое имя не должно совпадать со старым",
+                                       previous_url=url_for("changeUsernameGet"))
+
             user.username = form.new_username.data
-
-            # Сохраняем изменения в базе данных
             db.session.commit()
+            return render_template("success.html", message="Имя успешно изменено", next_url=url_for("accountGet"))
 
-            return jsonify({"message": "Имя успешно изменено"}), 200
         return make_response(render_template("changeUsername.html", form=form), 400)
 
     @app.route("/change_username", methods=["GET"])

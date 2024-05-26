@@ -1,7 +1,0 @@
-<h1>Изменить способ оплаты</h1>
-<form id="ChangePaymentMethodForm" method="post" action="/change_payment_method" enctype="multipart/form-data"
-      novalidate>
-    {{ form.csrf_token }}
-    {{ form.payment_method.label }} {{ form.payment_method }}
-    <input type="submit" value="Сохранить">
-</form>

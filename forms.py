@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
-from wtforms import StringField, PasswordField, IntegerField, validators, SelectField
+from wtforms import StringField, PasswordField, \
+    IntegerField, validators, SelectField
 
 
 # Класс формы регистрации
@@ -38,8 +39,13 @@ class TripForm(FlaskForm):
     message_adress = "Неверный формат адреса"
     pickup_location = StringField("Место начала поездки")
     dropoff_location = StringField("Место начала поездки")
-    payment_method = SelectField('Способ оплаты', choices=[('Карта', 'Карта'), ('Наличные', 'Наличные')],
+    payment_method = SelectField('Способ оплаты', choices=[
+        ('Карта', 'Карта'), ('Наличные', 'Наличные')],
                                  validators=[InputRequired()])
+    rate = SelectField("Тариф", choices=[("Экономный", "Экономный"),
+                                         ("Стандартный", "Стандартный"),
+                                         ("Премиум", "Премиум")])
+
 
 # Класс формы смены пароля
 class ChangePasswordForm(FlaskForm):

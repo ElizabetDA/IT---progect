@@ -1,22 +1,36 @@
-<h1>Личный кабинет</h1>
-<p>Имя пользователя: {{ driver.username }}</p>
-<p>Email: {{ driver.email }}</p>
-<p>Телефон: {{ driver.phone_number}} </p>
-<p>Модель машины: {{ driver.car_model}} </p>
-<p>Номерной знак: {{ driver.license_plate }}</p>
-<p>Баланс: {{ driver.balance }}</p>
-<p>Рейтинг: {{ driver.raiting }}</p>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт водителя</title>
+    <link rel="stylesheet" href="../static/css/account.css">
+</head>
+<body>
+    <div class="content-section user-info-container">
+        <h1>Личный кабинет</h1>
+        <p>Имя пользователя: {{ driver.username }}</p>
+        <p>Email: {{ driver.email }}</p>
+        <p>Телефон: {{ driver.phone_number}} </p>
+        <p>Модель машины: {{ driver.car_model}} </p>
+        <p>Номерной знак: {{ driver.license_plate }}</p>
+        <p>Баланс: {{ driver.balance }}</p>
+        <p>Рейтинг: {{ driver.raiting }}</p>
 
 
-<h2>Мои заказы</h2>
-<ul>
-    {% for trip in trips %}
-        <li>
-            Откуда: {{ trip.pickup_location }} <br>
-            Куда: {{ trip.dropoff_location }} <br>
-            Стоимость: {{ trip.fare }} <br>
-            Статус: {{ trip.status }}
-        </li>
-        <br><br>
-    {% endfor %}
-</ul>
+        <h2>Мои заказы</h2>
+        <ul>
+            {% for trip in trips %}
+                <li>
+                    Откуда: {{ trip.pickup_location }} <br>
+                    Куда: {{ trip.dropoff_location }} <br>
+                    Стоимость: {{ trip.fare }} <br>
+                    Статус: {{ trip.status }}
+                </li>
+            {% endfor %}
+        </ul>
+           </div>
+
+    <script src="../static/js/account.js"></script> <!-- Подключаем файл скриптов -->
+</body>
+</html>
