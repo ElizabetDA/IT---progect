@@ -46,15 +46,17 @@
             background-color: #555;
         }
 
-        .auth-button {
-            background-color: #000;
-            color: #fff;
-            cursor: pointer;
-            border: none;
+        .auth-button{
+        background-color: #000;
+        color: #fff;
+        cursor: pointer;
+        border: none;
         }
-        .auth-button:hover {
+
+        #auth-button:hover {
             background-color: #555;
         }
+
 
         #info {
             margin-top: 10px;
@@ -122,6 +124,11 @@
     <div id="container"></div>
     <div id="controls">
         <div class="button-input-container">
+            <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
+            <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
+            <button id="geoLocation">Мое местоположение</button>
+            <button id="reset">Сбросить точки</button>
+            <button id="copyAddresses">Копировать адреса</button>
             <!-- Контейнер для кнопки и полей ввода -->
             <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
                 <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
@@ -129,7 +136,7 @@
                 <!-- Поле для ввода места начала поездки -->
                 <p>
                     {{ form.pickup_location.label }}
-                    {{ form.pickup_location() }}
+                    {{ form.pickup_location(id="formPickupLocation") }}
                     <!-- Вывод ошибок валидации места начала поездки -->
                     {% for error in form.pickup_location.errors %}
                         {{ error }}
@@ -139,7 +146,7 @@
                 <!-- Поле для ввода места окончания поездки -->
                 <p>
                     {{ form.dropoff_location.label }}
-                    {{ form.dropoff_location() }}
+                    {{ form.dropoff_location(id="formDropoffLocation") }}
                     <!-- Вывод ошибок валидации места окончания поездки -->
                     {% for error in form.dropoff_location.errors %}
                         {{ error }}
@@ -151,13 +158,9 @@
                 </p>
 
                 <!-- Кнопка отправки формы -->
-                <input id="create" type="submit" class="auth-button" value="Создать заказ">
+                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ">
             </form>
         </div>
-        <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
-        <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
-        <button id="geoLocation">Мое местоположение</button>
-        <button id="reset">Сбросить точки</button>
     </div>
 
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
@@ -371,6 +374,18 @@
                 alert('Пожалуйста, введите оба адреса');
                 return;
             }
+
+            fetch('/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    pickup_location: pickupLocation,
+                    dropoff_location: dropoffLocation
+                })
+            })
         });
 
         map.on('idle', () => {
@@ -380,6 +395,23 @@
                 controls.style.right = '20px';
             }
         });
+
+        // Функция для копирования и вставки адресов
+        function copyAndPasteAddresses() {
+            const pickupInput = document.getElementById('pickupLocation');
+            const dropoffInput = document.getElementById('dropoffLocation');
+            const formPickupInput = document.querySelector('input[name="pickup_location"]');
+            const formDropoffInput = document.querySelector('input[name="dropoff_location"]');
+
+            if (pickupInput && dropoffInput && formPickupInput && formDropoffInput) {
+                formPickupInput.value = pickupInput.value;
+                formDropoffInput.value = dropoffInput.value;
+            } else {
+                alert('Не удалось найти поля для копирования адресов.');
+            }
+        }
+
+        document.getElementById('copyAddresses').addEventListener('click', copyAndPasteAddresses);
     </script>
 </body>
 </html>
