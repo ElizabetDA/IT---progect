@@ -128,13 +128,12 @@
             <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
             <button id="geoLocation">Мое местоположение</button>
             <button id="reset">Сбросить точки</button>
-            <button id="copyAddresses">Копировать адреса</button>
             <!-- Контейнер для кнопки и полей ввода -->
             <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
                 <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
                 {{ form.csrf_token }}
                 <!-- Поле для ввода места начала поездки -->
-                <p>
+                <p style="display:none;">
                     {{ form.pickup_location.label }}
                     {{ form.pickup_location(id="formPickupLocation") }}
                     <!-- Вывод ошибок валидации места начала поездки -->
@@ -144,7 +143,7 @@
                 </p>
 
                 <!-- Поле для ввода места окончания поездки -->
-                <p>
+                <p style="display:none;">
                     {{ form.dropoff_location.label }}
                     {{ form.dropoff_location(id="formDropoffLocation") }}
                     <!-- Вывод ошибок валидации места окончания поездки -->
@@ -158,7 +157,7 @@
                 </p>
 
                 <!-- Кнопка отправки формы -->
-                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ">
+                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ" onclick="copyAndPasteAddresses()">
             </form>
         </div>
     </div>
