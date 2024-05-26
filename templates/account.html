@@ -28,7 +28,6 @@
 
     <div class="content-section">
         <div class="my-orders-container">
-            <h2>Мои заказы</h2>
             <ul>
                 {% for trip in trips %}
                     <li>
@@ -39,11 +38,6 @@
                         Статус: {{ trip.status }}<br>
                         Способ оплаты : {{ trip.payment_method }}<br>
                     </li>
-                {% endfor %}
-            </ul>
-            <h2>Мой отзыв</h2>
-            <ul>
-                {% for trip in trips %}
                     {% if trip.status == 'Завершена' %}
                         <li>
                             {% if not trip.driving_sum %}
