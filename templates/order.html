@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Создание заказа</title>
+    <title>2GIS Map API</title>
     <style>
         html, body, #container {
             margin: 0;
@@ -28,7 +28,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             font-family: Arial, sans-serif;
         }
-        #controls input, #controls button {
+        #controls input, #controls button, #controls select {
             margin: 5px;
             padding: 10px;
             font-size: 14px;
@@ -45,20 +45,6 @@
         #controls button:hover {
             background-color: #555;
         }
-        .auth-button {
-            background-color: #000; /* Черный фон */
-            color: #fff; /* Белый текст */
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .auth-button:hover {
-            background-color: #333; /* Темно-серый фон при наведении */
-        }
-
         #info {
             margin-top: 10px;
         }
@@ -101,42 +87,15 @@
             color: #000;
             box-sizing: border-box;
         }
-
         #paymentMethod option {
             background-color: #fff;
             color: #000;
         }
-
         #paymentMethod:hover {
             background-color: #f0f0f0;
         }
-
         #paymentMethod:focus {
             outline: none;
-        }
-
-        #rates {
-            margin: 5px;
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            color: #000;
-            box-sizing: border-box;
-        }
-
-        #rates option {
-            background-color: #fff;
-            color: #000;
-        }
-
-        #rates:hover {
-            background-color: #f0f0f0;
-        }
-
-        #rates:focus {
-            outline: none.
         }
     </style>
 </head>
@@ -151,18 +110,15 @@
     </div>
     <div id="container"></div>
     <div id="controls">
-        <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
-        <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
-        <button id="geoLocation" type="button">Мое местоположение</button>
-        <button id="reset" type="button">Сбросить точки</button>
         <div class="button-input-container">
+            <!-- Контейнер для кнопки и полей ввода -->
             <form id="orderForm" method="post" action="/order" enctype="multipart/form-data" novalidate>
                 <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
                 {{ form.csrf_token }}
                 <!-- Поле для ввода места начала поездки -->
                 <p>
                     {{ form.pickup_location.label }}
-                    {{ form.pickup_location(id="form_pickup_location") }}
+                    {{ form.pickup_location() }}
                     <!-- Вывод ошибок валидации места начала поездки -->
                     {% for error in form.pickup_location.errors %}
                         {{ error }}
@@ -172,7 +128,7 @@
                 <!-- Поле для ввода места окончания поездки -->
                 <p>
                     {{ form.dropoff_location.label }}
-                    {{ form.dropoff_location(id="form_dropoff_location") }}
+                    {{ form.dropoff_location() }}
                     <!-- Вывод ошибок валидации места окончания поездки -->
                     {% for error in form.dropoff_location.errors %}
                         {{ error }}
@@ -184,9 +140,13 @@
                 </p>
 
                 <!-- Кнопка отправки формы -->
-                <input type="submit" class="auth-button" value="Создать заказ">
+                <input id="orderBtn" type="submit" class="auth-button" value="Создать заказ">
             </form>
         </div>
+        <input type="text" id="pickupLocation" placeholder="Откуда (улица номер дома)">
+        <input type="text" id="dropoffLocation" placeholder="Куда (улица номер дома)">
+        <button id="geoLocation">Мое местоположение</button>
+        <button id="reset">Сбросить точки</button>
     </div>
 
     <script src="https://mapgl.2gis.com/api/js/v1"></script>
@@ -196,9 +156,9 @@
         let dropoffMarker;
         let routeLine;
 
-        const apiKey = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db'; // Ваш ключ API
+        const apiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
         const directionsApiKey = '44175214-2975-4d75-8964-8ea0db5a196d';
-        const mapStyle = '9db719f1-1ab1-4e0e-903f-4c9fa77c10e7'; // Замените на ваш идентификатор стиля карты
+        const mapStyle = '0d1ce87b-1e17-4ea8-9d13-7edbfc8786db';  // Замените на ваш идентификатор стиля карты
 
         const map = new mapgl.Map('container', {
             center: [55.7558, 37.6173],
@@ -221,12 +181,12 @@
                         callback([parseFloat(lon), parseFloat(lat)]);
                     } else {
                         console.error('Geocoding result does not contain point data:', data);
-                        alert('Не удалось найти координаты для адреса: ' + address);
+                        alert(`Не удалось найти координаты для адреса: ${address}`);
                     }
                 })
                 .catch(error => {
                     console.error('Geocoding failed with error:', error);
-                    alert('Ошибка геокодирования: ' + error.message);
+                    alert('Ошибка геокодирования:', error.message);
                 });
         }
 
@@ -326,7 +286,6 @@
                         const houseNumber = data.address.house_number || '';
                         const address = street + ' ' + houseNumber;
                         document.getElementById('pickupLocation').value = address;
-                        document.getElementById('form_pickup_location').value = address; // Синхронизация поля формы
                     }
                 })
                 .catch(error => {
@@ -372,33 +331,28 @@
             }
             document.getElementById('pickupLocation').value = '';
             document.getElementById('dropoffLocation').value = '';
-            document.getElementById('form_pickup_location').value = '';
-            document.getElementById('form_dropoff_location').value = '';
             document.getElementById('fare').textContent = '-';
             document.getElementById('duration').textContent = '-';
             document.getElementById('distance').textContent = '-';
         });
 
-        document.getElementById('pickupLocation').addEventListener('input', function() {
+        document.getElementById('pickupLocation').addEventListener('change', function() {
             if (!pickupMarker) {
                 pickupMarker = createMarker([55.7558, 37.6173]);
                 pickupMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(pickupMarker, this);
-            document.getElementById('form_pickup_location').value = this.value; // Синхронизация поля формы
         });
 
-        document.getElementById('dropoffLocation').addEventListener('input', function() {
+        document.getElementById('dropoffLocation').addEventListener('change', function() {
             if (!dropoffMarker) {
                 dropoffMarker = createMarker([55.7512, 37.6184]);
                 dropoffMarker.on('dragend', updateRoute);
             }
             updateMarkerAndRoute(dropoffMarker, this);
-            document.getElementById('form_dropoff_location').value = this.value; // Синхронизация поля формы
         });
 
-        document.getElementById('orderForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        document.getElementById('orderBtn').addEventListener('click', function() {
             const pickupLocation = document.getElementById('pickupLocation').value;
             const dropoffLocation = document.getElementById('dropoffLocation').value;
 
@@ -428,7 +382,7 @@
             })
             .catch(error => {
                 console.error('Order creation error:', error);
-                alert('Не удалось создать заказ');
+                alert('Заказ успешно создан');
             });
         });
 

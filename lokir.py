@@ -147,6 +147,7 @@ def register_routes(app):
                                        license_plate=license_plate,
                                        taxist=taxist, rate=rate)
 
+    # Функция создания заказа
     @app.route("/order", methods=["POST"])
     @client_required()
     def orderCreate():
@@ -168,12 +169,11 @@ def register_routes(app):
                                 status="В ожидании", len_way=len_way, rate=rate)
                 db.session.add(new_trip)
                 db.session.commit()
-                return render_template("success.html", message="Заказ успешно создан", next_url=url_for("orderGet"))
+                return render_template("success.html", message="Заказ успешно создан",
+                                    next_url=url_for("orderGet"))
             except Exception as e:
                 return render_template("error.html", message="Не удалось создать заказ. Пожалуйста, попробуйте снова.",
-                                       previous_url=url_for("orderGet"))
-
-        return make_response(render_template("order.html", form=form), 400)
+                                   previous_url=url_for("orderGet"))
 
     @app.route("/account", methods=["GET"])
     @client_required()
