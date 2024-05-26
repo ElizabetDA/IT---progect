@@ -42,7 +42,8 @@ class User(db.Model):
         Returns:
             bool: True, если пароль верен, False в противном случае.
         """
-        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+        return self.password_hash == hashlib.sha256(
+            password.encode()).hexdigest()
 
 
 class Trip(db.Model):
@@ -51,7 +52,8 @@ class Trip(db.Model):
     __tablename__ = "trips"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"), nullable=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"),
+                          nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
@@ -166,7 +168,8 @@ class Driver(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     car_model = db.Column(db.String(100), nullable=False)
     license_plate = db.Column(db.String(20), nullable=False)
-    availability = db.Column(db.String(100), nullable=False, default="Свободен")
+    availability = db.Column(db.String(100), nullable=False,
+                             default="Свободен")
     location = db.Column(db.String(100), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
     trips = db.relationship("Trip", backref="driver", lazy="dynamic")
@@ -227,4 +230,5 @@ class Driver(db.Model):
         Returns:
             bool: True, если пароль верен, False в противном случае.
         """
-        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
+        return self.password_hash == hashlib.sha256(
+            password.encode()).hexdigest()
