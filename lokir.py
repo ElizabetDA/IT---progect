@@ -1,4 +1,5 @@
-from flask import render_template, request, jsonify, make_response, redirect, url_for
+from flask import render_template, request, jsonify, make_response, \
+                redirect, url_for
 from models import db, User, Trip, Driver
 from forms import (
     RegistrationForm,
@@ -131,11 +132,13 @@ def register_routes(app):
             if User.query.filter_by(email=email).first():
                 return render_template(
                     "error.html",
-                    message="Пользователь с таким адресом электронной почты уже существует",
+                    message="Пользователь с таким адресом \
+                    электронной почты уже существует",
                     previous_url=url_for("registrationForm"),
                 )
 
-            new_user = User(username=username, email=email, password_hash=password_hash)
+            new_user = User(username=username, email=email,
+                            password_hash=password_hash)
             db.session.add(new_user)
             db.session.commit()
             return render_template(
@@ -177,7 +180,8 @@ def register_routes(app):
                 email = form.email.data.lower()
                 password = form.password.data
                 user = User.query.filter_by(email=email).one()
-                # Сравниваем хэш введенного пароля с хэшем пароля найденного пользователя
+                # Сравниваем хэш введенного пароля с хэшем
+                # пароля найденного пользователя
 
                 if user.checkPassword(password):
                     access_token = create_access_token(
@@ -193,7 +197,8 @@ def register_routes(app):
                         httponly=True,
                         secure=True,
                     )
-                    response.set_cookie("access_token_cookie", value=access_token)
+                    response.set_cookie("access_token_cookie",
+                                        value=access_token)
                     return response
                 else:
                     return render_template(
@@ -330,7 +335,8 @@ def register_routes(app):
             except Exception:
                 return render_template(
                     "error.html",
-                    message="Не удалось создать заказ. Пожалуйста, попробуйте снова.",
+                    message="Не удалось создать заказ. \
+                    Пожалуйста, попробуйте снова.",
                     previous_url=url_for("orderGet"),
                 )
 
@@ -354,7 +360,8 @@ def register_routes(app):
         form = ForScore()
         # Рендерим шаблон account.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("account.html", user=user, trips=user_trips, form=form)
+        return render_template("account.html", user=user,
+                               trips=user_trips, form=form)
 
     @app.route("/account", methods=["POST"])
     @client_required()
@@ -455,7 +462,8 @@ def register_routes(app):
                 next_url=url_for("accountGet"),
             )
 
-        return make_response(render_template("changePassword.html", form=form), 400)
+        return make_response(render_template("changePassword.html",
+                                             form=form), 400)
 
     # Функция обновления access_token
     @app.route("/refresh", methods=["POST"])
@@ -525,21 +533,24 @@ def register_routes(app):
                     refresh_token = create_refresh_token(
                         identity=driver.id, additional_claims={"driver": True}
                     )
-                    response = make_response(redirect(url_for("getDriverPassage")))
+                    response = make_response(redirect(url_for
+                                                      ("getDriverPassage")))
                     response.set_cookie(
                         "refresh_token_cookie",
                         value=refresh_token,
                         httponly=True,
                         secure=True,
                     )
-                    response.set_cookie("access_token_cookie", value=access_token)
+                    response.set_cookie("access_token_cookie",
+                                        value=access_token)
                     return response
                 else:
                     return jsonify({"message": "Неверный пароль"}), 401
             except NoResultFound:
                 return jsonify({"message": "Водитель не найден"}), 404
         # Возвращение подсказок
-        return make_response(render_template("driverLogin.html", form=form), 400)
+        return make_response(render_template("driverLogin.html",
+                                             form=form), 400)
 
     # Форма заказа для водителя
     @app.route("/passage", methods=["GET"])
@@ -638,7 +649,8 @@ def register_routes(app):
                     dropoff_location=dropoff_location,
                     form=form,
                 )
-            return make_response(render_template("driverPassage.html", form=form), 400)
+            return make_response(render_template("driverPassage.html",
+                                                 form=form), 400)
 
         elif form_type == "startTrip":
             form = FlaskForm(request.form)
@@ -693,7 +705,8 @@ def register_routes(app):
         driver_trips = driver.trips
         # Рендерим шаблон driverAccount.html и передаем
         # в него данные пользователя и его заказы
-        return render_template("driverAccount.html", driver=driver, trips=driver_trips)
+        return render_template("driverAccount.html", driver=driver,
+                               trips=driver_trips)
 
     @app.route("/change_username", methods=["POST"])
     @client_required()
@@ -725,7 +738,8 @@ def register_routes(app):
                 next_url=url_for("accountGet"),
             )
 
-        return make_response(render_template("changeUsername.html", form=form), 400)
+        return make_response(render_template("changeUsername.html",
+                                             form=form), 400)
 
     @app.route("/change_username", methods=["GET"])
     @client_required()

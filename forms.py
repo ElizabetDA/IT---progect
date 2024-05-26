@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import InputRequired, Email, Regexp
-from wtforms import StringField, PasswordField, IntegerField, validators, SelectField
+from wtforms import StringField, PasswordField, IntegerField, \
+                    validators, SelectField
 
 
 # Класс формы регистрации
@@ -10,7 +11,8 @@ class RegistrationForm(FlaskForm):
     message_empty_field = "Поле не должно быть пустым"
     message_name = "Имя должно содержать только русские буквы"
     message_email = "Неверный почтовый адрес"
-    message_password_length = "Пароль должен состоять не менее чем из 8 символов"
+    message_password_length = "Пароль должен состоять \
+    не менее чем из 8 символов"
     message_no_russian_chars = "Пароль не должен содержать русские буквы"
 
     username = StringField(
@@ -54,7 +56,8 @@ class LoginForm(FlaskForm):
         ],
     )
     password = PasswordField(
-        "Введите пароль", validators=[InputRequired(message=message_empty_field)]
+        "Введите пароль", validators=[InputRequired
+                                      (message=message_empty_field)]
     )
 
 
@@ -86,10 +89,12 @@ class ChangePasswordForm(FlaskForm):
 
     message_empty_field = "Поле не должно быть пустым"
     message_password = "Неверный пароль"
-    message_password_length = "Пароль должен состоять не менее чем из 8 символов"
+    message_password_length = "Пароль должен состоять \
+    не менее чем из 8 символов"
     message_no_russian_chars = "Пароль не должен содержать русские буквы"
     old_password = PasswordField(
-        "Введите старый пароль", validators=[InputRequired(message=message_empty_field)]
+        "Введите старый пароль", validators=[InputRequired
+                                             (message=message_empty_field)]
     )
     new_password = PasswordField(
         "Пароль",
@@ -144,5 +149,6 @@ class ForScore(FlaskForm):
         "Комфорт", validators=[validators.NumberRange(min=1, max=5)]
     )
     driving_polite = IntegerField(
-        "Вежливость водителя", validators=[validators.NumberRange(min=1, max=5)]
+        "Вежливость водителя", validators=[validators.NumberRange(min=1,
+                                                                  max=5)]
     )

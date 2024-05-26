@@ -58,5 +58,6 @@ def lenWay(pickup_location, dropoff_location):
     }
 
     # Получение расстояния между точками
-    response2GIS = requests.post(f"{len2Gis}key={API_KEY}&version=2.0", json=data)
+    response2GIS = requests.post(f"{len2Gis}key={API_KEY}&version=2.0",
+                                 json=data)
     return response2GIS.json()["routes"][0]["distance"]
