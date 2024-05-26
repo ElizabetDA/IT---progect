@@ -35,16 +35,13 @@
                         Откуда: {{ trip.pickup_location }} <br>
                         Куда: {{ trip.dropoff_location }} <br>
                         Расстояние: {{ trip.len_way }} м. <br>
-                        Стоимость: {{ trip.fare }} Р.<br>
-                        Статус: {{ trip.status }}
+                        Стоимость: {{ trip.fare }} p.<br>
+                        Статус: {{ trip.status }}<br>
                         Способ оплаты : {{ trip.payment_method }}<br>
                     </li>
                 {% endfor %}
             </ul>
-        </div>
-
-        <div class="my-reviews-container">
-            <h2>Мои отзывы</h2>
+            <h2>Мой отзыв</h2>
             <ul>
                 {% for trip in trips %}
                     {% if trip.status == 'Завершена' %}
