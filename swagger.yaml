@@ -157,6 +157,36 @@ components:
         - payment_method
 
 
+    ForScore:
+      type: object
+      properties:
+        driving_score:
+          type: integer
+          minimum: 1
+          maximum: 5
+        driving_comfort:
+          type: integer
+          minimum: 1
+          maximum: 5
+        driving_polite:
+          type: integer
+          minimum: 1
+          maximum: 5
+      required:
+        - driving_score
+        - driving_comfort
+        - driving_polite
+
+    ChangeUsernameForm:
+      type: object
+      properties:
+        new_username:
+          type: string
+          pattern: '^[А-Яа-яЁё]+$'
+      required:
+        - new_username
+
+
 paths:
   /:
     get:
@@ -404,3 +434,76 @@ paths:
           description: Неверный формат данных
         "401":
           description: Пользователь не авторизован
+  /about_us:
+    get:
+      summary: Получить информацию о сервисе
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
+  /information:
+    get:
+      summary: Получить информационную страницу
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
+  /contacts:
+    get:
+      summary: Получить контактную информацию
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
+  /qa:
+    get:
+      summary: Получить страницу с часто задаваемыми вопросами
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
+  /pricing:
+    get:
+      summary: Получить информацию о ценах
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
+  /change_username:
+    post:
+      summary: Изменить имя пользователя
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangeUsernameForm'
+      responses:
+        '200':
+          description: Успешное изменение имени пользователя
+        '400':
+          description: Неверный формат данных
+    get:
+      summary: Получить форму для изменения имени пользователя
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            text/html:
+              schema:
+                type: string
