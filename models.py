@@ -10,6 +10,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     """Модель пользователя."""
+
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -41,23 +42,24 @@ class User(db.Model):
         Returns:
             bool: True, если пароль верен, False в противном случае.
         """
-        return self.password_hash == hashlib.sha256(
-            password.encode()).hexdigest()
+        return self.password_hash == hashlib.sha256(password.encode()).hexdigest()
 
 
 class Trip(db.Model):
     """Модель поездки."""
+
     __tablename__ = "trips"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"),
-                          nullable=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"), nullable=True)
     pickup_location = db.Column(db.String(200), nullable=False)
     dropoff_location = db.Column(db.String(200), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
-    start_time = db.Column(db.DateTime,
-                           nullable=False, default=datetime.
-                           now(pytz.timezone("Europe/Moscow")))
+    start_time = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.now(pytz.timezone("Europe/Moscow")),
+    )
     end_time = db.Column(db.DateTime, nullable=True)
     fare = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default="В ожидании")
@@ -93,8 +95,9 @@ class Trip(db.Model):
         self.driving_score = driving_score
         self.driving_comfort = driving_comfort
         self.driving_polite = driving_polite
-        self.driving_sum = round((driving_score +
-                                  driving_comfort + driving_polite) / 3, 2)
+        self.driving_sum = round(
+            (driving_score + driving_comfort + driving_polite) / 3, 2
+        )
 
     def chandeDriverId(self, driver_id):
         """Изменяет ID водителя, обслуживающего поездку.
@@ -109,9 +112,11 @@ class Trip(db.Model):
 
     def __repr__(self):
         """Возвращает строковое представление объекта Trip."""
-        return (f"Trip {self.id} - User: {self.user.username},"
-                f"Driver: {self.driver.name if self.driver else None}, \
-                Status: {self.status}")
+        return (
+            f"Trip {self.id} - User: {self.user.username},"
+            f"Driver: {self.driver.name if self.driver else None}, \
+                Status: {self.status}"
+        )
 
     @staticmethod
     def calculateFare(lenWay, rate):
@@ -152,6 +157,7 @@ class Trip(db.Model):
 
 class Driver(db.Model):
     """Модель водителя."""
+
     __tablename__ = "drivers"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -160,8 +166,7 @@ class Driver(db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     car_model = db.Column(db.String(100), nullable=False)
     license_plate = db.Column(db.String(20), nullable=False)
-    availability = db.Column(db.String(100), nullable=False,
-                             default="Свободен")
+    availability = db.Column(db.String(100), nullable=False, default="Свободен")
     location = db.Column(db.String(100), nullable=False)
     balance = db.Column(db.Integer, nullable=False, default=0)
     trips = db.relationship("Trip", backref="driver", lazy="dynamic")
@@ -176,8 +181,12 @@ class Driver(db.Model):
         Returns:
             None
         """
-        self.raiting = round(db.session.query(func.avg(
-            Trip.driving_sum)).filter(Trip.driver_id == self.id).scalar(), 2)
+        self.raiting = round(
+            db.session.query(func.avg(Trip.driving_sum))
+            .filter(Trip.driver_id == self.id)
+            .scalar(),
+            2,
+        )
 
     def changeAvailability(self, availability):
         """Изменяет статус доступности водителя.

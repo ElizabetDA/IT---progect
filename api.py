@@ -32,22 +32,31 @@ def lenWay(pickup_location, dropoff_location):
     end_street, end_house = to2Gis(dropoff_location)
 
     # Получение координат начальной и конечной точек
-    response2GIS = requests.get(f"""{decode2Gis}, {start_street},
+    response2GIS = requests.get(
+        f"""{decode2Gis}, {start_street},
                                 {start_house}
-                                &fields=items.point&key={API_KEY}""")
+                                &fields=items.point&key={API_KEY}"""
+    )
     start_lat = response2GIS.json()["result"]["items"][0]["point"]["lat"]
     start_lon = response2GIS.json()["result"]["items"][0]["point"]["lon"]
-    response2GIS = requests.get(f"""{decode2Gis}, {end_street},
+    response2GIS = requests.get(
+        f"""{decode2Gis}, {end_street},
                                 {end_house}
-                                &fields=items.point&key={API_KEY}""")
+                                &fields=items.point&key={API_KEY}"""
+    )
     end_lat = response2GIS.json()["result"]["items"][0]["point"]["lat"]
     end_lon = response2GIS.json()["result"]["items"][0]["point"]["lon"]
 
-    data = {"points": [{"lat": start_lat, "lon": start_lon},
-                       {"lat": end_lat, "lon": end_lon}], "mode": "taxi",
-            "sources": [0], "targets": [1]}
+    data = {
+        "points": [
+            {"lat": start_lat, "lon": start_lon},
+            {"lat": end_lat, "lon": end_lon},
+        ],
+        "mode": "taxi",
+        "sources": [0],
+        "targets": [1],
+    }
 
     # Получение расстояния между точками
-    response2GIS = requests.post(f"{len2Gis}key={API_KEY}&version=2.0",
-                                 json=data)
-    return (response2GIS.json()["routes"][0]["distance"])
+    response2GIS = requests.post(f"{len2Gis}key={API_KEY}&version=2.0", json=data)
+    return response2GIS.json()["routes"][0]["distance"]

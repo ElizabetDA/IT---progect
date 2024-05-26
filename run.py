@@ -7,7 +7,7 @@ import os
 
 # Создание экземпляра Flask приложения
 app = Flask(__name__)
-app.static_folder = os.path.join(app.root_path, 'static')
+app.static_folder = os.path.join(app.root_path, "static")
 jwt = JWTManager(app)
 
 # Загрузка конфигурации Flask приложения
