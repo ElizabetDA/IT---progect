@@ -15,8 +15,10 @@
         </div>
         <button class="account-button" onclick="location.href='/account';">Аккаунт</button>
     </div>
-    <div class="change-password-section">
-        <h1>Смена имени</h1>
+    <div class="change-section">
+        <div class="change-header">
+            <h1>Смена имени</h1>
+        </div>
         <form id="ChangeUsernameForm" method="post" action="/change_username" enctype="multipart/form-data" novalidate>
             <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
             {{ form.csrf_token }}
@@ -30,7 +32,7 @@
             </p>
 
             <!-- Кнопка отправки формы -->
-        <button type="submit" class="change-password-button">Сменить имя</button>
+        <button type="submit" class="change-button">Сменить имя</button>
         </form>
         {% if same_username_error %}
             <p>{{ same_username_error }}</p>

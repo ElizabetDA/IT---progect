@@ -3,6 +3,7 @@ body {
     background-size: cover;
     background-size: auto; /* Изменено на auto, чтобы фон был исходного размера */
     background-repeat: repeat; /* Фон повторяется по горизонтали и вертикали */
+    font-family: Arial, sans-serif;
     color: white;
     margin: 0;
     padding: 0;
