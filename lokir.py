@@ -444,7 +444,7 @@ def register_routes(app):
                 return render_template(
                     "error.html",
                     message="Новый пароль не должен совпадать со старым",
-                    previous_url=url_for("changePasswordGet"),
+                    previous_url=url_for("changePassword.html"),
                 )
 
             user.changePassword(form.new_password.data)

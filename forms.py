@@ -8,8 +8,11 @@ class RegistrationForm(FlaskForm):
     """Форма регистрации нового пользователя."""
 
     message_empty_field = "Поле не должно быть пустым"
-    message_name = "Имя должно содеражать только русские буквы"
+    message_name = "Имя должно содержать только русские буквы"
     message_email = "Неверный почтовый адрес"
+    message_password_length = "Пароль должен состоять не менее чем из 8 символов"
+    message_no_russian_chars = "Пароль не должен содержать русские буквы"
+
     username = StringField(
         "Имя:",
         validators=[
@@ -25,7 +28,15 @@ class RegistrationForm(FlaskForm):
         ],
     )
     password = PasswordField(
-        "Пароль:", validators=[InputRequired(message=message_empty_field)]
+        "Пароль",
+        [
+            validators.DataRequired(message=message_empty_field),
+            validators.Length(min=8, message=message_password_length),
+            validators.Regexp(
+                r"^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]+$",
+                message=message_no_russian_chars,
+            ),
+        ],
     )
 
 
@@ -75,11 +86,21 @@ class ChangePasswordForm(FlaskForm):
 
     message_empty_field = "Поле не должно быть пустым"
     message_password = "Неверный пароль"
+    message_password_length = "Пароль должен состоять не менее чем из 8 символов"
+    message_no_russian_chars = "Пароль не должен содержать русские буквы"
     old_password = PasswordField(
         "Введите старый пароль", validators=[InputRequired(message=message_empty_field)]
     )
     new_password = PasswordField(
-        "Введите новый пароль", validators=[InputRequired(message=message_empty_field)]
+        "Пароль",
+        [
+            validators.DataRequired(message=message_empty_field),
+            validators.Length(min=8, message=message_password_length),
+            validators.Regexp(
+                r"^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]+$",
+                message=message_no_russian_chars,
+            ),
+        ],
     )
 
 
