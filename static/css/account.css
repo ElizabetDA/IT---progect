@@ -1,0 +1,225 @@
+body {
+    background-image: url("../images/background_12.jpg");
+    background-size: cover;
+    background-size: auto; /* Изменено на auto, чтобы фон был исходного размера */
+    background-repeat: repeat; /* Фон повторяется по горизонтали и вертикали */
+    font-family: Arial, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    padding-top: 60px;
+}
+
+.top-bar {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.top-bar button {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.account-button {
+    background-color: #1FBF57;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: absolute;
+    right: 50px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.tariffs-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.tariff-container {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    max-width: 800px;
+    width: calc(100% - 40px);
+}
+
+.tariff-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tariff {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.car-image img {
+    max-width: 200px;
+    border-radius: 10px;
+}
+
+.order-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.order-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    height: 40px;
+    width: 200px;
+}
+
+.user-info-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    max-width: 800px;
+    width: calc(100% - 40px);
+    text-align: center; /* Добавлено выравнивание текста по центру */
+}
+
+.user-info-text {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px; /* Добавлен отступ снизу для разделения текста и кнопки */
+}
+
+.change-password-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s; /* Добавлен эффект перехода для изменения цвета фона при наведении */
+}
+
+.change-password-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+}
+
+.change-username-button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s; /* Добавлен эффект перехода для изменения цвета фона при наведении */
+}
+
+.change-username-button:hover {
+    background-color: #808080; /* Цвет фона при наведении */
+}
+
+.my-orders-container, .my-reviews-container {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    max-width: 800px;
+    width: calc(100% - 40px);
+}
+
+.my-orders-container h2, .my-reviews-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #fff;
+    text-align: center;
+}
+
+.my-orders-container ul, .my-reviews-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.my-orders-container li, .my-reviews-container li {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.my-reviews-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+footer {
+    background-color: #000;
+    color: #fff;
+    padding: 5px 0;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+/* account.css */
+.order-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #000;
+}
+
+.order-container li {
+    list-style: none;
+}
+
+.submit-review-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.submit-review-button:hover {
+    background-color: #45a049;
+}
+

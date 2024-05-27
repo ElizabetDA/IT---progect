@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <!-- Подключаем файл стилей CSS -->
+    <link rel="stylesheet" href="../static/css/login.css">
+</head>
+<body>
+        <h1>Авторизация</h1>
+        <!-- Форма для ввода данных -->
+        <form method="post" action="/login" enctype="multipart/form-data" novalidate>
+            <!-- CSRF токен для защиты от подделки межсайтовых запросов -->
+            {{ form.csrf_token }}
+            <!-- Поле для ввода электронной почты -->
+            <p>
+                {{ form.email.label }} {{ form.email(class="input-field") }}
+                {% for error in form.email.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+            <!-- Поле для ввода пароля -->
+            <p>
+                {{ form.password.label }} {{ form.password(class="input-field") }}
+                {% for error in form.password.errors %}
+                    {{ error }}
+                {% endfor %}
+            </p>
+            <!-- Кнопка для отправки формы -->
+            <input type="submit" value="Авторизоваться">
+        </form>
+        <!-- Блок для кнопки перехода на страницу регистрации -->
+        <div class="register-container">
+            <a href="/register" class="register-link">Регистрация</a>
+        </div>
+</body>
+</html>
